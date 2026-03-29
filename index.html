@@ -291,9 +291,10 @@
     width:4px; border-radius:13px 0 0 13px;
   }
   .player-card.active {
-    border-color:rgba(201,148,58,.32);
-    background:linear-gradient(135deg,rgba(46,34,14,.98) 0%,rgba(28,20,8,.99) 100%);
-    box-shadow:0 0 0 1px rgba(201,148,58,.18),var(--shadow-deep);
+    border-color:rgba(201,148,58,.45);
+    background:linear-gradient(135deg,rgba(52,38,14,.99) 0%,rgba(30,22,8,.99) 100%);
+    box-shadow:0 0 0 1px rgba(201,148,58,.28),var(--shadow-deep), 0 0 30px rgba(201,148,58,.08);
+    transform: scale(1.015);
   }
   .player-card.active::before {
     content:''; position:absolute; top:0; left:0; right:0; height:1px;
@@ -305,16 +306,22 @@
   .p-info { min-width:0; }
 
   .p-name {
-    font-family:'Playfair Display',serif; font-size:1rem; font-weight:700;
-    display:flex; align-items:center; gap:.45rem; flex-wrap:wrap;
+    font-family:'Playfair Display',serif; font-size:1.25rem; font-weight:900;
+    display:flex; align-items:center; gap:.5rem; flex-wrap:wrap;
+    letter-spacing:.02em; line-height:1.2;
+  }
+  .player-card.active .p-name {
+    font-size:1.5rem;
+    text-shadow: 0 0 18px rgba(255,255,255,.15), 0 2px 6px rgba(0,0,0,.6);
   }
 
   .turn-pill {
-    font-family:'DM Mono',monospace; font-size:.55rem; font-weight:500;
+    font-family:'DM Mono',monospace; font-size:.62rem; font-weight:700;
     background:linear-gradient(135deg,var(--gold),var(--gold2)); color:#1a0f00;
-    padding:2px 7px; border-radius:20px; letter-spacing:.06em; text-transform:uppercase;
+    padding:3px 9px; border-radius:20px; letter-spacing:.08em; text-transform:uppercase;
     box-shadow:0 2px 8px rgba(201,148,58,.35);
     animation:pillPulse 2s ease-in-out infinite;
+    vertical-align: middle;
   }
   @keyframes pillPulse {
     0%,100%{box-shadow:0 2px 8px rgba(201,148,58,.35)}
@@ -335,9 +342,12 @@
 
   .p-score {
     font-family:'Playfair Display',serif; font-weight:900;
-    font-size:2.1rem; line-height:1; min-width:64px;
+    font-size:2.3rem; line-height:1; min-width:70px;
     text-align:right; text-shadow:0 2px 8px rgba(0,0,0,.6);
     transition:transform .25s ease;
+  }
+  .player-card.active .p-score {
+    font-size:2.7rem;
   }
   @keyframes scoreBump { 0%{transform:scale(1)} 40%{transform:scale(1.25)} 100%{transform:scale(1)} }
   .score-bump { animation:scoreBump .35s ease; }
