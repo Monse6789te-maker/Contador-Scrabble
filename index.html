@@ -373,12 +373,20 @@
   }
 
   .turn-panel-header {
-    font-size:.68rem; text-transform:uppercase; letter-spacing:.2em;
+    font-size:.75rem; text-transform:uppercase; letter-spacing:.2em;
     color:var(--text-dim); margin-bottom:1rem;
-    display:flex; align-items:center; gap:.6rem;
+    display:flex; align-items:center; gap:.5rem; flex-wrap:wrap;
+  }
+  .turn-panel-header .turn-label {
+    font-size:.72rem; letter-spacing:.2em; color:var(--text-dim); text-transform:uppercase;
+  }
+  .turn-panel-header .turn-player-name {
+    font-family:'Playfair Display',serif;
+    font-size:1.5rem; font-weight:900; font-style:italic;
+    letter-spacing:.03em; text-transform:none; line-height:1;
   }
   .turn-panel-header::after {
-    content:''; flex:1; height:1px;
+    content:''; flex:1; height:1px; min-width:20px;
     background:linear-gradient(90deg,rgba(201,148,58,.2),transparent);
   }
 
@@ -632,6 +640,79 @@
     .logo-tile { width:38px; height:38px; }
     .logo-tile .letter { font-size:1.1rem; }
   }
+
+  /* ═══════════════ WORD VALIDATOR ═══════════════ */
+  .validator-wrap {
+    width:100%; max-width:500px; margin-top:1.5rem;
+    animation:slideUp .5s .25s ease both;
+  }
+  .validator-card {
+    background:linear-gradient(160deg,rgba(46,36,16,.96),rgba(30,22,8,.99));
+    border:1px solid rgba(201,148,58,.2); border-radius:var(--radius);
+    padding:1.5rem 2rem; position:relative; overflow:hidden;
+    box-shadow:var(--shadow-card);
+  }
+  .validator-card::after {
+    content:''; position:absolute; top:0; left:10%; right:10%; height:2px;
+    background:linear-gradient(90deg,transparent,var(--gold),var(--gold2),var(--gold),transparent);
+    border-radius:0 0 2px 2px;
+  }
+  .validator-title {
+    font-family:'Playfair Display',serif; font-size:1rem; font-weight:700;
+    color:var(--cream2); margin-bottom:.25rem; display:flex; align-items:center; gap:.5rem;
+  }
+  .validator-sub {
+    font-size:.68rem; color:var(--text-mute); letter-spacing:.06em; margin-bottom:1rem;
+  }
+  .validator-row {
+    display:flex; gap:.6rem; align-items:stretch;
+  }
+  .validator-input {
+    flex:1; background:rgba(0,0,0,.3);
+    border:1.5px solid rgba(201,148,58,.18); border-radius:9px;
+    padding:.65rem 1rem; color:var(--cream);
+    font-family:'Playfair Display',serif; font-size:1.1rem; font-weight:700;
+    outline:none; transition:border-color .2s,box-shadow .2s;
+    letter-spacing:.08em; text-transform:lowercase;
+  }
+  .validator-input:focus {
+    border-color:rgba(201,148,58,.5);
+    box-shadow:0 0 0 3px rgba(201,148,58,.08);
+  }
+  .validator-input::placeholder { color:var(--text-mute); font-weight:400; font-style:italic; font-size:.9rem; }
+  .validator-btn {
+    padding:.65rem 1.1rem; border-radius:9px;
+    background:linear-gradient(140deg,var(--gold),var(--gold2));
+    border:none; color:#1a0f00; font-family:'Lato',sans-serif;
+    font-weight:700; font-size:.82rem; letter-spacing:.05em;
+    cursor:pointer; transition:all .2s; white-space:nowrap;
+    box-shadow:0 4px 14px rgba(201,148,58,.3);
+  }
+  .validator-btn:hover { transform:translateY(-1px); box-shadow:0 6px 20px rgba(201,148,58,.45); }
+  .validator-btn:disabled { opacity:.5; cursor:not-allowed; transform:none; }
+  .validator-result {
+    margin-top:.85rem; padding:.75rem 1rem; border-radius:9px;
+    font-size:.88rem; display:none; animation:fadeIn .3s ease;
+    border:1px solid; line-height:1.5;
+  }
+  .validator-result.valid {
+    background:rgba(78,205,196,.08); border-color:rgba(78,205,196,.3);
+    color:#4ecdc4; display:block;
+  }
+  .validator-result.invalid {
+    background:rgba(168,50,40,.08); border-color:rgba(168,50,40,.3);
+    color:#e07060; display:block;
+  }
+  .validator-result.loading {
+    background:rgba(201,148,58,.06); border-color:rgba(201,148,58,.2);
+    color:var(--gold2); display:block;
+  }
+  .v-result-word {
+    font-family:'Playfair Display',serif; font-weight:900;
+    font-size:1.05rem; margin-bottom:.2rem;
+  }
+  .v-result-reason { font-size:.78rem; opacity:.85; }
+
 </style>
 </head>
 <body>
@@ -674,6 +755,24 @@
     <button class="start-btn" onclick="startGame()">Comenzar Partida &nbsp;✦</button>
   </div>
 </div>
+
+  <div class="validator-wrap">
+    <div class="validator-card">
+      <div class="validator-title">📖 Verificar Palabra</div>
+      <p class="validator-sub">Comprueba si una palabra es válida en Scrabble en español (RAE)</p>
+      <div class="validator-row">
+        <input class="validator-input" type="text" id="validator-input"
+          placeholder="Escribe una palabra..." maxlength="30"
+          oninput="this.value=this.value.toLowerCase()"
+          onkeydown="if(event.key==='Enter') checkWord()">
+        <button class="validator-btn" id="validator-btn" onclick="checkWord()">Verificar</button>
+      </div>
+      <div class="validator-result" id="validator-result">
+        <div class="v-result-word" id="v-word"></div>
+        <div class="v-result-reason" id="v-reason"></div>
+      </div>
+    </div>
+  </div>
 
 <!-- ═══════ GAME ═══════ -->
 <div id="game-screen">
@@ -851,7 +950,7 @@
   function renderTurnPanel() {
     const p = state.players[state.currentTurn];
     document.getElementById('turn-header').innerHTML =
-      `Turno de &nbsp;<span class="${p.color}" style="font-family:'Playfair Display',serif;font-weight:700;font-style:italic">${p.name}</span>`;
+      `<span class="turn-label">Turno de</span><span class="turn-player-name ${p.color}">${p.name}</span>`;
     document.getElementById('score-input').value = '';
     state.scrabbleOn = false;
     updateScrabbleUI();
@@ -1000,6 +1099,134 @@
 
   setCount(3);
   renderSetupList();
+
+  // ── Diccionario local de palabras claramente inválidas en Scrabble ──
+  const INVALIDAS_SIEMPRE = new Set([
+    // países
+    'mexico','españa','francia','italia','alemania','japon','china','brasil',
+    'argentina','colombia','peru','chile','cuba','canada','rusia','india',
+    // nombres propios comunes
+    'maria','jose','juan','pedro','ana','luis','carlos','jorge','miguel',
+    'rosa','elena','pablo','isabel','diego','sofia','lucía','lucia',
+    // marcas / empresas
+    'google','facebook','twitter','apple','samsung','nike','adidas','coca',
+    'pepsi','toyota','honda','ford','netflix','amazon','microsoft',
+    // acrónimos
+    'onu','oms','fbi','cia','nasa','otan','uefa','fifa',
+  ]);
+
+  // ── Prefijos/sufijos aislados que nunca son válidos ──
+  const PREFIJOS = ['anti','sub','pre','pos','post','re','des','in','im','bi','tri','mega','micro','mini','macro'];
+
+  function esObviamenteInvalida(w) {
+    if (INVALIDAS_SIEMPRE.has(w)) return { invalida: true, razon: 'Nombre propio, país, marca o acrónimo no permitido.' };
+    // Todo mayúsculas → probable acrónimo (pero el input ya normaliza a minúsculas, esta es por si acaso)
+    if (/^[A-ZÁÉÍÓÚ]{2,}$/.test(w)) return { invalida: true, razon: 'Acrónimo: no permitido en Scrabble.' };
+    // Prefijo aislado sin raíz
+    if (PREFIJOS.includes(w)) return { invalida: true, razon: 'Prefijo aislado: no es una palabra válida.' };
+    return null;
+  }
+
+  // ── Consulta la API pública de Free Dictionary (soporta español) ──
+  async function consultarDiccionary(word) {
+    const r = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/es/${encodeURIComponent(word)}`);
+    if (r.status === 404) return null;   // no encontrada
+    if (!r.ok) throw new Error('api-error');
+    const data = await r.json();
+    // Verifica que tenga definición real y no sea nombre propio
+    if (!Array.isArray(data) || !data.length) return null;
+    const entry = data[0];
+    // Si el título empieza con mayúscula y coincide exactamente → nombre propio
+    if (entry.word && /^[A-ZÁÉÍÓÚ]/.test(entry.word) && entry.word.toLowerCase() === word) {
+      return { valida: false, razon: 'Nombre propio: no permitido en Scrabble.' };
+    }
+    const meanings = entry.meanings || [];
+    if (!meanings.length) return null;
+    const tipo = meanings[0].partOfSpeech || 'palabra';
+    return { valida: true, razon: `Encontrada en el diccionario como ${tipo}.` };
+  }
+
+  // ── Consulta Wiktionary en español como respaldo ──
+  async function consultarWiktionary(word) {
+    const url = `https://es.wiktionary.org/w/api.php?action=query&titles=${encodeURIComponent(word)}&prop=categories&cllimit=20&format=json&origin=*`;
+    const r = await fetch(url);
+    if (!r.ok) throw new Error('wiki-error');
+    const data = await r.json();
+    const pages = Object.values(data?.query?.pages || {});
+    if (!pages.length || pages[0].missing !== undefined) return null;
+
+    const cats = (pages[0].categories || []).map(c => c.title.toLowerCase());
+
+    // Si está categorizado como nombre propio → inválida
+    const esPropio = cats.some(c =>
+      c.includes('nombre propio') || c.includes('nombres propios') ||
+      c.includes('topónimo') || c.includes('antropónimo')
+    );
+    if (esPropio) return { valida: false, razon: 'Nombre propio o topónimo: no permitido en Scrabble.' };
+
+    // Si tiene categorías en español → válida
+    const tieneES = cats.some(c => c.includes('es:') || c.includes('español'));
+    if (tieneES) {
+      const esSust = cats.some(c => c.includes('sustantivo'));
+      const esVerb = cats.some(c => c.includes('verbo'));
+      const esAdj  = cats.some(c => c.includes('adjetivo'));
+      const tipo = esSust ? 'sustantivo' : esVerb ? 'verbo' : esAdj ? 'adjetivo' : 'palabra';
+      return { valida: true, razon: `Registrada en Wiktionary como ${tipo} en español.` };
+    }
+
+    return null; // no concluyente
+  }
+
+  async function checkWord() {
+    const input = document.getElementById('validator-input');
+    const btn   = document.getElementById('validator-btn');
+    const resultDiv = document.getElementById('validator-result');
+    const wordEl    = document.getElementById('v-word');
+    const reasonEl  = document.getElementById('v-reason');
+
+    const word = input.value.trim().toLowerCase().normalize('NFC');
+    if (!word) { input.focus(); return; }
+
+    btn.disabled = true;
+    resultDiv.className = 'validator-result loading';
+    resultDiv.style.display = 'block';
+    wordEl.textContent  = word.toUpperCase();
+    reasonEl.textContent = 'Consultando el diccionario...';
+
+    // 1) Filtro local rápido
+    const localCheck = esObviamenteInvalida(word);
+    if (localCheck) {
+      wordEl.textContent  = word.toUpperCase();
+      reasonEl.textContent = localCheck.razon;
+      resultDiv.className = 'validator-result invalid';
+      btn.disabled = false;
+      return;
+    }
+
+    let resultado = null;
+
+    // 2) Intentar Free Dictionary API
+    try { resultado = await consultarDiccionary(word); } catch(e) {}
+
+    // 3) Si no fue concluyente, intentar Wiktionary
+    if (!resultado) {
+      try { resultado = await consultarWiktionary(word); } catch(e) {}
+    }
+
+    // 4) Si ninguna fuente respondió
+    if (!resultado) {
+      resultado = {
+        valida: false,
+        razon: 'No encontrada en el diccionario. Puede no ser válida en Scrabble.'
+      };
+    }
+
+    wordEl.textContent  = word.toUpperCase();
+    reasonEl.textContent = resultado.razon;
+    resultDiv.className = 'validator-result ' + (resultado.valida ? 'valid' : 'invalid');
+    btn.disabled = false;
+  }
+
 </script>
 </body>
 </html>
