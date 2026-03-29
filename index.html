@@ -637,8 +637,7 @@
   .bc0{background:#4ecdc4} .bc1{background:#ff6b9d} .bc2{background:#5eb8e0}
   .bc3{background:#f7dc6f} .bc4{background:#c39bdb} .bc5{background:#ff9a65}
 
-  @media(max-width:600px){
-    .player-card { grid-template-columns:24px 1fr auto; }
+
     .p-action-col { grid-column:1/-1; flex-direction:row; justify-content:flex-end; }
     .turn-controls { flex-direction:column; }
     .add-btn,.pass-btn,.action-col { width:100%; }
@@ -720,6 +719,397 @@
   }
   .v-result-reason { font-size:.78rem; opacity:.85; }
 
+
+  /* ══ LAYOUT CENTRADO GLOBAL ══ */
+  #setup-screen {
+    display:flex; flex-direction:column; align-items:center;
+    justify-content:center; min-height:100vh;
+    padding:2rem 1rem; position:relative; z-index:1;
+    animation:fadeIn .6s ease;
+  }
+  .setup-card { width:100%; max-width:520px; }
+  .validator-wrap { width:100%; max-width:520px; }
+
+  #game-screen {
+    display:none; min-height:100vh;
+    padding:1.5rem 1rem 3rem;
+    max-width:900px; margin:0 auto;
+    position:relative; z-index:1;
+  }
+
+  /* ── Game header centrado ── */
+  .game-header {
+    display:flex; flex-direction:column; align-items:center;
+    text-align:center; margin-bottom:.75rem; gap:.6rem;
+  }
+  .game-title-block { text-align:center; }
+  .header-btns { display:flex; gap:.5rem; flex-wrap:wrap; justify-content:center; }
+
+  /* ── Scoreboard: 1 columna centrada ── */
+  .scoreboard { display:flex; flex-direction:column; gap:.85rem; margin-bottom:1.25rem; }
+
+  /* ── Player card: mas grande y legible ── */
+  .player-card {
+    background:linear-gradient(135deg,rgba(38,28,12,.97) 0%,rgba(22,16,6,.99) 100%);
+    border:1px solid rgba(201,148,58,.1); border-radius:16px;
+    padding:1.1rem 1.5rem;
+    display:grid; grid-template-columns:36px 1fr auto auto;
+    align-items:center; gap:1rem;
+    transition:all .3s ease; position:relative; overflow:hidden;
+    box-shadow:var(--shadow-card);
+  }
+  .p-rank { font-family:'Playfair Display',serif; font-size:1.4rem; font-weight:900; text-align:center; line-height:1; }
+  .p-name {
+    font-family:'Playfair Display',serif; font-size:1.35rem; font-weight:900;
+    display:flex; align-items:center; gap:.5rem; flex-wrap:wrap;
+    letter-spacing:.02em; line-height:1.2;
+  }
+  .player-card.active .p-name {
+    font-size:1.6rem;
+    text-shadow:0 0 18px rgba(255,255,255,.15), 0 2px 6px rgba(0,0,0,.6);
+  }
+  .p-score {
+    font-family:'Playfair Display',serif; font-weight:900;
+    font-size:2.5rem; line-height:1; min-width:75px;
+    text-align:right; text-shadow:0 2px 8px rgba(0,0,0,.6);
+    transition:transform .25s ease;
+  }
+  .player-card.active .p-score { font-size:3rem; }
+  .jump-btn {
+    padding:.4rem .8rem; border-radius:8px; border:1px solid;
+    background:transparent; font-family:'DM Mono',monospace; font-size:.78rem;
+    cursor:pointer; transition:all .15s; white-space:nowrap; letter-spacing:.04em;
+  }
+
+  /* ── Turn panel: todo centrado ── */
+  .turn-panel {
+    background:linear-gradient(160deg,rgba(38,28,12,.97) 0%,rgba(20,15,6,.98) 100%);
+    border:1px solid rgba(201,148,58,.18); border-radius:var(--radius);
+    padding:1.75rem 1.5rem; margin-bottom:1.25rem;
+    box-shadow:var(--shadow-card); position:relative; overflow:hidden;
+    text-align:center;
+  }
+  .turn-panel-header {
+    font-size:.8rem; text-transform:uppercase; letter-spacing:.2em;
+    color:var(--text-dim); margin-bottom:1.1rem;
+    display:flex; align-items:center; justify-content:center;
+    gap:.6rem; flex-wrap:wrap;
+  }
+  .turn-panel-header .turn-label {
+    font-size:.78rem; letter-spacing:.2em; color:var(--text-dim); text-transform:uppercase;
+  }
+  .turn-panel-header .turn-player-name {
+    font-family:'Playfair Display',serif;
+    font-size:1.8rem; font-weight:900; font-style:italic;
+    letter-spacing:.03em; text-transform:none; line-height:1;
+  }
+  .turn-panel-header::after { display:none; }
+
+  .sil {
+    font-size:.8rem; color:var(--text-dim); margin-bottom:.5rem;
+    display:block; letter-spacing:.06em; text-align:center;
+  }
+  .score-input {
+    width:100%; background:rgba(0,0,0,.35);
+    border:1.5px solid rgba(201,148,58,.18); border-radius:10px;
+    padding:.85rem 1rem; color:var(--cream);
+    font-family:'Playfair Display',serif; font-size:2rem; font-weight:900;
+    outline:none; text-align:center;
+    transition:border-color .2s,box-shadow .2s; letter-spacing:.05em;
+  }
+  .score-input:focus {
+    border-color:rgba(201,148,58,.5);
+    box-shadow:0 0 0 3px rgba(201,148,58,.1),inset 0 2px 8px rgba(0,0,0,.3);
+  }
+
+  /* ── Quick row + scrabble btn en una sola fila centrada ── */
+  .turn-controls { display:flex; flex-direction:column; gap:1rem; align-items:stretch; }
+  .score-input-wrap { width:100%; }
+
+  .quick-row {
+    display:flex; gap:6px; margin-top:.6rem;
+    flex-wrap:wrap; justify-content:center;
+  }
+  .qbtn {
+    padding:.45rem .85rem; border-radius:8px;
+    border:1px solid rgba(201,148,58,.22); background:var(--surface3);
+    color:var(--cream2); font-family:'DM Mono',monospace; font-size:.85rem;
+    font-weight:500; cursor:pointer; transition:all .15s; min-width:52px;
+  }
+  .qbtn:hover { border-color:var(--gold); color:var(--gold2); background:rgba(201,148,58,.1); transform:translateY(-1px); }
+
+  /* ── Scrabble como botón dentro de quick-row ── */
+  .scrabble-section { display:flex; justify-content:center; }
+  .scrabble-label {
+    display:flex; align-items:center; gap:.5rem; cursor:pointer;
+    padding:.45rem .85rem; border-radius:8px;
+    border:1px solid rgba(201,148,58,.22); background:var(--surface3);
+    transition:all .2s; user-select:none;
+    font-family:'DM Mono',monospace; font-size:.85rem;
+    color:var(--cream2); font-weight:500;
+  }
+  .scrabble-label:hover { border-color:rgba(201,148,58,.45); background:rgba(201,148,58,.08); }
+  .scrabble-label.on {
+    border-color:rgba(201,148,58,.6); background:rgba(201,148,58,.14);
+    box-shadow:0 0 16px rgba(201,148,58,.18);
+    color:var(--gold2);
+  }
+  .scrabble-star {
+    font-size:1rem; transition:transform .3s ease,filter .3s;
+    filter:grayscale(1) opacity(.5);
+  }
+  .scrabble-label.on .scrabble-star {
+    filter:grayscale(0) drop-shadow(0 0 5px rgba(255,220,80,.7));
+    transform:rotate(15deg) scale(1.15);
+  }
+  .scrabble-text strong { font-family:'DM Mono',monospace; font-size:.85rem; font-weight:700; }
+  .scrabble-text small { display:none; }
+
+  /* ── Botones de acción grandes y centrados ── */
+  .action-col {
+    display:flex; flex-direction:row; gap:.75rem;
+    justify-content:center; align-items:center; flex-wrap:wrap;
+  }
+  .add-btn {
+    flex:1; min-width:160px; max-width:280px;
+    padding:1rem 1.5rem;
+    background:linear-gradient(140deg,#4a7039,#3b5c2f);
+    border:1px solid #5a8a47; border-radius:12px; color:#d5eebc;
+    font-family:'Playfair Display',serif; font-size:1.05rem; font-weight:700;
+    cursor:pointer; letter-spacing:.05em; transition:all .2s; text-align:center;
+    box-shadow:0 4px 16px rgba(59,92,47,.3),inset 0 1px 0 rgba(255,255,255,.1);
+  }
+  .add-btn:hover { transform:translateY(-2px); box-shadow:0 6px 22px rgba(59,92,47,.45); }
+  .pass-btn {
+    flex:1; min-width:130px; max-width:200px;
+    padding:1rem 1.5rem; background:transparent;
+    border:1px solid rgba(201,148,58,.2); border-radius:12px;
+    color:var(--text-dim); font-family:'Lato',sans-serif; font-size:.95rem;
+    cursor:pointer; transition:all .18s; text-align:center;
+  }
+  .pass-btn:hover { border-color:var(--text-dim); color:var(--cream2); }
+
+  /* ── hbtn mas grande ── */
+  .hbtn {
+    display:flex; align-items:center; gap:.4rem;
+    padding:.55rem 1.1rem; border-radius:9px;
+    border:1px solid rgba(201,148,58,.2);
+    background:rgba(30,22,8,.9); color:var(--text-dim);
+    font-family:'Lato',sans-serif; font-size:.88rem; font-weight:700;
+    letter-spacing:.04em; cursor:pointer; transition:all .18s;
+  }
+  .hbtn:hover { border-color:var(--gold); color:var(--cream2); background:var(--surface2); }
+  .hbtn.danger:hover { border-color:#c0392b; color:#e74c3c; }
+
+  /* ── Log centrado ── */
+  .log-panel {
+    background:linear-gradient(160deg,rgba(32,24,10,.95),rgba(18,13,5,.97));
+    border:1px solid rgba(201,148,58,.12); border-radius:var(--radius);
+    padding:1.25rem 1.5rem; box-shadow:var(--shadow-card); position:relative;
+  }
+  .log-header {
+    font-size:.75rem; text-transform:uppercase; letter-spacing:.2em;
+    color:var(--text-dim); margin-bottom:.85rem;
+    display:flex; align-items:center; justify-content:center; gap:.6rem;
+  }
+  .log-header::after { display:none; }
+
+  /* ── Validator centrado ── */
+  .validator-card { text-align:center; }
+  .validator-row { justify-content:center; }
+  .validator-result { text-align:center; }
+  .v-result-word { font-size:1.2rem; }
+  .v-result-reason { font-size:.85rem; }
+
+  /* ── Chips mas grandes ── */
+  .chip {
+    font-family:'DM Mono',monospace; font-size:.72rem;
+    padding:2px 7px; border-radius:5px;
+    background:rgba(255,255,255,.05); color:var(--text-dim);
+    border:1px solid rgba(255,255,255,.06);
+  }
+
+  /* ── Round badge mas visible ── */
+  .round-badge {
+    display:inline-flex; align-items:center; gap:.5rem;
+    background:var(--surface2); border:1px solid rgba(201,148,58,.25);
+    border-radius:20px; padding:.4rem 1.25rem;
+    font-family:'DM Mono',monospace; font-size:.82rem;
+    color:var(--text-dim); letter-spacing:.12em; text-transform:uppercase;
+  }
+  .round-badge .rnum { color:var(--gold2); font-weight:700; font-size:.95rem; }
+
+  /* ── Responsive ── */
+  @media(max-width:600px){
+    .player-card { grid-template-columns:30px 1fr auto; padding:.9rem 1rem; }
+    .p-action-col { grid-column:1/-1; flex-direction:row; justify-content:flex-end; }
+    .p-name { font-size:1.1rem; }
+    .player-card.active .p-name { font-size:1.3rem; }
+    .p-score { font-size:2rem; }
+    .player-card.active .p-score { font-size:2.4rem; }
+    .turn-panel-header .turn-player-name { font-size:1.5rem; }
+    .setup-card { padding:1.5rem 1.25rem; }
+    .logo-gothic { font-size:2.6rem; }
+    .logo-tile { width:38px; height:38px; }
+    .logo-tile .letter { font-size:1.1rem; }
+    .action-col { flex-direction:column; }
+    .add-btn,.pass-btn { max-width:100%; }
+  }
+
+
+  /* ── Validator acordeón ── */
+  .validator-wrap {
+    width:100%; max-width:520px;
+    margin-top:1rem;
+    animation:slideUp .5s .3s ease both;
+  }
+  .validator-toggle {
+    width:100%; display:flex; align-items:center; justify-content:space-between;
+    padding:.9rem 1.4rem;
+    background:linear-gradient(160deg,rgba(46,36,16,.96),rgba(30,22,8,.99));
+    border:1px solid rgba(201,148,58,.25); border-radius:var(--radius);
+    color:var(--gold2); cursor:pointer;
+    font-family:'Playfair Display',serif; font-size:1.05rem; font-weight:700;
+    letter-spacing:.03em; transition:all .25s ease;
+    box-shadow:var(--shadow-card);
+  }
+  .validator-toggle:hover {
+    border-color:rgba(201,148,58,.5);
+    background:linear-gradient(160deg,rgba(52,40,18,.98),rgba(34,25,10,.99));
+    box-shadow:0 0 20px rgba(201,148,58,.1);
+  }
+  .vtoggle-arrow {
+    font-size:.85rem; color:var(--gold); transition:transform .3s ease;
+    display:inline-block;
+  }
+  .vtoggle-arrow.open { transform:rotate(180deg); }
+
+  .validator-body {
+    max-height:0; overflow:hidden;
+    transition:max-height .4s cubic-bezier(0.4,0,0.2,1), opacity .3s ease;
+    opacity:0;
+  }
+  .validator-body.open {
+    max-height:400px;
+    opacity:1;
+  }
+  .validator-card {
+    background:linear-gradient(160deg,rgba(38,28,12,.97),rgba(22,16,8,.99));
+    border:1px solid rgba(201,148,58,.18); border-top:none;
+    border-radius:0 0 var(--radius) var(--radius);
+    padding:1.25rem 1.4rem 1.4rem;
+    text-align:center;
+  }
+  .validator-sub {
+    font-size:.75rem; color:var(--text-mute); letter-spacing:.04em;
+    margin-bottom:1rem; line-height:1.5;
+  }
+  .validator-row {
+    display:flex; gap:.6rem; align-items:stretch; justify-content:center;
+  }
+  .validator-input {
+    flex:1; background:rgba(0,0,0,.35);
+    border:1.5px solid rgba(201,148,58,.2); border-radius:9px;
+    padding:.7rem 1rem; color:var(--cream);
+    font-family:'Playfair Display',serif; font-size:1.15rem; font-weight:700;
+    outline:none; transition:border-color .2s, box-shadow .2s;
+    letter-spacing:.08em; text-align:center;
+  }
+  .validator-input:focus {
+    border-color:rgba(201,148,58,.55);
+    box-shadow:0 0 0 3px rgba(201,148,58,.1);
+  }
+  .validator-input::placeholder { color:var(--text-mute); font-weight:400; font-style:italic; font-size:.9rem; letter-spacing:.02em; }
+  .validator-btn {
+    padding:.7rem 1.2rem; border-radius:9px;
+    background:linear-gradient(140deg,var(--gold),var(--gold2));
+    border:none; color:#1a0f00;
+    font-family:'Lato',sans-serif; font-weight:700; font-size:.88rem;
+    letter-spacing:.05em; cursor:pointer; transition:all .2s;
+    box-shadow:0 4px 14px rgba(201,148,58,.3); white-space:nowrap;
+  }
+  .validator-btn:hover { transform:translateY(-1px); box-shadow:0 6px 20px rgba(201,148,58,.45); }
+  .validator-btn:disabled { opacity:.5; cursor:not-allowed; transform:none; }
+  .validator-result {
+    margin-top:.85rem; padding:.75rem 1rem; border-radius:9px;
+    font-size:.9rem; display:none; animation:fadeIn .3s ease;
+    border:1px solid; line-height:1.5; text-align:center;
+  }
+  .validator-result.valid   { background:rgba(78,205,196,.08); border-color:rgba(78,205,196,.35); color:#4ecdc4; display:block; }
+  .validator-result.invalid { background:rgba(168,50,40,.1);   border-color:rgba(168,50,40,.35);  color:#e07060; display:block; }
+  .validator-result.loading { background:rgba(201,148,58,.07); border-color:rgba(201,148,58,.25); color:var(--gold2); display:block; }
+  .v-result-word   { font-family:'Playfair Display',serif; font-weight:900; font-size:1.15rem; margin-bottom:.25rem; }
+  .v-result-reason { font-size:.82rem; opacity:.88; }
+
+
+  .v-result-def {
+    font-size:.78rem; margin-top:.4rem; opacity:.75;
+    font-style:italic; line-height:1.5; color:inherit;
+  }
+
+
+  /* ── Ayuda acordeón ── */
+  .help-wrap {
+    width:100%; max-width:520px;
+    margin-top:.75rem;
+    animation:slideUp .5s .35s ease both;
+  }
+  .help-toggle {
+    width:100%; display:flex; align-items:center; justify-content:space-between;
+    padding:.9rem 1.4rem;
+    background:linear-gradient(160deg,rgba(30,40,16,.96),rgba(20,28,8,.99));
+    border:1px solid rgba(94,184,102,.22); border-radius:var(--radius);
+    color:#7ecf82; cursor:pointer;
+    font-family:'Playfair Display',serif; font-size:1.05rem; font-weight:700;
+    letter-spacing:.03em; transition:all .25s ease;
+    box-shadow:var(--shadow-card);
+  }
+  .help-toggle:hover {
+    border-color:rgba(94,184,102,.45);
+    background:linear-gradient(160deg,rgba(36,50,18,.98),rgba(24,34,10,.99));
+  }
+  .htoggle-arrow {
+    font-size:.85rem; color:#5eb866; transition:transform .3s ease;
+    display:inline-block;
+  }
+  .htoggle-arrow.open { transform:rotate(180deg); }
+
+  .help-body {
+    max-height:0; overflow:hidden;
+    transition:max-height .45s cubic-bezier(0.4,0,0.2,1), opacity .3s ease;
+    opacity:0;
+  }
+  .help-body.open { max-height:900px; opacity:1; }
+
+  .help-card {
+    background:linear-gradient(160deg,rgba(24,34,10,.97),rgba(16,22,6,.99));
+    border:1px solid rgba(94,184,102,.15); border-top:none;
+    border-radius:0 0 var(--radius) var(--radius);
+    padding:1.25rem 1.4rem 1.5rem;
+  }
+  .help-section {
+    margin-bottom:1.1rem;
+  }
+  .help-section:last-child { margin-bottom:0; }
+  .help-section-title {
+    font-family:'Playfair Display',serif; font-size:.95rem; font-weight:700;
+    color:#7ecf82; margin-bottom:.5rem; display:flex; align-items:center; gap:.4rem;
+  }
+  .help-section p {
+    font-size:.82rem; color:var(--cream2); line-height:1.65;
+  }
+  .help-rule {
+    display:flex; align-items:flex-start; gap:.5rem;
+    font-size:.82rem; color:var(--cream2); line-height:1.6;
+    padding:.3rem 0; border-bottom:1px solid rgba(255,255,255,.04);
+  }
+  .help-rule:last-child { border-bottom:none; }
+  .help-rule-icon { flex-shrink:0; font-size:.9rem; margin-top:.05rem; }
+  .help-divider {
+    height:1px; margin:.9rem 0;
+    background:linear-gradient(90deg,transparent,rgba(94,184,102,.2),transparent);
+  }
+
 </style>
 </head>
 <body>
@@ -760,26 +1150,55 @@
     <div class="ornament-divider"><span>✦</span></div>
 
     <button class="start-btn" onclick="startGame()">Comenzar Partida &nbsp;✦</button>
-  </div>
-</div>
+  </div><!-- end setup-card -->
 
-  <div class="validator-wrap">
-    <div class="validator-card">
-      <div class="validator-title">📖 Verificar Palabra</div>
-      <p class="validator-sub">Comprueba si una palabra es válida en Scrabble en español (RAE)</p>
-      <div class="validator-row">
-        <input class="validator-input" type="text" id="validator-input"
-          placeholder="Escribe una palabra..." maxlength="30"
-          oninput="this.value=this.value.toLowerCase()"
-          onkeydown="if(event.key==='Enter') checkWord()">
-        <button class="validator-btn" id="validator-btn" onclick="checkWord()">Verificar</button>
-      </div>
-      <div class="validator-result" id="validator-result">
-        <div class="v-result-word" id="v-word"></div>
-        <div class="v-result-reason" id="v-reason"></div>
+  <!-- ── Cómo usar la app ── -->
+  <div class="help-wrap">
+    <button class="help-toggle" onclick="toggleHelp()" id="help-toggle">
+      <span>❓ ¿Cómo usar la app?</span>
+      <span class="htoggle-arrow" id="htoggle-arrow">▼</span>
+    </button>
+    <div class="help-body" id="help-body">
+      <div class="help-card">
+
+        <div class="help-section">
+          <div class="help-section-title">🎮 Inicio de partida</div>
+          <div class="help-rule"><span class="help-rule-icon">1️⃣</span><span>Elige cuántos jugadores participan (2 a 6) y escribe sus nombres.</span></div>
+          <div class="help-rule"><span class="help-rule-icon">2️⃣</span><span>Pulsa <strong>Comenzar Partida</strong> para iniciar. El primer jugador empieza automáticamente.</span></div>
+        </div>
+
+        <div class="help-divider"></div>
+
+        <div class="help-section">
+          <div class="help-section-title">✏️ Anotar puntos</div>
+          <div class="help-rule"><span class="help-rule-icon">🔢</span><span>Escribe los puntos de la jugada en el campo central o usa los botones rápidos <strong>+5 · +10 · +15…</strong></span></div>
+          <div class="help-rule"><span class="help-rule-icon">⭐</span><span>Si el jugador usó las 7 fichas (¡Scrabble!), activa el botón <strong>¡Scrabble! +50</strong> antes de añadir.</span></div>
+          <div class="help-rule"><span class="help-rule-icon">➕</span><span>Pulsa <strong>Añadir Puntos</strong> para confirmar y pasar al siguiente jugador.</span></div>
+          <div class="help-rule"><span class="help-rule-icon">⏭️</span><span>Si el jugador no puede o no quiere jugar, pulsa <strong>Pasar turno</strong>.</span></div>
+        </div>
+
+        <div class="help-divider"></div>
+
+        <div class="help-section">
+          <div class="help-section-title">🛠️ Controles extra</div>
+          <div class="help-rule"><span class="help-rule-icon">↩️</span><span><strong>Deshacer</strong> elimina la última jugada anotada por si cometiste un error.</span></div>
+          <div class="help-rule"><span class="help-rule-icon">🏆</span><span><strong>Finalizar</strong> termina la partida y muestra al ganador con la tabla final de puntos.</span></div>
+          <div class="help-rule"><span class="help-rule-icon">↺</span><span><strong>Reiniciar</strong> pone todos los puntos a cero sin borrar los nombres.</span></div>
+        </div>
+
+        <div class="help-divider"></div>
+
+        <div class="help-section">
+          <div class="help-section-title">📖 Verificar Palabra</div>
+          <div class="help-rule"><span class="help-rule-icon">🔍</span><span>Durante la partida, despliega la sección <strong>Verificar Palabra</strong>, escribe la palabra en duda y pulsa Verificar.</span></div>
+          <div class="help-rule"><span class="help-rule-icon">✅</span><span>Si es válida, verás su definición. Si no, se indica el motivo (nombre propio, acrónimo, etc.).</span></div>
+        </div>
+
       </div>
     </div>
   </div>
+
+</div><!-- end setup-screen -->
 
 <!-- ═══════ GAME ═══════ -->
 <div id="game-screen">
@@ -814,15 +1233,9 @@
           <button class="qbtn" onclick="addQuick(20)">+20</button>
           <button class="qbtn" onclick="addQuick(30)">+30</button>
           <button class="qbtn" onclick="addQuick(50)">+50</button>
-        </div>
-      </div>
-
-      <div class="scrabble-section">
-        <div class="scrabble-label" id="scrabble-label" onclick="toggleScrabble()">
-          <span class="scrabble-star" id="scrabble-star">⭐</span>
-          <div class="scrabble-text">
-            <strong>¡Scrabble!</strong>
-            <small>+50 pts · 7 fichas</small>
+          <div class="scrabble-label" id="scrabble-label" onclick="toggleScrabble()">
+            <span class="scrabble-star" id="scrabble-star">⭐</span>
+            <strong>¡Scrabble! +50</strong>
           </div>
         </div>
       </div>
@@ -838,6 +1251,31 @@
     <div class="log-header">📜 Historial de jugadas</div>
     <div class="log-list" id="log-list">
       <div class="log-empty">Las jugadas aparecerán aquí...</div>
+    </div>
+  </div>
+
+  <!-- ── Verificar Palabra (acordeón) dentro del juego ── -->
+  <div class="validator-wrap" style="max-width:100%; margin-top:1.25rem;">
+    <button class="validator-toggle" onclick="toggleValidator()" id="validator-toggle">
+      <span>📖 Verificar Palabra</span>
+      <span class="vtoggle-arrow" id="vtoggle-arrow">▼</span>
+    </button>
+    <div class="validator-body" id="validator-body">
+      <div class="validator-card">
+        <p class="validator-sub">Comprueba si una palabra es válida en Scrabble en español (RAE)</p>
+        <div class="validator-row">
+          <input class="validator-input" type="text" id="validator-input"
+            placeholder="Escribe una palabra..." maxlength="30"
+            oninput="this.value=this.value.toLowerCase()"
+            onkeydown="if(event.key==='Enter') checkWord()">
+          <button class="validator-btn" id="validator-btn" onclick="checkWord()">Verificar</button>
+        </div>
+        <div class="validator-result" id="validator-result">
+          <div class="v-result-word" id="v-word"></div>
+          <div class="v-result-reason" id="v-reason"></div>
+          <div class="v-result-def" id="v-def"></div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -1137,59 +1575,65 @@
   // ── Consulta la API pública de Free Dictionary (soporta español) ──
   async function consultarDiccionary(word) {
     const r = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/es/${encodeURIComponent(word)}`);
-    if (r.status === 404) return null;   // no encontrada
+    if (r.status === 404) return null;
     if (!r.ok) throw new Error('api-error');
     const data = await r.json();
-    // Verifica que tenga definición real y no sea nombre propio
     if (!Array.isArray(data) || !data.length) return null;
     const entry = data[0];
-    // Si el título empieza con mayúscula y coincide exactamente → nombre propio
     if (entry.word && /^[A-ZÁÉÍÓÚ]/.test(entry.word) && entry.word.toLowerCase() === word) {
-      return { valida: false, razon: 'Nombre propio: no permitido en Scrabble.' };
+      return { valida: false, razon: 'Nombre propio: no permitido en Scrabble.', def: null };
     }
     const meanings = entry.meanings || [];
     if (!meanings.length) return null;
     const tipo = meanings[0].partOfSpeech || 'palabra';
-    return { valida: true, razon: `Encontrada en el diccionario como ${tipo}.` };
+    const def = meanings[0]?.definitions?.[0]?.definition || null;
+    return { valida: true, razon: `Válida · ${tipo}`, def };
   }
 
   // ── Consulta Wiktionary en español como respaldo ──
   async function consultarWiktionary(word) {
-    const url = `https://es.wiktionary.org/w/api.php?action=query&titles=${encodeURIComponent(word)}&prop=categories&cllimit=20&format=json&origin=*`;
-    const r = await fetch(url);
+    // Intentar obtener extracto de definición también
+    const urlCats = `https://es.wiktionary.org/w/api.php?action=query&titles=${encodeURIComponent(word)}&prop=categories|extracts&cllimit=20&exintro=1&exchars=200&format=json&origin=*`;
+    const r = await fetch(urlCats);
     if (!r.ok) throw new Error('wiki-error');
     const data = await r.json();
     const pages = Object.values(data?.query?.pages || {});
     if (!pages.length || pages[0].missing !== undefined) return null;
 
-    const cats = (pages[0].categories || []).map(c => c.title.toLowerCase());
+    const page = pages[0];
+    const cats = (page.categories || []).map(c => c.title.toLowerCase());
 
-    // Si está categorizado como nombre propio → inválida
     const esPropio = cats.some(c =>
       c.includes('nombre propio') || c.includes('nombres propios') ||
       c.includes('topónimo') || c.includes('antropónimo')
     );
-    if (esPropio) return { valida: false, razon: 'Nombre propio o topónimo: no permitido en Scrabble.' };
+    if (esPropio) return { valida: false, razon: 'Nombre propio o topónimo: no permitido en Scrabble.', def: null };
 
-    // Si tiene categorías en español → válida
     const tieneES = cats.some(c => c.includes('es:') || c.includes('español'));
     if (tieneES) {
       const esSust = cats.some(c => c.includes('sustantivo'));
       const esVerb = cats.some(c => c.includes('verbo'));
       const esAdj  = cats.some(c => c.includes('adjetivo'));
       const tipo = esSust ? 'sustantivo' : esVerb ? 'verbo' : esAdj ? 'adjetivo' : 'palabra';
-      return { valida: true, razon: `Registrada en Wiktionary como ${tipo} en español.` };
+      // Limpiar el extracto HTML si existe
+      let def = null;
+      if (page.extract) {
+        def = page.extract.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
+        if (def.length > 120) def = def.slice(0, 120).replace(/\s\S+$/, '') + '…';
+      }
+      return { valida: true, razon: `Válida · ${tipo}`, def };
     }
 
-    return null; // no concluyente
+    return null;
   }
 
   async function checkWord() {
-    const input = document.getElementById('validator-input');
-    const btn   = document.getElementById('validator-btn');
+    const input     = document.getElementById('validator-input');
+    const btn       = document.getElementById('validator-btn');
     const resultDiv = document.getElementById('validator-result');
     const wordEl    = document.getElementById('v-word');
     const reasonEl  = document.getElementById('v-reason');
+    const defEl     = document.getElementById('v-def');
 
     const word = input.value.trim().toLowerCase().normalize('NFC');
     if (!word) { input.focus(); return; }
@@ -1197,41 +1641,52 @@
     btn.disabled = true;
     resultDiv.className = 'validator-result loading';
     resultDiv.style.display = 'block';
-    wordEl.textContent  = word.toUpperCase();
+    wordEl.textContent   = word.toUpperCase();
     reasonEl.textContent = 'Consultando el diccionario...';
+    defEl.textContent    = '';
 
     // 1) Filtro local rápido
     const localCheck = esObviamenteInvalida(word);
     if (localCheck) {
-      wordEl.textContent  = word.toUpperCase();
+      wordEl.textContent   = word.toUpperCase();
       reasonEl.textContent = localCheck.razon;
-      resultDiv.className = 'validator-result invalid';
+      defEl.textContent    = '';
+      resultDiv.className  = 'validator-result invalid';
       btn.disabled = false;
       return;
     }
 
     let resultado = null;
-
-    // 2) Intentar Free Dictionary API
     try { resultado = await consultarDiccionary(word); } catch(e) {}
-
-    // 3) Si no fue concluyente, intentar Wiktionary
     if (!resultado) {
       try { resultado = await consultarWiktionary(word); } catch(e) {}
     }
-
-    // 4) Si ninguna fuente respondió
     if (!resultado) {
-      resultado = {
-        valida: false,
-        razon: 'No encontrada en el diccionario. Puede no ser válida en Scrabble.'
-      };
+      resultado = { valida: false, razon: 'No encontrada en el diccionario. Puede no ser válida en Scrabble.', def: null };
     }
 
-    wordEl.textContent  = word.toUpperCase();
+    wordEl.textContent   = word.toUpperCase();
     reasonEl.textContent = resultado.razon;
-    resultDiv.className = 'validator-result ' + (resultado.valida ? 'valid' : 'invalid');
+    defEl.textContent    = resultado.valida && resultado.def ? resultado.def : '';
+    resultDiv.className  = 'validator-result ' + (resultado.valida ? 'valid' : 'invalid');
     btn.disabled = false;
+  }
+
+
+  function toggleValidator() {
+    const body  = document.getElementById('validator-body');
+    const arrow = document.getElementById('vtoggle-arrow');
+    const isOpen = body.classList.toggle('open');
+    arrow.classList.toggle('open', isOpen);
+    if (isOpen) setTimeout(() => document.getElementById('validator-input').focus(), 420);
+  }
+
+
+  function toggleHelp() {
+    const body  = document.getElementById('help-body');
+    const arrow = document.getElementById('htoggle-arrow');
+    const isOpen = body.classList.toggle('open');
+    arrow.classList.toggle('open', isOpen);
   }
 
 </script>
