@@ -1110,9 +1110,181 @@
     background:linear-gradient(90deg,transparent,rgba(94,184,102,.2),transparent);
   }
 
+
+  /* ══════════════════════════════════════════════
+     MEJORAS VISUALES — Fichas flotantes de fondo
+  ══════════════════════════════════════════════ */
+
+  /* Fichas decorativas flotantes */
+  .bg-tiles-container {
+    position:fixed; inset:0; pointer-events:none;
+    z-index:0; overflow:hidden;
+  }
+  .bg-tile {
+    position:absolute;
+    background:linear-gradient(145deg,#f0dfa8 0%,#d4b56a 55%,#b8943e 100%);
+    border-radius:5px;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    box-shadow:2px 2px 0 rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.4);
+    opacity:0; font-family:'Playfair Display',serif; font-weight:900;
+    color:#1e1000; user-select:none;
+  }
+  .bg-tile::after {
+    content:''; position:absolute; inset:2px; border-radius:3px;
+    border:1px solid rgba(255,255,255,.18); pointer-events:none;
+  }
+  .bg-tile .bl { line-height:1; }
+  .bg-tile .bp { font-family:'DM Mono',monospace; font-weight:500;
+    position:absolute; bottom:3px; right:4px; color:#4a2e00; }
+
+  @keyframes bgTileFloat {
+    0%   { opacity:0; transform:translateY(0px) rotate(var(--rot-start)); }
+    8%   { opacity:var(--max-op); }
+    90%  { opacity:var(--max-op); }
+    100% { opacity:0; transform:translateY(var(--travel)) rotate(var(--rot-end)); }
+  }
+
+  /* ── Shimmer en cards al hover ── */
+  @keyframes shimmer {
+    0%   { transform:translateX(-100%) skewX(-15deg); }
+    100% { transform:translateX(250%) skewX(-15deg); }
+  }
+  .player-card::after {
+    content:''; position:absolute; inset:0; pointer-events:none;
+    background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,.04) 50%,transparent 100%);
+    transform:translateX(-100%) skewX(-15deg);
+    border-radius:16px;
+  }
+  .player-card:hover::after { animation:shimmer .7s ease; }
+
+  /* ── Pulso en la tarjeta activa ── */
+  @keyframes activeCardPulse {
+    0%,100% { box-shadow:0 0 0 1px rgba(201,148,58,.28),var(--shadow-deep), 0 0 24px rgba(201,148,58,.07); }
+    50%     { box-shadow:0 0 0 2px rgba(201,148,58,.45),var(--shadow-deep), 0 0 42px rgba(201,148,58,.18); }
+  }
+  .player-card.active { animation:activeCardPulse 3s ease-in-out infinite; }
+
+  /* ── Entrada de tarjetas ── */
+  @keyframes cardEnter {
+    from { opacity:0; transform:translateX(-18px) scale(.97); }
+    to   { opacity:1; transform:translateX(0)      scale(1); }
+  }
+  .player-card { animation:cardEnter .4s ease both; }
+
+  /* ── Botón Añadir Puntos: brillo deslizante ── */
+  .add-btn { overflow:hidden; }
+  .add-btn::before {
+    content:''; position:absolute; top:0; left:-120%;
+    width:60%; height:100%;
+    background:linear-gradient(90deg,transparent,rgba(255,255,255,.12),transparent);
+    transform:skewX(-15deg);
+    transition:left .55s ease;
+  }
+  .add-btn:hover::before { left:160%; }
+
+  /* ── Input de puntos: borde animado al focus ── */
+  .score-input-wrap { position:relative; }
+  .score-input:focus {
+    border-color:rgba(201,148,58,.6);
+    box-shadow:0 0 0 3px rgba(201,148,58,.12), 0 0 20px rgba(201,148,58,.08), inset 0 2px 8px rgba(0,0,0,.3);
+  }
+
+  /* ── Chips con entrada suave ── */
+  @keyframes chipPop {
+    from { opacity:0; transform:scale(.6); }
+    to   { opacity:1; transform:scale(1); }
+  }
+  .chip { animation:chipPop .25s ease both; }
+
+  /* ── Logo gothic: glow pulsante ── */
+  @keyframes logoGlow {
+    0%,100% { text-shadow:0 0 30px rgba(201,148,58,.45),0 2px 8px rgba(0,0,0,.8); }
+    50%     { text-shadow:0 0 60px rgba(201,148,58,.65),0 0 100px rgba(201,148,58,.2),0 2px 8px rgba(0,0,0,.8); }
+  }
+  .logo-gothic  { animation:logoGlow 4s ease-in-out infinite; }
+  .game-title-gothic { animation:logoGlow 4s ease-in-out infinite; }
+
+  /* ── Turn panel: entrada del nombre ── */
+  @keyframes nameSlide {
+    from { opacity:0; transform:translateX(20px); }
+    to   { opacity:1; transform:translateX(0); }
+  }
+  .turn-player-name { animation:nameSlide .35s cubic-bezier(.34,1.56,.64,1) both; }
+
+  /* ── Ronda badge: subtle pulse ── */
+  @keyframes roundPulse {
+    0%,100% { border-color:rgba(201,148,58,.25); }
+    50%     { border-color:rgba(201,148,58,.55); box-shadow:0 0 14px rgba(201,148,58,.15); }
+  }
+  .round-badge { animation:roundPulse 3.5s ease-in-out infinite; }
+
+  /* ── Quick buttons: bounce al click ── */
+  .qbtn:active { transform:scale(.9) translateY(1px); }
+  .scrabble-label:active { transform:scale(.95); }
+
+  /* ── Historial: entrada de filas ── */
+  @keyframes logSlide {
+    from { opacity:0; transform:translateX(-12px); }
+    to   { opacity:1; transform:translateX(0); }
+  }
+  .log-entry { animation:logSlide .3s ease both; }
+
+  /* ── Separador ornamental mejorado ── */
+  .ornament-divider { opacity:.45; margin:1.5rem 0; }
+
+  /* ── Color bar animada ── */
+  @keyframes barGrow {
+    from { transform:scaleY(0); }
+    to   { transform:scaleY(1); }
+  }
+  .player-card .color-bar { animation:barGrow .5s cubic-bezier(.34,1.56,.64,1) both; transform-origin:top; }
+
+  /* ── Score bump mejorado ── */
+  @keyframes scoreBump {
+    0%   { transform:scale(1); }
+    30%  { transform:scale(1.35) translateY(-4px); filter:brightness(1.3); }
+    60%  { transform:scale(.95); }
+    100% { transform:scale(1); filter:brightness(1); }
+  }
+
+  /* ── Validator toggle shimmer ── */
+  .validator-toggle { overflow:hidden; position:relative; }
+  .validator-toggle::before {
+    content:''; position:absolute; top:0; left:-120%; width:55%; height:100%;
+    background:linear-gradient(90deg,transparent,rgba(255,255,255,.06),transparent);
+    transform:skewX(-15deg); transition:left .6s ease;
+  }
+  .validator-toggle:hover::before { left:160%; }
+
+  .help-toggle { overflow:hidden; position:relative; }
+  .help-toggle::before {
+    content:''; position:absolute; top:0; left:-120%; width:55%; height:100%;
+    background:linear-gradient(90deg,transparent,rgba(255,255,255,.05),transparent);
+    transform:skewX(-15deg); transition:left .6s ease;
+  }
+  .help-toggle:hover::before { left:160%; }
+
+  /* ── Start btn: brillo ── */
+  .start-btn { position:relative; }
+  .start-btn::before {
+    content:''; position:absolute; top:0; left:-120%; width:55%; height:100%;
+    background:linear-gradient(90deg,transparent,rgba(255,255,255,.1),transparent);
+    transform:skewX(-15deg); transition:left .55s ease;
+  }
+  .start-btn:hover::before { left:160%; }
+
+
+  @keyframes particleFloat {
+    0%   { opacity:1; transform:translateX(-50%) translateY(0) scale(1); }
+    100% { opacity:0; transform:translateX(-50%) translateY(-70px) scale(1.4); }
+  }
+
 </style>
 </head>
 <body>
+
+<!-- Fichas flotantes de fondo -->
+<div class="bg-tiles-container" id="bg-tiles"></div>
 
 <!-- ═══════ SETUP ═══════ -->
 <div id="setup-screen">
@@ -1377,7 +1549,7 @@
         return `<span class="chip${r.scr?' scr':r.pts<0?' neg':''}">${(r.pts>=0?'+':'')+r.pts+(r.scr?'★':'')}</span>`;
       }).join('');
       return `
-        <div class="player-card ${isCur?'active':''}">
+        <div class="player-card ${isCur?'active':''}" style="animation-delay:${idx*0.07}s">
           <div class="color-bar" style="background:${p.hex}"></div>
           <div class="p-rank">${medal}</div>
           <div class="p-info">
@@ -1465,7 +1637,22 @@
 
   function bumpScore(idx) {
     const el = document.getElementById(`score-${idx}`);
-    if (el) { el.classList.remove('score-bump'); void el.offsetWidth; el.classList.add('score-bump'); }
+    if (!el) return;
+    el.classList.remove('score-bump'); void el.offsetWidth; el.classList.add('score-bump');
+    // floating +pts particle
+    const p = state.players[idx];
+    const last = p.rounds[p.rounds.length-1];
+    if (!last || last.passed) return;
+    const rect = el.getBoundingClientRect();
+    const particle = document.createElement('div');
+    particle.textContent = `+${last.pts}`;
+    particle.style.cssText = `position:fixed;left:${rect.left + rect.width/2}px;top:${rect.top}px;
+      transform:translateX(-50%);font-family:'Playfair Display',serif;font-weight:900;
+      font-size:1.4rem;color:${p.hex};pointer-events:none;z-index:999;
+      text-shadow:0 0 12px ${p.hex}88;
+      animation:particleFloat .9s cubic-bezier(.2,.8,.4,1) forwards;`;
+    document.body.appendChild(particle);
+    setTimeout(() => particle.remove(), 950);
   }
 
   function undoLast() {
@@ -1688,6 +1875,53 @@
     const isOpen = body.classList.toggle('open');
     arrow.classList.toggle('open', isOpen);
   }
+
+
+  // ── Fichas flotantes de fondo ──
+  (function() {
+    const LETTERS = 'ABCDEFGHIJKLMNÑOPQRSTUVWXYZ';
+    const PTS = {A:1,B:3,C:3,D:2,E:1,F:4,G:2,H:4,I:1,J:8,K:10,L:1,M:3,N:1,Ñ:8,O:1,P:3,Q:10,R:1,S:1,T:1,U:1,V:4,W:10,X:10,Y:10,Z:10};
+    const container = document.getElementById('bg-tiles');
+    const SIZES = [32,38,44,50];
+    const MAX_TILES = 14;
+    let active = 0;
+
+    function spawnTile() {
+      if (active >= MAX_TILES) return;
+      active++;
+      const letter = LETTERS[Math.floor(Math.random() * LETTERS.length)];
+      const pts    = PTS[letter] || 1;
+      const size   = SIZES[Math.floor(Math.random() * SIZES.length)];
+      const side   = Math.random() > .5; // left or right drift
+      const startX = Math.random() * 92 + 4; // % from left
+      const rotS   = (Math.random() - .5) * 20;
+      const rotE   = rotS + (Math.random() - .5) * 40;
+      const travel = -(window.innerHeight * (.6 + Math.random() * .5)) + 'px';
+      const dur    = 9 + Math.random() * 10;
+      const op     = 0.055 + Math.random() * 0.065;
+
+      const el = document.createElement('div');
+      el.className = 'bg-tile';
+      el.style.cssText = [
+        `width:${size}px`, `height:${size}px`,
+        `left:${startX}%`, `bottom:-${size + 20}px`,
+        `font-size:${size * .52}px`,
+        `--rot-start:${rotS}deg`, `--rot-end:${rotE}deg`,
+        `--travel:${travel}`, `--max-op:${op}`,
+        `animation:bgTileFloat ${dur}s linear forwards`,
+      ].join(';');
+      el.innerHTML = `<span class="bl">${letter}</span><span class="bp" style="font-size:${size*.18}px">${pts}</span>`;
+      container.appendChild(el);
+
+      el.addEventListener('animationend', () => {
+        el.remove(); active--;
+      });
+    }
+
+    // Spawn tiles periodically
+    spawnTile(); spawnTile(); spawnTile();
+    setInterval(() => { if (Math.random() > .35) spawnTile(); }, 1800);
+  })();
 
 </script>
 
