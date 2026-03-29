@@ -1,12 +1,36 @@
 {
-  "name": "Scrabble Marcador",
+  "name": "Scrabble Marcador de Puntos",
   "short_name": "Scrabble",
-  "start_url": "/",
+  "description": "Marcador de puntos para el juego de Scrabble en español",
+  "start_url": "./index.html",
+  "scope": "./",
   "display": "standalone",
+  "orientation": "portrait",
   "background_color": "#110d06",
   "theme_color": "#c9943a",
+  "lang": "es",
+  "categories": ["games", "utilities"],
   "icons": [
-    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
-    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" }
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Nueva Partida",
+      "short_name": "Nueva",
+      "url": "./index.html",
+      "description": "Iniciar una nueva partida de Scrabble"
+    }
   ]
 }
