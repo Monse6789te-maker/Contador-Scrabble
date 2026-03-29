@@ -1279,9 +1279,161 @@
     100% { opacity:0; transform:translateX(-50%) translateY(-70px) scale(1.4); }
   }
 
+  /* ═══════════════ MODERN EFFECTS ═══════════════ */
+
+  /* Ripple on buttons */
+  .ripple-effect {
+    position:absolute; border-radius:50%;
+    transform:scale(0); animation:ripple .6s linear;
+    background:rgba(255,255,255,.18); pointer-events:none;
+  }
+  @keyframes ripple {
+    to { transform:scale(4); opacity:0; }
+  }
+
+  /* Score flash overlay on card */
+  @keyframes cardFlash {
+    0%   { box-shadow:0 0 0 0 rgba(201,148,58,0); }
+    30%  { box-shadow:0 0 0 6px rgba(201,148,58,.55), 0 0 60px rgba(201,148,58,.3); }
+    100% { box-shadow:0 0 0 0 rgba(201,148,58,0); }
+  }
+  .card-flash { animation:cardFlash .7s ease forwards !important; }
+
+  /* Scrabble burst */
+  @keyframes scrabbleBurst {
+    0%   { transform:scale(1) rotate(0deg); filter:brightness(1); }
+    25%  { transform:scale(1.4) rotate(-8deg); filter:brightness(1.6) drop-shadow(0 0 12px #f5d07088); }
+    50%  { transform:scale(1.15) rotate(6deg); filter:brightness(1.4); }
+    75%  { transform:scale(1.3) rotate(-4deg); filter:brightness(1.5); }
+    100% { transform:scale(1) rotate(0deg); filter:brightness(1); }
+  }
+  .scrabble-burst { animation:scrabbleBurst .65s cubic-bezier(.34,1.56,.64,1); }
+
+  /* Streak badge */
+  .streak-badge {
+    display:inline-flex; align-items:center; gap:3px;
+    background:linear-gradient(135deg,#ff6b35,#ff3d77);
+    color:#fff; font-family:'DM Mono',monospace;
+    font-size:.55rem; font-weight:700; padding:2px 6px;
+    border-radius:20px; letter-spacing:.06em; text-transform:uppercase;
+    box-shadow:0 2px 10px rgba(255,61,119,.4);
+    animation:streakPop .4s cubic-bezier(.34,1.56,.64,1);
+    vertical-align:middle;
+  }
+  @keyframes streakPop {
+    from { transform:scale(0) rotate(-15deg); opacity:0; }
+    to   { transform:scale(1) rotate(0deg); opacity:1; }
+  }
+
+  /* Score number counter animation */
+  @keyframes numberRoll {
+    0%   { opacity:0; transform:translateY(18px) scale(.8); }
+    60%  { opacity:1; transform:translateY(-4px) scale(1.05); }
+    100% { opacity:1; transform:translateY(0) scale(1); }
+  }
+  .score-roll { animation:numberRoll .45s cubic-bezier(.34,1.56,.64,1); }
+
+  /* Turn transition wipe */
+  @keyframes turnWipe {
+    from { clip-path:inset(0 100% 0 0); opacity:.5; }
+    to   { clip-path:inset(0 0% 0 0);   opacity:1; }
+  }
+  .turn-wipe { animation:turnWipe .38s cubic-bezier(.4,0,.2,1); }
+
+  /* Firework spark */
+  .spark {
+    position:fixed; pointer-events:none; z-index:998;
+    border-radius:50%; animation:sparkFly linear forwards;
+  }
+  @keyframes sparkFly {
+    0%  { opacity:1; transform:translate(0,0) scale(1); }
+    100%{ opacity:0; transform:translate(var(--tx),var(--ty)) scale(0); }
+  }
+
+  /* Points badge flying to scoreboard */
+  .flying-pts {
+    position:fixed; pointer-events:none; z-index:999;
+    font-family:'Playfair Display',serif; font-weight:900;
+    border-radius:20px; white-space:nowrap;
+    animation:flyToScore .75s cubic-bezier(.4,0,.2,1) forwards;
+  }
+  @keyframes flyToScore {
+    0%   { opacity:1; transform:translate(0,0) scale(1.2); }
+    80%  { opacity:.8; }
+    100% { opacity:0; transform:translate(var(--dx),var(--dy)) scale(.5); }
+  }
+
+  /* Scrabble bonus popup */
+  .scrabble-popup {
+    position:fixed; left:50%; top:50%; transform:translate(-50%,-50%) scale(0);
+    background:linear-gradient(135deg,#c9943a,#f5d070,#c9943a);
+    color:#1a0f00; font-family:'UnifrakturMaguntia',cursive;
+    font-size:2.8rem; padding:.5rem 1.5rem; border-radius:12px;
+    box-shadow:0 0 60px rgba(245,208,112,.6), 0 0 0 3px rgba(255,255,255,.3);
+    z-index:1000; pointer-events:none; white-space:nowrap;
+    animation:scrabblePopup .9s cubic-bezier(.34,1.56,.64,1) forwards;
+  }
+  @keyframes scrabblePopup {
+    0%   { transform:translate(-50%,-50%) scale(0) rotate(-5deg); opacity:0; }
+    40%  { transform:translate(-50%,-50%) scale(1.1) rotate(2deg); opacity:1; }
+    65%  { transform:translate(-50%,-50%) scale(.95) rotate(0deg); opacity:1; }
+    80%  { transform:translate(-50%,-50%) scale(1) rotate(0deg); opacity:1; }
+    100% { transform:translate(-50%,-65%) scale(.8); opacity:0; }
+  }
+
+  /* Milestone flash (century, record) */
+  .milestone-banner {
+    position:fixed; left:50%; top:80px;
+    transform:translateX(-50%) translateY(-120px);
+    background:linear-gradient(135deg,rgba(22,16,8,.97),rgba(40,30,10,.97));
+    border:1px solid rgba(201,148,58,.5);
+    color:var(--cream); font-family:'Playfair Display',serif;
+    font-size:1rem; font-weight:700; font-style:italic;
+    padding:.65rem 1.5rem; border-radius:30px;
+    box-shadow:0 8px 40px rgba(0,0,0,.6), 0 0 0 1px rgba(201,148,58,.2),
+               0 0 30px rgba(201,148,58,.15);
+    z-index:1001; pointer-events:none;
+    transition:transform .5s cubic-bezier(.34,1.56,.64,1);
+    display:flex; align-items:center; gap:.6rem;
+    white-space:nowrap;
+  }
+  .milestone-banner.show { transform:translateX(-50%) translateY(0); }
+
+  /* Input shake on invalid */
+  @keyframes shakeInput {
+    0%,100%{ transform:translateX(0); }
+    20%    { transform:translateX(-8px); }
+    40%    { transform:translateX(8px); }
+    60%    { transform:translateX(-5px); }
+    80%    { transform:translateX(5px); }
+  }
+  .shake { animation:shakeInput .35s ease; }
+
+  /* Winner crown bounce */
+  @keyframes crownBounce {
+    0%   { transform:translateY(0) scale(1) rotate(-4deg); filter:drop-shadow(0 0 20px rgba(255,200,50,.5)); }
+    30%  { transform:translateY(-28px) scale(1.1) rotate(4deg); filter:drop-shadow(0 0 40px rgba(255,200,50,.8)); }
+    50%  { transform:translateY(-18px) scale(1.05) rotate(-2deg); filter:drop-shadow(0 0 30px rgba(255,200,50,.6)); }
+    100% { transform:translateY(-18px) scale(1.05) rotate(4deg); filter:drop-shadow(0 0 30px rgba(255,200,50,.6)); }
+  }
+  #winner-screen.show .winner-emblem { animation:crownBounce 2.5s ease-in-out infinite alternate; }
+
+  /* Haptic visual feedback ring */
+  .haptic-ring {
+    position:fixed; border-radius:50%; pointer-events:none; z-index:997;
+    border:2px solid rgba(201,148,58,.6);
+    animation:hapticRing .5s ease forwards;
+  }
+  @keyframes hapticRing {
+    0%   { transform:scale(0); opacity:1; }
+    100% { transform:scale(3); opacity:0; }
+  }
+
 </style>
 </head>
 <body>
+
+<div class="milestone-banner" id="milestone-banner">🎯 <span id="milestone-text"></span></div>
 
 <!-- Fichas flotantes de fondo -->
 <div class="bg-tiles-container" id="bg-tiles"></div>
@@ -1495,6 +1647,104 @@
   let state = { players:[], currentTurn:0, round:1, scrabbleOn:false, history:[], log:[] };
   let playerCount = 3;
 
+  /* ═══ AUDIO ENGINE (Web Audio API) ═══ */
+  let audioCtx = null;
+  function getAudio() {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    return audioCtx;
+  }
+
+  function playTone(freq, type='sine', dur=0.12, vol=0.18, delay=0) {
+    try {
+      const ctx = getAudio();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.type = type; osc.frequency.value = freq;
+      const t = ctx.currentTime + delay;
+      gain.gain.setValueAtTime(vol, t);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + dur);
+      osc.start(t); osc.stop(t + dur);
+    } catch(e) {}
+  }
+
+  function sfxScore(pts) {
+    // Higher score = higher pitch
+    const base = 440 + Math.min(pts * 4, 300);
+    playTone(base, 'sine', .12, .15);
+    playTone(base * 1.5, 'sine', .08, .08, .07);
+  }
+  function sfxScrabble() {
+    [523, 659, 784, 1047].forEach((f, i) => playTone(f, 'sine', .18, .15, i * 0.08));
+    setTimeout(() => playTone(1568, 'sine', .4, .2), 380);
+  }
+  function sfxPass()   { playTone(280, 'triangle', .15, .1); playTone(220, 'triangle', .12, .08, .08); }
+  function sfxUndo()   { playTone(400, 'sine', .08, .1); playTone(320, 'sine', .1, .1, .06); }
+  function sfxClick()  { playTone(600, 'sine', .04, .07); }
+  function sfxWinner() {
+    const melody = [523,659,784,880,1047,880,784,659,523];
+    melody.forEach((f,i) => playTone(f,'sine',.18,.2,i*0.1));
+  }
+
+  /* ═══ HAPTICS ═══ */
+  function haptic(pattern=[10]) {
+    if (navigator.vibrate) navigator.vibrate(pattern);
+  }
+
+  /* ═══ RIPPLE ═══ */
+  function addRipple(btn, e) {
+    const rect = btn.getBoundingClientRect();
+    const r = document.createElement('span');
+    const size = Math.max(rect.width, rect.height);
+    r.className = 'ripple-effect';
+    r.style.cssText = `width:${size}px;height:${size}px;left:${(e.clientX-rect.left)-size/2}px;top:${(e.clientY-rect.top)-size/2}px`;
+    btn.style.position = 'relative'; btn.style.overflow = 'hidden';
+    btn.appendChild(r);
+    setTimeout(() => r.remove(), 700);
+  }
+  document.addEventListener('click', e => {
+    const btn = e.target.closest('button, .count-btn, .qbtn, .scrabble-label, .jump-btn');
+    if (btn) { addRipple(btn, e); sfxClick(); }
+  });
+
+  /* ═══ SPARKS ═══ */
+  function launchSparks(x, y, color, count=10) {
+    for (let i=0; i<count; i++) {
+      const el = document.createElement('div');
+      el.className = 'spark';
+      const angle = (Math.PI * 2 * i) / count + Math.random() * .5;
+      const dist = 40 + Math.random() * 80;
+      const size = 4 + Math.random() * 6;
+      el.style.cssText = `left:${x}px;top:${y}px;width:${size}px;height:${size}px;background:${color};
+        --tx:${Math.cos(angle)*dist}px;--ty:${Math.sin(angle)*dist}px;
+        animation-duration:${.4+Math.random()*.4}s`;
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 900);
+    }
+  }
+
+  /* ═══ MILESTONE BANNER ═══ */
+  let milestoneTimer = null;
+  function showMilestone(text) {
+    const banner = document.getElementById('milestone-banner');
+    document.getElementById('milestone-text').textContent = text;
+    banner.classList.add('show');
+    clearTimeout(milestoneTimer);
+    milestoneTimer = setTimeout(() => banner.classList.remove('show'), 2800);
+  }
+
+  /* ═══ SCRABBLE POPUP ═══ */
+  function showScrabblePopup() {
+    const el = document.createElement('div');
+    el.className = 'scrabble-popup';
+    el.textContent = '¡Scrabble! +50';
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 1000);
+    // Sparks from center
+    launchSparks(window.innerWidth/2, window.innerHeight/2, '#f5d070', 18);
+  }
+
+  /* ═══ SETUP ═══ */
   function setCount(n) {
     playerCount = n;
     document.querySelectorAll('.count-btn').forEach((b,i) => b.classList.toggle('active', i+2===n));
@@ -1521,11 +1771,12 @@
     const players = [];
     for (let i = 0; i < playerCount; i++) {
       const inp = document.getElementById(`pname-${i}`);
-      players.push({ name: inp?.value.trim() || DEFAULTS[i], score:0, color:COLORS[i], hex:COLORS_HEX[i], rounds:[], passes:0 });
+      players.push({ name: inp?.value.trim() || DEFAULTS[i], score:0, color:COLORS[i], hex:COLORS_HEX[i], rounds:[], passes:0, streak:0, bestScore:0 });
     }
     state = { players, currentTurn:0, round:1, scrabbleOn:false, history:[], log:[] };
     document.getElementById('setup-screen').style.display = 'none';
     document.getElementById('game-screen').style.display  = 'block';
+    haptic([10, 30, 10]);
     render();
   }
 
@@ -1548,12 +1799,14 @@
         if (r.passed) return `<span class="chip pass-chip">—</span>`;
         return `<span class="chip${r.scr?' scr':r.pts<0?' neg':''}">${(r.pts>=0?'+':'')+r.pts+(r.scr?'★':'')}</span>`;
       }).join('');
+      const streakBadge = p.streak >= 3
+        ? `<span class="streak-badge">🔥 ×${p.streak}</span>` : '';
       return `
-        <div class="player-card ${isCur?'active':''}" style="animation-delay:${idx*0.07}s">
+        <div class="player-card ${isCur?'active':''}" style="animation-delay:${idx*0.07}s" id="card-${idx}">
           <div class="color-bar" style="background:${p.hex}"></div>
           <div class="p-rank">${medal}</div>
           <div class="p-info">
-            <div class="p-name ${p.color}">${p.name}${isCur?'<span class="turn-pill">turno</span>':''}</div>
+            <div class="p-name ${p.color}">${p.name}${isCur?'<span class="turn-pill">turno</span>':''}${streakBadge}</div>
             <div class="p-chips">${chips}</div>
           </div>
           <div class="p-score ${p.color}" id="score-${idx}">${p.score}</div>
@@ -1566,8 +1819,8 @@
 
   function renderTurnPanel() {
     const p = state.players[state.currentTurn];
-    document.getElementById('turn-header').innerHTML =
-      `<span class="turn-label">Turno de</span><span class="turn-player-name ${p.color}">${p.name}</span>`;
+    const header = document.getElementById('turn-header');
+    header.innerHTML = `<span class="turn-label">Turno de</span><span class="turn-player-name ${p.color} turn-wipe">${p.name}</span>`;
     document.getElementById('score-input').value = '';
     state.scrabbleOn = false;
     updateScrabbleUI();
@@ -1591,11 +1844,19 @@
     const inp = document.getElementById('score-input');
     inp.value = (Number(inp.value)||0) + n;
     inp.focus();
+    // mini haptic on quick-add
+    haptic([5]);
   }
 
   function toggleScrabble() {
     state.scrabbleOn = !state.scrabbleOn;
     updateScrabbleUI();
+    if (state.scrabbleOn) {
+      haptic([15, 10, 30]);
+      const star = document.getElementById('scrabble-star');
+      star.classList.add('scrabble-burst');
+      star.addEventListener('animationend', () => star.classList.remove('scrabble-burst'), {once:true});
+    }
   }
 
   function updateScrabbleUI() {
@@ -1605,25 +1866,73 @@
   function addScore() {
     const inp = document.getElementById('score-input');
     let pts = parseInt(inp.value) || 0;
-    if (pts < 0) { showToast('Los puntos no pueden ser negativos'); return; }
-    const total = pts + (state.scrabbleOn ? 50 : 0);
+    if (pts < 0) {
+      inp.classList.add('shake');
+      inp.addEventListener('animationend', () => inp.classList.remove('shake'), {once:true});
+      showToast('Los puntos no pueden ser negativos');
+      haptic([50]);
+      return;
+    }
+    const isScrabble = state.scrabbleOn;
+    const total = pts + (isScrabble ? 50 : 0);
     const p = state.players[state.currentTurn];
+    const prevScore = p.score;
     p.score += total;
-    p.rounds.push({ pts:total, scr:state.scrabbleOn });
+
+    // Update streak
+    if (pts > 0) { p.streak++; } else { p.streak = 0; }
+    if (total > p.bestScore) p.bestScore = total;
+
+    p.rounds.push({ pts:total, scr:isScrabble });
     let action = `anotó ${pts} pts`;
-    if (state.scrabbleOn) action += ` + 50 ¡Scrabble!`;
+    if (isScrabble) action += ` + 50 ¡Scrabble!`;
     state.log.push({ name:p.name, hex:p.hex, action, pts:total, ptsStr:`+${total}` });
     state.history.push({ idx:state.currentTurn, delta:total, passed:false });
-    bumpScore(state.currentTurn);
+
+    // Sound + haptic
+    if (isScrabble) { sfxScrabble(); haptic([10,20,10,20,50]); }
+    else { sfxScore(pts); haptic([15]); }
+
+    // Visual effects
+    bumpScore(state.currentTurn, total, isScrabble, prevScore);
+
+    // Scrabble popup
+    if (isScrabble) { setTimeout(showScrabblePopup, 100); }
+
+    // Milestones
+    checkMilestones(p, total, prevScore);
+
     advanceTurn();
+  }
+
+  function checkMilestones(p, pts, prevScore) {
+    const newScore = p.score;
+    // Century milestones
+    const hundreds = [100,200,300,400,500];
+    for (const h of hundreds) {
+      if (prevScore < h && newScore >= h) {
+        setTimeout(() => showMilestone(`${p.name} alcanzó ${h} puntos 🎯`), 400);
+        launchSparks(window.innerWidth * .5, window.innerHeight * .4, p.hex, 14);
+        break;
+      }
+    }
+    // High single play
+    if (pts >= 40 && !state.scrabbleOn) {
+      setTimeout(() => showMilestone(`¡Jugada increíble! ${pts} puntos 🌟`), 300);
+    }
+    // Streak
+    if (p.streak === 3) { setTimeout(() => showMilestone(`${p.name} está en racha 🔥`), 500); }
+    if (p.streak === 5) { setTimeout(() => showMilestone(`¡Racha de ${p.streak}! Imparable 🚀`), 500); }
   }
 
   function passTurn() {
     const p = state.players[state.currentTurn];
     p.passes++;
+    p.streak = 0;
     p.rounds.push({ pts:0, passed:true });
     state.log.push({ name:p.name, hex:p.hex, action:'pasó su turno', pts:0, ptsStr:'—' });
     state.history.push({ idx:state.currentTurn, delta:0, passed:true });
+    sfxPass(); haptic([8]);
     advanceTurn();
   }
 
@@ -1633,36 +1942,79 @@
     render();
   }
 
-  function jumpTo(idx) { state.currentTurn = idx; render(); }
+  function jumpTo(idx) { state.currentTurn = idx; sfxClick(); render(); }
 
-  function bumpScore(idx) {
+  function animateScoreCount(el, from, to, hex) {
+    const dur = 500;
+    const start = performance.now();
+    function tick(now) {
+      const t = Math.min((now - start) / dur, 1);
+      const ease = 1 - Math.pow(1 - t, 3);
+      el.textContent = Math.round(from + (to - from) * ease);
+      if (t < 1) requestAnimationFrame(tick);
+      else { el.textContent = to; }
+    }
+    requestAnimationFrame(tick);
+  }
+
+  function bumpScore(idx, pts, isScrabble, prevScore) {
     const el = document.getElementById(`score-${idx}`);
-    if (!el) return;
-    el.classList.remove('score-bump'); void el.offsetWidth; el.classList.add('score-bump');
-    // floating +pts particle
+    const card = document.getElementById(`card-${idx}`);
     const p = state.players[idx];
-    const last = p.rounds[p.rounds.length-1];
-    if (!last || last.passed) return;
+    if (!el) return;
+
+    // Card flash
+    if (card) {
+      card.classList.add('card-flash');
+      card.addEventListener('animationend', () => card.classList.remove('card-flash'), {once:true});
+    }
+
+    // Score number roll animation
+    el.classList.remove('score-roll', 'score-bump');
+    void el.offsetWidth;
+
+    // Animated count-up
+    animateScoreCount(el, prevScore, p.score, p.hex);
+    el.classList.add('score-bump');
+
+    // Floating +pts particle
     const rect = el.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top;
+
     const particle = document.createElement('div');
-    particle.textContent = `+${last.pts}`;
-    particle.style.cssText = `position:fixed;left:${rect.left + rect.width/2}px;top:${rect.top}px;
+    particle.textContent = `+${pts}${isScrabble ? '★' : ''}`;
+    const fontSize = Math.min(1.2 + pts * 0.01, 2.2);
+    particle.style.cssText = `position:fixed;left:${cx}px;top:${cy}px;
       transform:translateX(-50%);font-family:'Playfair Display',serif;font-weight:900;
-      font-size:1.4rem;color:${p.hex};pointer-events:none;z-index:999;
-      text-shadow:0 0 12px ${p.hex}88;
-      animation:particleFloat .9s cubic-bezier(.2,.8,.4,1) forwards;`;
+      font-size:${fontSize}rem;color:${p.hex};pointer-events:none;z-index:999;
+      text-shadow:0 0 16px ${p.hex}99,0 0 40px ${p.hex}44;
+      animation:particleFloat ${isScrabble ? 1.4 : .9}s cubic-bezier(.2,.8,.4,1) forwards;`;
     document.body.appendChild(particle);
-    setTimeout(() => particle.remove(), 950);
+    setTimeout(() => particle.remove(), 1500);
+
+    // Sparks for big scores
+    if (pts >= 20 || isScrabble) {
+      launchSparks(cx, cy, p.hex, isScrabble ? 16 : 8);
+    }
   }
 
   function undoLast() {
-    if (!state.history.length) { showToast('No hay jugadas para deshacer'); return; }
+    if (!state.history.length) { showToast('No hay jugadas para deshacer'); haptic([30]); return; }
     const last = state.history.pop();
-    state.players[last.idx].score -= last.delta;
-    state.players[last.idx].rounds.pop();
+    const p = state.players[last.idx];
+    const prevScore = p.score;
+    p.score -= last.delta;
+    p.rounds.pop();
     state.log.pop();
     state.currentTurn = last.idx;
     if (state.currentTurn === state.players.length - 1 && state.round > 1) state.round--;
+    sfxUndo(); haptic([10, 10]);
+    // Animate score back down
+    setTimeout(() => {
+      const el = document.getElementById(`score-${last.idx}`);
+      if (el) animateScoreCount(el, prevScore, p.score, p.hex);
+    }, 50);
     showToast('Jugada deshecha ↩');
     render();
   }
@@ -1673,8 +2025,9 @@
 
   function resetGame() {
     closeModal('reset-modal');
-    state.players.forEach(p => { p.score=0; p.rounds=[]; p.passes=0; });
+    state.players.forEach(p => { p.score=0; p.rounds=[]; p.passes=0; p.streak=0; p.bestScore=0; });
     state.currentTurn=0; state.round=1; state.history=[]; state.log=[];
+    haptic([20, 10, 20]);
     render();
   }
 
@@ -1690,31 +2043,43 @@
     document.getElementById('winner-score-text').textContent = `${winner.score} puntos · Ronda ${state.round}`;
     document.getElementById('final-scores').innerHTML = sorted.map((p,i) => {
       const m = i===0?'🥇':i===1?'🥈':i===2?'🥉':`#${i+1}`;
+      const bestStr = p.bestScore > 0 ? `<span style="font-family:'DM Mono';font-size:.62rem;color:var(--text-dim);margin-left:.35rem">mejor: +${p.bestScore}</span>` : '';
       return `<div class="final-row">
-        <div class="final-player"><span>${m}</span><span style="color:${p.hex};font-family:'Playfair Display',serif;font-weight:700">${p.name}</span></div>
+        <div class="final-player"><span>${m}</span><span style="color:${p.hex};font-family:'Playfair Display',serif;font-weight:700">${p.name}</span>${bestStr}</div>
         <div class="final-pts" style="color:${p.hex}">${p.score} pts</div>
       </div>`;
     }).join('');
-    document.getElementById('winner-screen').style.display = 'flex';
+    const ws = document.getElementById('winner-screen');
+    ws.style.display = 'flex';
+    ws.classList.add('show');
+    sfxWinner(); haptic([20,30,20,30,100]);
     launchConfetti();
   }
 
   function backToSetup() {
-    document.getElementById('winner-screen').style.display = 'none';
+    const ws = document.getElementById('winner-screen');
+    ws.classList.remove('show');
+    ws.style.display = 'none';
     document.getElementById('setup-screen').style.display  = 'flex';
   }
 
   function launchConfetti() {
     const colors = ['#f7dc6f','#4ecdc4','#ff6b9d','#5eb8e0','#c39bdb','#ff9a65','#c9943a','#ffffff'];
-    for (let i = 0; i < 90; i++) {
+    for (let i = 0; i < 120; i++) {
       setTimeout(() => {
         const el = document.createElement('div');
-        const size = 6 + Math.random() * 8;
+        const size = 5 + Math.random() * 10;
+        const isRect = Math.random() > .4;
         el.className = 'confetti-piece';
-        el.style.cssText = `left:${Math.random()*100}vw;top:-20px;background:${colors[Math.floor(Math.random()*colors.length)]};border-radius:${Math.random()>.5?'50%':'2px'};width:${size}px;height:${size}px;animation-duration:${2.5+Math.random()*2.5}s;`;
+        el.style.cssText = `left:${Math.random()*100}vw;top:-20px;
+          background:${colors[Math.floor(Math.random()*colors.length)]};
+          border-radius:${isRect ? '2px' : '50%'};
+          width:${size}px;height:${isRect ? size * (1 + Math.random()) : size}px;
+          animation-duration:${2 + Math.random() * 3}s;
+          opacity:${.7 + Math.random() * .3}`;
         document.body.appendChild(el);
-        setTimeout(() => el.remove(), 6000);
-      }, i * 35);
+        setTimeout(() => el.remove(), 7000);
+      }, i * 30);
     }
   }
 
@@ -1732,6 +2097,9 @@
   setCount(3);
   renderSetupList();
 
+</script>
+
+<script>
   // ── Diccionario local de palabras claramente inválidas en Scrabble ──
   const INVALIDAS_SIEMPRE = new Set([
     // países
