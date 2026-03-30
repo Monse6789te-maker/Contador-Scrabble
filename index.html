@@ -414,22 +414,152 @@
 
   /* ── Timer bar ── */
   .timer-bar-wrap {
-    position:relative; height:8px; background:rgba(255,255,255,.06);
-    border-radius:4px; margin:.5rem 0 1rem; overflow:visible;
+    position:relative; height:10px; background:rgba(255,255,255,.06);
+    border-radius:5px; margin:.5rem 0 1.1rem; overflow:visible;
   }
   .timer-bar {
-    height:100%; width:100%; border-radius:4px;
+    height:100%; width:100%; border-radius:5px;
     background:linear-gradient(90deg, var(--gold3), var(--gold2));
-    transition:width .1s linear, background .3s;
+    transition:width .15s linear, background .3s;
     box-shadow:0 0 8px rgba(201,148,58,.4);
   }
-  .timer-bar.warning { background:linear-gradient(90deg,#ff6b35,#ff3d77); box-shadow:0 0 12px rgba(255,61,119,.5); }
+  .timer-bar.warning { background:linear-gradient(90deg,#ff6b35,#ff3d77); box-shadow:0 0 14px rgba(255,61,119,.55); }
+  .timer-bar.penalty { background:linear-gradient(90deg,#5eb8e0,#4ecdc4); box-shadow:0 0 14px rgba(94,184,224,.5); }
   .timer-text {
-    position:absolute; right:0; top:-22px;
-    font-family:'DM Mono',monospace; font-size:.85rem;
-    color:var(--gold2); font-weight:700;
+    position:absolute; right:0; top:-24px;
+    font-family:'DM Mono',monospace; font-size:.95rem;
+    color:var(--gold2); font-weight:700; letter-spacing:.04em;
   }
   .timer-text.warning { color:#ff6b9d; }
+  .timer-info-row {
+    display:flex; align-items:center; justify-content:space-between;
+    margin-bottom:.5rem; gap:.5rem;
+  }
+  .timer-label {
+    font-family:'DM Mono',monospace; font-size:.72rem;
+    color:var(--text-dim); letter-spacing:.08em; text-transform:uppercase;
+  }
+  .timer-action-btns { display:flex; gap:.4rem; }
+  .timer-act-btn {
+    padding:.28rem .65rem; border-radius:7px;
+    border:1px solid rgba(201,148,58,.25); background:rgba(201,148,58,.08);
+    color:var(--gold2); font-family:'DM Mono',monospace; font-size:.72rem;
+    font-weight:700; cursor:pointer; transition:all .15s; letter-spacing:.04em;
+    white-space:nowrap;
+  }
+  .timer-act-btn:hover { background:rgba(201,148,58,.18); border-color:rgba(201,148,58,.5); }
+  .timer-act-btn.penalty-btn {
+    border-color:rgba(94,184,224,.3); background:rgba(94,184,224,.08); color:#5eb8e0;
+  }
+  .timer-act-btn.penalty-btn:hover { background:rgba(94,184,224,.18); border-color:rgba(94,184,224,.55); }
+  .timer-act-btn.pause-btn.paused {
+    border-color:rgba(78,205,196,.4); background:rgba(78,205,196,.1); color:#4ecdc4;
+  }
+
+  /* ── Timer settings modal ── */
+  .timer-modal-box {
+    background:linear-gradient(160deg, rgba(30,22,10,.99), rgba(14,10,4,.99));
+    border:1px solid rgba(201,148,58,.32); border-radius:20px;
+    padding:2rem 2.2rem; max-width:480px; width:100%;
+    text-align:left; box-shadow: var(--shadow-deep), inset 0 1px 0 rgba(255,255,255,.06);
+    position:relative; animation:slideUp .25s ease;
+  }
+  .timer-modal-box::before {
+    content:''; position:absolute; top:0; left:10%; right:10%; height:2px; pointer-events:none;
+    background:linear-gradient(90deg, transparent, var(--gold2), rgba(201,148,58,.5), transparent);
+  }
+  .timer-modal-close {
+    position:absolute; top:1rem; right:1.2rem;
+    background:rgba(201,148,58,.1); border:1px solid rgba(201,148,58,.2);
+    border-radius:8px; color:var(--cream2); font-size:1.1rem; cursor:pointer;
+    padding:.35rem .65rem; min-width:38px; min-height:38px;
+    display:flex; align-items:center; justify-content:center; transition:all .2s;
+  }
+  .timer-modal-close:hover { background:rgba(201,148,58,.22); }
+
+  .timer-section-title {
+    font-family:'Playfair Display',serif; font-size:1rem; font-weight:700;
+    color:var(--gold2); margin-bottom:.85rem; display:flex; align-items:center; gap:.45rem;
+  }
+
+  /* Preset grid */
+  .timer-preset-grid {
+    display:grid; grid-template-columns:repeat(3,1fr); gap:.55rem; margin-bottom:1.4rem;
+  }
+  .timer-preset-btn {
+    padding:.7rem .5rem; border-radius:11px;
+    border:1.5px solid rgba(201,148,58,.18);
+    background:linear-gradient(145deg, rgba(28,20,8,.9), rgba(14,10,4,.95));
+    color:var(--cream2); cursor:pointer; transition:all .2s; text-align:center;
+    min-height:56px; display:flex; flex-direction:column; align-items:center; justify-content:center;
+  }
+  .timer-preset-btn:hover { border-color:rgba(201,148,58,.5); background:rgba(201,148,58,.08); }
+  .timer-preset-btn.active {
+    border-color:var(--gold2); background:linear-gradient(145deg, rgba(201,148,58,.22), rgba(201,148,58,.1));
+    box-shadow:0 0 18px rgba(201,148,58,.2);
+  }
+  .timer-preset-btn .pval {
+    font-family:'DM Mono',monospace; font-size:1.05rem; font-weight:700; color:var(--gold2);
+    line-height:1; margin-bottom:3px;
+  }
+  .timer-preset-btn.active .pval { color:var(--gold3); }
+  .timer-preset-btn .plabel {
+    font-size:.68rem; color:var(--text-dim); letter-spacing:.04em; line-height:1.2;
+  }
+
+  /* Custom time inputs */
+  .timer-custom-row {
+    display:flex; align-items:center; gap:.65rem; margin-bottom:1.3rem; flex-wrap:wrap;
+  }
+  .timer-custom-row label {
+    font-size:.8rem; color:var(--text-dim); letter-spacing:.08em; text-transform:uppercase;
+    white-space:nowrap;
+  }
+  .timer-custom-input {
+    width:72px; background:rgba(0,0,0,.4);
+    border:1.5px solid rgba(201,148,58,.22); border-radius:9px;
+    padding:.6rem .5rem; color:var(--cream);
+    font-family:'DM Mono',monospace; font-size:1.1rem; font-weight:700;
+    outline:none; text-align:center;
+    transition:border-color .2s, box-shadow .2s;
+  }
+  .timer-custom-input:focus { border-color:rgba(201,148,58,.6); box-shadow:0 0 0 3px rgba(201,148,58,.12); }
+  .timer-custom-sep { font-size:1.2rem; color:var(--gold); font-weight:700; }
+
+  /* Penalty config */
+  .timer-penalty-section { margin-bottom:1.3rem; }
+  .timer-penalty-row {
+    display:flex; align-items:center; gap:.7rem; flex-wrap:wrap;
+    padding:.75rem 1rem; border-radius:11px;
+    background:rgba(94,184,224,.06); border:1px solid rgba(94,184,224,.15);
+  }
+  .timer-penalty-row label { font-size:.85rem; color:var(--cream2); flex:1; line-height:1.4; }
+  .timer-penalty-input {
+    width:60px; background:rgba(0,0,0,.4);
+    border:1.5px solid rgba(94,184,224,.25); border-radius:8px;
+    padding:.5rem .4rem; color:#5eb8e0;
+    font-family:'DM Mono',monospace; font-size:1rem; font-weight:700;
+    outline:none; text-align:center; transition:border-color .2s;
+  }
+  .timer-penalty-input:focus { border-color:rgba(94,184,224,.6); box-shadow:0 0 0 3px rgba(94,184,224,.1); }
+  .timer-penalty-unit { font-size:.8rem; color:var(--text-dim); white-space:nowrap; }
+
+  /* Warn threshold */
+  .timer-warn-row {
+    display:flex; align-items:center; gap:.7rem; flex-wrap:wrap;
+    padding:.65rem .9rem; border-radius:10px;
+    background:rgba(255,107,61,.05); border:1px solid rgba(255,107,61,.15);
+    margin-bottom:1.3rem;
+  }
+  .timer-warn-row label { font-size:.85rem; color:var(--cream2); flex:1; }
+  .timer-warn-input {
+    width:58px; background:rgba(0,0,0,.4);
+    border:1.5px solid rgba(255,107,61,.25); border-radius:8px;
+    padding:.5rem .4rem; color:#ff9060;
+    font-family:'DM Mono',monospace; font-size:1rem; font-weight:700;
+    outline:none; text-align:center; transition:border-color .2s;
+  }
+  .timer-warn-input:focus { border-color:rgba(255,107,61,.6); box-shadow:0 0 0 3px rgba(255,107,61,.1); }
 
   /* ── Validator inside turn panel ── */
   .validator-wrap { width:100%; margin-top:0; margin-bottom:1rem; }
@@ -1093,7 +1223,10 @@
     </div>
     <div class="header-btns">
       <button class="hbtn" onclick="undoLast()" aria-label="Deshacer última jugada">↩ Deshacer</button>
-      <button class="hbtn" id="timer-toggle-btn" onclick="toggleTimer()" aria-label="Activar temporizador">⏱ Timer</button>
+      <button class="hbtn" id="timer-toggle-btn" onclick="toggleTimer()"
+        aria-label="Activar o desactivar temporizador" aria-pressed="false">⏱ Timer</button>
+      <button class="hbtn" id="timer-settings-btn" onclick="openTimerSettings()"
+        aria-label="Configurar temporizador" title="Ajustar duración y penalizaciones">⚙ Timer</button>
       <button class="hbtn" onclick="openHelpModal()" aria-label="Ver instrucciones">❓ Ayuda</button>
       <button class="hbtn" onclick="endGamePrompt()" aria-label="Finalizar partida">🏆 Finalizar</button>
       <button class="hbtn danger" onclick="resetPrompt()" aria-label="Reiniciar partida">↺ Reiniciar</button>
@@ -1111,8 +1244,19 @@
 
     <!-- Timer bar (hidden until activated) -->
     <div class="timer-bar-wrap" id="timer-bar-wrap" style="display:none" aria-hidden="true">
-      <div class="timer-bar" id="timer-bar"></div>
+      <div class="timer-info-row">
+        <span class="timer-label" id="timer-label">Tiempo restante</span>
+        <div class="timer-action-btns">
+          <button class="timer-act-btn pause-btn" id="timer-pause-btn"
+            onclick="toggleTimerPause()" aria-label="Pausar o reanudar temporizador"
+            title="Pausar / Reanudar">⏸ Pausar</button>
+          <button class="timer-act-btn penalty-btn" id="timer-penalty-btn"
+            onclick="applyPenalty()" aria-label="Añadir tiempo de penalización"
+            title="Añadir tiempo de penalización">+⏱ Penal.</button>
+        </div>
+      </div>
       <div class="timer-text" id="timer-text" aria-live="polite">60</div>
+      <div class="timer-bar" id="timer-bar"></div>
     </div>
 
     <!-- Verify Word accordion -->
@@ -1217,7 +1361,7 @@
     <div class="help-section">
       <div class="help-section-title" style="color:#7ecf82">🛠️ Botones del menú</div>
       <div class="help-rule"><span class="help-rule-icon">↩️</span><span><strong>Deshacer</strong> — borra el último punto anotado si te equivocaste.</span></div>
-      <div class="help-rule"><span class="help-rule-icon">⏱️</span><span><strong>Timer</strong> — activa un contador de 60 segundos por turno.</span></div>
+      <div class="help-rule"><span class="help-rule-icon">⏱️</span><span><strong>Timer</strong> — activa el contador de turno. Con <strong>⚙ Timer</strong> puedes ajustar la duración (20s, 1:30, 2:00…), las penalizaciones por palabra inválida y el umbral de aviso.</span></div>
       <div class="help-rule"><span class="help-rule-icon">🏆</span><span><strong>Finalizar</strong> — termina la partida y muestra al ganador.</span></div>
       <div class="help-rule"><span class="help-rule-icon">↺</span><span><strong>Reiniciar</strong> — pone todos los puntos a cero.</span></div>
     </div>
@@ -1249,6 +1393,75 @@
     <div style="margin-top:1.5rem">
       <button class="mbtn confirm-g" style="width:100%;font-size:1.05rem;padding:1rem" onclick="closeModal('help-modal')">✓ Entendido</button>
     </div>
+  </div>
+</div>
+
+<!-- Timer settings modal -->
+<div class="modal-overlay" id="timer-modal" role="dialog" aria-modal="true" aria-labelledby="timer-modal-title">
+  <div class="timer-modal-box">
+    <button class="timer-modal-close" onclick="closeModal('timer-modal')" aria-label="Cerrar ajustes del temporizador">✕</button>
+    <h3 class="modal-title" id="timer-modal-title" style="text-align:left;margin-bottom:1.4rem">⚙ Ajustar Temporizador</h3>
+
+    <!-- Presets -->
+    <div class="timer-section-title">⏱ Duración por turno</div>
+    <div class="timer-preset-grid" id="timer-preset-grid">
+      <button class="timer-preset-btn" onclick="selectPreset(20)" data-secs="20">
+        <span class="pval">0:20</span><span class="plabel">Rápido</span>
+      </button>
+      <button class="timer-preset-btn" onclick="selectPreset(30)" data-secs="30">
+        <span class="pval">0:30</span><span class="plabel">Normal</span>
+      </button>
+      <button class="timer-preset-btn active" onclick="selectPreset(60)" data-secs="60">
+        <span class="pval">1:00</span><span class="plabel">Clásico</span>
+      </button>
+      <button class="timer-preset-btn" onclick="selectPreset(90)" data-secs="90">
+        <span class="pval">1:30</span><span class="plabel">Cómodo</span>
+      </button>
+      <button class="timer-preset-btn" onclick="selectPreset(120)" data-secs="120">
+        <span class="pval">2:00</span><span class="plabel">Relajado</span>
+      </button>
+      <button class="timer-preset-btn" onclick="selectPreset(180)" data-secs="180">
+        <span class="pval">3:00</span><span class="plabel">Libre</span>
+      </button>
+    </div>
+
+    <!-- Custom -->
+    <div class="timer-section-title">✏️ Tiempo personalizado</div>
+    <div class="timer-custom-row">
+      <label for="timer-custom-min">Minutos</label>
+      <input class="timer-custom-input" type="number" id="timer-custom-min"
+        min="0" max="9" value="1" aria-label="Minutos del temporizador">
+      <span class="timer-custom-sep">:</span>
+      <label for="timer-custom-sec">Segundos</label>
+      <input class="timer-custom-input" type="number" id="timer-custom-sec"
+        min="0" max="59" value="0" aria-label="Segundos del temporizador">
+      <button class="timer-act-btn" onclick="applyCustomTime()" style="padding:.6rem 1rem;font-size:.82rem">
+        Aplicar
+      </button>
+    </div>
+
+    <!-- Penalty -->
+    <div class="timer-section-title" style="margin-top:.2rem">⚡ Penalización por palabra inválida</div>
+    <div class="timer-penalty-section">
+      <div class="timer-penalty-row">
+        <label for="timer-penalty-val">Al equivocarse de palabra, se añaden</label>
+        <input class="timer-penalty-input" type="number" id="timer-penalty-val"
+          min="5" max="120" value="20" aria-label="Segundos de penalización">
+        <span class="timer-penalty-unit">seg. al turno actual</span>
+      </div>
+    </div>
+
+    <!-- Warning threshold -->
+    <div class="timer-section-title">🔴 Aviso de tiempo bajo</div>
+    <div class="timer-warn-row">
+      <label for="timer-warn-val">Mostrar aviso cuando queden</label>
+      <input class="timer-warn-input" type="number" id="timer-warn-val"
+        min="3" max="30" value="10" aria-label="Segundos para mostrar aviso">
+      <span class="timer-penalty-unit">segundos</span>
+    </div>
+
+    <button class="mbtn confirm-g" style="width:100%;font-size:1rem;padding:.95rem;margin-top:.3rem"
+      onclick="saveTimerSettings()">✓ Guardar y cerrar</button>
   </div>
 </div>
 
@@ -1382,10 +1595,7 @@
   }
 
   /* ═══ TIMER — declared early so startGame can reference it ═══ */
-  let timerEnabled  = false;
-  let timerInterval = null;
-  let timerSeconds  = 60;
-  const TIMER_DURATION = 60;
+  // Timer variables are declared in the "TIMER — Full customizable system" section below
 
   /* ═══ SETUP ═══ */
   function setCount(n) {
@@ -1768,27 +1978,86 @@
     setTimeout(() => overlay.classList.remove('show'), 800);
   }
 
-  /* ═══ TIMER FUNCTIONS ═══ */
+  /* ═══ TIMER — Full customizable system ═══ */
+  let timerEnabled   = false;
+  let timerInterval  = null;
+  let timerSeconds   = 60;
+  let timerPaused    = false;
+  let TIMER_DURATION = 60;    // user-configurable
+  let PENALTY_SECS   = 20;    // seconds added per invalid word
+  let WARN_THRESHOLD = 10;    // seconds left when warning kicks in
+
+  function formatTime(s) {
+    const m = Math.floor(s / 60);
+    const sec = s % 60;
+    return m > 0 ? `${m}:${String(sec).padStart(2,'0')}` : `${sec}s`;
+  }
+
   function toggleTimer() {
     timerEnabled = !timerEnabled;
     const btn  = document.getElementById('timer-toggle-btn');
     const wrap = document.getElementById('timer-bar-wrap');
     btn.classList.toggle('active', timerEnabled);
+    btn.setAttribute('aria-pressed', timerEnabled);
     btn.style.borderColor = timerEnabled ? 'var(--gold)' : '';
     btn.style.color       = timerEnabled ? 'var(--gold2)' : '';
     wrap.style.display    = timerEnabled ? 'block' : 'none';
     wrap.setAttribute('aria-hidden', timerEnabled ? 'false' : 'true');
-    if (timerEnabled) startTimerRun(); else stopTimer();
+    if (timerEnabled) { timerPaused = false; startTimerRun(); }
+    else stopTimer();
+  }
+
+  function toggleTimerPause() {
+    if (!timerEnabled) return;
+    timerPaused = !timerPaused;
+    const btn = document.getElementById('timer-pause-btn');
+    if (timerPaused) {
+      clearInterval(timerInterval);
+      timerInterval = null;
+      btn.textContent = '▶ Reanudar';
+      btn.classList.add('paused');
+    } else {
+      btn.textContent = '⏸ Pausar';
+      btn.classList.remove('paused');
+      // resume countdown
+      timerInterval = setInterval(() => {
+        timerSeconds--;
+        updateTimerDisplay();
+        if (timerSeconds <= WARN_THRESHOLD && timerSeconds > 0) haptic([5]);
+        if (timerSeconds <= 0) {
+          stopTimer();
+          sfxPass(); haptic([30,20,50]);
+          showToast('⏱ ¡Tiempo! Pasa el turno');
+        }
+      }, 1000);
+    }
+    sfxClick();
+  }
+
+  function applyPenalty() {
+    if (!timerEnabled) return;
+    timerSeconds = Math.min(timerSeconds + PENALTY_SECS, TIMER_DURATION * 3);
+    const bar = document.getElementById('timer-bar');
+    bar.classList.add('penalty');
+    setTimeout(() => bar.classList.remove('penalty'), 800);
+    updateTimerDisplay();
+    showToast(`+${PENALTY_SECS}s de penalización ⚡`);
+    haptic([10, 15, 10]);
+    sfxClick();
   }
 
   function startTimerRun() {
     stopTimer();
     timerSeconds = TIMER_DURATION;
+    timerPaused  = false;
+    const pauseBtn = document.getElementById('timer-pause-btn');
+    if (pauseBtn) { pauseBtn.textContent = '⏸ Pausar'; pauseBtn.classList.remove('paused'); }
     updateTimerDisplay();
     timerInterval = setInterval(() => {
+      if (timerPaused) return;
       timerSeconds--;
       updateTimerDisplay();
-      if (timerSeconds <= 10) haptic([5]);
+      if (timerSeconds <= WARN_THRESHOLD && timerSeconds > 0) haptic([5]);
       if (timerSeconds <= 0) {
         stopTimer();
         sfxPass(); haptic([30,20,50]);
@@ -1800,18 +2069,83 @@
   function stopTimer() {
     clearInterval(timerInterval);
     timerInterval = null;
+    timerPaused   = false;
+    const pauseBtn = document.getElementById('timer-pause-btn');
+    if (pauseBtn) { pauseBtn.textContent = '⏸ Pausar'; pauseBtn.classList.remove('paused'); }
   }
 
   function updateTimerDisplay() {
     const bar  = document.getElementById('timer-bar');
     const text = document.getElementById('timer-text');
+    const lbl  = document.getElementById('timer-label');
     if (!bar || !text) return;
-    const pct = (timerSeconds / TIMER_DURATION) * 100;
+    const pct  = Math.min((timerSeconds / TIMER_DURATION) * 100, 100);
     bar.style.width = pct + '%';
-    text.textContent = timerSeconds;
-    const isWarn = timerSeconds <= 10;
+    text.textContent = formatTime(timerSeconds);
+    if (lbl) lbl.textContent = timerPaused ? '⏸ Pausado' : 'Tiempo restante';
+    const isWarn = timerSeconds <= WARN_THRESHOLD && !timerPaused;
     bar.classList.toggle('warning', isWarn);
     text.classList.toggle('warning', isWarn);
+  }
+
+  /* ── Timer settings modal ── */
+  function openTimerSettings() {
+    // Sync inputs to current values
+    document.getElementById('timer-custom-min').value = Math.floor(TIMER_DURATION / 60);
+    document.getElementById('timer-custom-sec').value = TIMER_DURATION % 60;
+    document.getElementById('timer-penalty-val').value = PENALTY_SECS;
+    document.getElementById('timer-warn-val').value = WARN_THRESHOLD;
+    // Highlight matching preset
+    document.querySelectorAll('.timer-preset-btn').forEach(btn => {
+      btn.classList.toggle('active', parseInt(btn.dataset.secs) === TIMER_DURATION);
+    });
+    document.getElementById('timer-modal').classList.add('open');
+    sfxClick();
+  }
+
+  function selectPreset(secs) {
+    TIMER_DURATION = secs;
+    // Update custom inputs to match
+    document.getElementById('timer-custom-min').value = Math.floor(secs / 60);
+    document.getElementById('timer-custom-sec').value = secs % 60;
+    // Highlight selected
+    document.querySelectorAll('.timer-preset-btn').forEach(btn => {
+      btn.classList.toggle('active', parseInt(btn.dataset.secs) === secs);
+    });
+    sfxClick();
+    if (timerEnabled) { startTimerRun(); }
+  }
+
+  function applyCustomTime() {
+    const mins = Math.max(0, parseInt(document.getElementById('timer-custom-min').value) || 0);
+    const secs = Math.max(0, Math.min(59, parseInt(document.getElementById('timer-custom-sec').value) || 0));
+    const total = mins * 60 + secs;
+    if (total < 5) { showToast('El tiempo mínimo es 5 segundos'); return; }
+    TIMER_DURATION = total;
+    // Clear all preset highlights since it's custom
+    document.querySelectorAll('.timer-preset-btn').forEach(btn => {
+      btn.classList.toggle('active', parseInt(btn.dataset.secs) === total);
+    });
+    sfxClick();
+    showToast(`Duración ajustada: ${formatTime(total)}`);
+    if (timerEnabled) startTimerRun();
+  }
+
+  function saveTimerSettings() {
+    // Read & apply penalty + warn inputs
+    const pv = parseInt(document.getElementById('timer-penalty-val').value) || 20;
+    const wv = parseInt(document.getElementById('timer-warn-val').value) || 10;
+    PENALTY_SECS   = Math.max(5, Math.min(120, pv));
+    WARN_THRESHOLD = Math.max(3, Math.min(30, wv));
+    // Also apply any custom time if set
+    const mins  = Math.max(0, parseInt(document.getElementById('timer-custom-min').value) || 0);
+    const secs  = Math.max(0, Math.min(59, parseInt(document.getElementById('timer-custom-sec').value) || 0));
+    const total = mins * 60 + secs;
+    if (total >= 5) TIMER_DURATION = total;
+    if (timerEnabled) startTimerRun();
+    closeModal('timer-modal');
+    showToast(`Timer: ${formatTime(TIMER_DURATION)} · Penalización: +${PENALTY_SECS}s`);
+    sfxClick();
   }
 
   /* ═══ SCORE CHART ═══ */
