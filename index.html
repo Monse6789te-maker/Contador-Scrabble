@@ -708,131 +708,110 @@
 
   .calc-body {
     max-height:0; overflow:hidden;
-    transition:max-height .35s cubic-bezier(.4,0,.2,1);
+    transition:max-height .38s cubic-bezier(.4,0,.2,1);
     border:1px solid rgba(201,148,58,.2); border-top:none;
     border-radius:0 0 12px 12px;
     background:linear-gradient(160deg, rgba(18,13,6,.97), rgba(10,8,3,.99));
   }
-  .calc-body.open { max-height:640px; }
+  .calc-body.open { max-height:520px; }
 
   .calc-card { padding:1rem 1.1rem 1.2rem; }
 
-  .calc-sub {
-    font-size:.78rem; color:var(--text-dim); text-align:center;
-    margin-bottom:.9rem; letter-spacing:.04em; line-height:1.5;
+  /* Step labels */
+  .calc-step {
+    font-size:.72rem; color:var(--gold2); text-transform:uppercase;
+    letter-spacing:.14em; font-weight:700; margin-bottom:.45rem;
+    display:flex; align-items:center; gap:.4rem;
+  }
+  .calc-step-num {
+    width:18px; height:18px; border-radius:50%;
+    background:rgba(201,148,58,.2); border:1px solid rgba(201,148,58,.4);
+    display:inline-flex; align-items:center; justify-content:center;
+    font-size:.62rem; font-family:'DM Mono',monospace; flex-shrink:0;
   }
 
-  /* Letter tiles input row */
-  .calc-word-row {
-    display:flex; gap:.5rem; align-items:center; margin-bottom:.85rem;
-  }
+  /* Word input */
   .calc-word-input {
-    flex:1; background:rgba(0,0,0,.38);
+    width:100%; background:rgba(0,0,0,.38);
     border:1.5px solid rgba(201,148,58,.2); border-radius:10px;
     padding:.7rem 1rem; color:var(--cream);
-    font-family:'Playfair Display',serif; font-size:1.4rem; font-weight:900;
-    letter-spacing:.12em; text-transform:uppercase; text-align:center;
+    font-family:'Playfair Display',serif; font-size:1.5rem; font-weight:900;
+    letter-spacing:.14em; text-transform:uppercase; text-align:center;
     outline:none; transition:border-color .2s, box-shadow .2s;
+    margin-bottom:1rem;
   }
   .calc-word-input:focus {
     border-color:rgba(201,148,58,.6);
     box-shadow:0 0 0 3px rgba(201,148,58,.1);
   }
   .calc-word-input::placeholder {
-    font-size:.95rem; letter-spacing:.06em; color:var(--text-mute);
+    font-size:.9rem; letter-spacing:.04em; color:var(--text-mute);
     font-family:'Lato',sans-serif; font-weight:400;
   }
 
-  /* Tiles preview */
-  .calc-tiles-preview {
-    display:flex; flex-wrap:wrap; gap:4px; justify-content:center;
-    min-height:32px; margin-bottom:.85rem;
-  }
-  .calc-tile {
-    width:32px; height:32px;
-    background:linear-gradient(145deg,#f0dfa8 0%,#d4aa50 55%,#b88820 100%);
-    border-radius:5px; display:flex; flex-direction:column;
-    align-items:center; justify-content:center;
-    box-shadow:2px 3px 0 rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.4);
-    position:relative; flex-shrink:0;
-  }
-  .calc-tile .ct-l {
-    font-family:'Playfair Display',serif; font-weight:900; font-size:.9rem;
-    color:#1a0e00; line-height:1;
-  }
-  .calc-tile .ct-p {
-    font-family:'DM Mono',monospace; font-size:.32rem; color:#3a1a00;
-    position:absolute; bottom:2px; right:3px; font-weight:700;
-  }
-  .calc-tile.blank-tile {
-    background:linear-gradient(145deg,#d0c8b0,#a09060);
-    opacity:.75;
-  }
-  .calc-tile.blank-tile .ct-l { color:#3a3020; }
-
-  /* Bonus buttons grid */
-  .calc-bonus-label {
-    font-size:.75rem; color:var(--gold2); text-transform:uppercase;
-    letter-spacing:.14em; font-weight:700; margin-bottom:.55rem; text-align:center;
-  }
-  .calc-bonus-grid {
-    display:grid; grid-template-columns:repeat(4,1fr); gap:.45rem;
-    margin-bottom:.9rem;
+  /* Bonus radio-style row — 1 selection at a time */
+  .calc-bonus-row {
+    display:grid; grid-template-columns:repeat(2,1fr); gap:.5rem;
+    margin-bottom:1rem;
   }
   .cbtn {
-    padding:.55rem .3rem; border-radius:9px;
-    border:1.5px solid; font-family:'DM Mono',monospace;
-    font-size:.8rem; font-weight:700; cursor:pointer;
-    transition:all .18s; text-align:center; min-height:44px;
+    padding:.65rem .5rem; border-radius:10px;
+    border:1.5px solid; cursor:pointer;
+    transition:all .18s; text-align:center; min-height:52px;
     display:flex; flex-direction:column; align-items:center; justify-content:center;
-    gap:1px; line-height:1.2;
+    gap:3px; line-height:1.2; background:rgba(0,0,0,.25);
   }
-  .cbtn .cbtn-name { font-size:.65rem; opacity:.75; font-weight:500; }
-  /* DL — light blue */
-  .cbtn.dl { background:rgba(94,184,255,.08); border-color:rgba(94,184,255,.35); color:#7ec8f0; }
-  .cbtn.dl:hover, .cbtn.dl.active { background:rgba(94,184,255,.22); border-color:#7ec8f0; box-shadow:0 0 12px rgba(94,184,255,.25); }
-  /* TL — dark blue */
-  .cbtn.tl { background:rgba(50,100,220,.1); border-color:rgba(80,140,255,.35); color:#8ab0ff; }
-  .cbtn.tl:hover, .cbtn.tl.active { background:rgba(80,140,255,.22); border-color:#8ab0ff; box-shadow:0 0 12px rgba(80,140,255,.25); }
-  /* DP — pink */
-  .cbtn.dp { background:rgba(230,90,120,.08); border-color:rgba(230,90,120,.35); color:#f08098; }
-  .cbtn.dp:hover, .cbtn.dp.active { background:rgba(230,90,120,.22); border-color:#f08098; box-shadow:0 0 12px rgba(230,90,120,.25); }
-  /* TP — red */
-  .cbtn.tp { background:rgba(180,40,40,.1); border-color:rgba(220,80,80,.4); color:#e07070; }
-  .cbtn.tp:hover, .cbtn.tp.active { background:rgba(220,80,80,.22); border-color:#e07070; box-shadow:0 0 12px rgba(220,80,80,.3); }
-  /* Primera palabra */
-  .cbtn.fp { background:rgba(59,92,47,.12); border-color:rgba(94,184,102,.35); color:#7ecf82; }
-  .cbtn.fp:hover, .cbtn.fp.active { background:rgba(94,184,102,.22); border-color:#7ecf82; box-shadow:0 0 12px rgba(94,184,102,.25); }
-  .cbtn.active { transform:scale(.96); }
+  .cbtn-icon { font-size:1.1rem; }
+  .cbtn-label { font-family:'Lato',sans-serif; font-size:.82rem; font-weight:700; }
+  .cbtn-desc  { font-family:'DM Mono',monospace; font-size:.65rem; opacity:.65; }
 
-  /* Result display */
+  .cbtn.none  { border-color:rgba(255,255,255,.1);  color:var(--text-dim); }
+  .cbtn.dl    { border-color:rgba(94,184,255,.3);   color:#7ec8f0; }
+  .cbtn.tl    { border-color:rgba(80,140,255,.3);   color:#8ab0ff; }
+  .cbtn.dp    { border-color:rgba(230,90,120,.3);   color:#f08098; }
+  .cbtn.tp    { border-color:rgba(220,80,80,.35);   color:#e07070; }
+
+  .cbtn.none:hover  { border-color:rgba(255,255,255,.25); color:var(--cream2); }
+  .cbtn.dl:hover    { background:rgba(94,184,255,.1); }
+  .cbtn.tl:hover    { background:rgba(80,140,255,.1); }
+  .cbtn.dp:hover    { background:rgba(230,90,120,.1); }
+  .cbtn.tp:hover    { background:rgba(220,80,80,.1); }
+
+  .cbtn.active.none { background:rgba(255,255,255,.1);  border-color:rgba(255,255,255,.4);  color:var(--cream); }
+  .cbtn.active.dl   { background:rgba(94,184,255,.18);  border-color:#7ec8f0; box-shadow:0 0 14px rgba(94,184,255,.2); }
+  .cbtn.active.tl   { background:rgba(80,140,255,.18);  border-color:#8ab0ff; box-shadow:0 0 14px rgba(80,140,255,.2); }
+  .cbtn.active.dp   { background:rgba(230,90,120,.18);  border-color:#f08098; box-shadow:0 0 14px rgba(230,90,120,.2); }
+  .cbtn.active.tp   { background:rgba(220,80,80,.18);   border-color:#e07070; box-shadow:0 0 14px rgba(220,80,80,.25); }
+
+  /* Result */
   .calc-result-box {
-    background:rgba(0,0,0,.3); border:1px solid rgba(201,148,58,.2);
-    border-radius:12px; padding:.9rem 1rem;
+    background:rgba(0,0,0,.3); border:1px solid rgba(201,148,58,.25);
+    border-radius:12px; padding:.9rem 1.1rem;
     display:flex; align-items:center; justify-content:space-between;
-    gap:.75rem; margin-bottom:.75rem;
+    gap:1rem; margin-bottom:.75rem;
   }
   .calc-result-total {
     font-family:'Playfair Display',serif; font-weight:900;
-    font-size:2.4rem; color:var(--gold2); line-height:1;
-    text-shadow:0 0 20px rgba(232,184,75,.3);
-    transition:all .25s;
+    font-size:2.8rem; color:var(--gold2); line-height:1;
+    text-shadow:0 0 20px rgba(232,184,75,.3); min-width:3ch; text-align:center;
+    transition:color .2s;
   }
-  .calc-result-breakdown {
-    font-family:'DM Mono',monospace; font-size:.72rem;
-    color:var(--text-dim); line-height:1.8; text-align:right; flex:1;
+  .calc-result-label {
+    font-size:.72rem; color:var(--text-mute); text-transform:uppercase;
+    letter-spacing:.1em; margin-top:.15rem;
   }
-  .calc-result-breakdown span { display:block; }
-  .calc-result-breakdown .brk-bonus { color:var(--gold3); }
-  .calc-result-breakdown .brk-scr   { color:var(--gold2); }
+  .calc-result-right { flex:1; font-family:'DM Mono',monospace; font-size:.78rem; line-height:1.9; color:var(--text-dim); text-align:right; }
+  .calc-result-right .r-base  { color:var(--cream2); }
+  .calc-result-right .r-bonus { color:var(--gold3); font-weight:700; }
+  .calc-result-right .r-total { color:var(--gold2); font-weight:700; }
 
   .calc-use-btn {
-    width:100%; padding:.8rem;
-    background:linear-gradient(135deg, rgba(59,92,47,.8), rgba(45,72,35,.9));
+    width:100%; padding:.85rem;
+    background:linear-gradient(135deg, rgba(59,92,47,.85), rgba(45,72,35,.95));
     border:1px solid rgba(94,184,102,.35); border-radius:10px;
     color:#d0f0be; font-family:'Playfair Display',serif;
     font-size:1rem; font-weight:700; cursor:pointer;
-    transition:all .2s; letter-spacing:.04em; min-height:44px;
+    transition:all .2s; letter-spacing:.04em; min-height:48px;
   }
   .calc-use-btn:hover { background:linear-gradient(135deg,#587a42,#456234); transform:translateY(-1px); }
   .calc-use-btn:disabled { opacity:.35; cursor:not-allowed; transform:none; }
@@ -1672,61 +1651,62 @@
       </button>
       <div class="calc-body" id="calc-body" role="region">
         <div class="calc-card">
-          <p class="calc-sub">Escribe tu palabra, selecciona las casillas especiales y obtén el total automáticamente.</p>
 
-          <div class="calc-word-row">
-            <input class="calc-word-input" type="text" id="calc-input"
-              placeholder="Escribe la palabra…" maxlength="15"
-              oninput="onCalcInput(this)"
-              aria-label="Palabra para calcular puntos">
-          </div>
+          <!-- Paso 1: palabra -->
+          <div class="calc-step"><span class="calc-step-num">1</span> Escribe la palabra</div>
+          <input class="calc-word-input" type="text" id="calc-input"
+            placeholder="P · A · L · A · B · R · A" maxlength="15"
+            oninput="onCalcInput(this)"
+            aria-label="Palabra para calcular puntos">
 
-          <div class="calc-tiles-preview" id="calc-tiles-preview" aria-hidden="true"></div>
-
-          <div class="calc-bonus-label">Casillas especiales activadas</div>
-          <div class="calc-bonus-grid" role="group" aria-label="Bonificaciones del tablero">
-            <button class="cbtn dl" id="cbtn-dl" onclick="toggleCalcBonus('dl')"
-              aria-pressed="false" title="Doble Letra: duplica el valor de UNA letra">
-              ×2<div class="cbtn-name">Doble Letra</div>
+          <!-- Paso 2: casilla especial -->
+          <div class="calc-step"><span class="calc-step-num">2</span> ¿Cayó en alguna casilla especial?</div>
+          <div class="calc-bonus-row" role="group" aria-label="Casilla especial de la palabra">
+            <button class="cbtn none active" id="cbtn-none" onclick="selectBonus('none')" aria-pressed="true">
+              <span class="cbtn-icon">⬜</span>
+              <span class="cbtn-label">Ninguna</span>
+              <span class="cbtn-desc">sin bonus</span>
             </button>
-            <button class="cbtn tl" id="cbtn-tl" onclick="toggleCalcBonus('tl')"
-              aria-pressed="false" title="Triple Letra: triplica el valor de UNA letra">
-              ×3<div class="cbtn-name">Triple Letra</div>
+            <button class="cbtn dl" id="cbtn-dl" onclick="selectBonus('dl')" aria-pressed="false">
+              <span class="cbtn-icon">🔵</span>
+              <span class="cbtn-label">Doble Letra</span>
+              <span class="cbtn-desc">×2 una letra</span>
             </button>
-            <button class="cbtn dp" id="cbtn-dp" onclick="toggleCalcBonus('dp')"
-              aria-pressed="false" title="Doble Palabra: duplica el total de la palabra">
-              ×2<div class="cbtn-name">Doble Palabra</div>
+            <button class="cbtn tl" id="cbtn-tl" onclick="selectBonus('tl')" aria-pressed="false">
+              <span class="cbtn-icon">🟦</span>
+              <span class="cbtn-label">Triple Letra</span>
+              <span class="cbtn-desc">×3 una letra</span>
             </button>
-            <button class="cbtn tp" id="cbtn-tp" onclick="toggleCalcBonus('tp')"
-              aria-pressed="false" title="Triple Palabra: triplica el total de la palabra">
-              ×3<div class="cbtn-name">Triple Palabra</div>
+            <button class="cbtn dp" id="cbtn-dp" onclick="selectBonus('dp')" aria-pressed="false">
+              <span class="cbtn-icon">🟣</span>
+              <span class="cbtn-label">Doble Palabra</span>
+              <span class="cbtn-desc">×2 total</span>
             </button>
-            <button class="cbtn dl" id="cbtn-dl2" onclick="toggleCalcBonus('dl2')"
-              aria-pressed="false" title="Segunda casilla Doble Letra">
-              ×2<div class="cbtn-name">2ª D.Letra</div>
+            <button class="cbtn tp" id="cbtn-tp" onclick="selectBonus('tp')" aria-pressed="false">
+              <span class="cbtn-icon">🔴</span>
+              <span class="cbtn-label">Triple Palabra</span>
+              <span class="cbtn-desc">×3 total</span>
             </button>
-            <button class="cbtn tl" id="cbtn-tl2" onclick="toggleCalcBonus('tl2')"
-              aria-pressed="false" title="Segunda casilla Triple Letra">
-              ×3<div class="cbtn-name">2ª T.Letra</div>
-            </button>
-            <button class="cbtn dp" id="cbtn-dp2" onclick="toggleCalcBonus('dp2')"
-              aria-pressed="false" title="Segunda casilla Doble Palabra">
-              ×2<div class="cbtn-name">2ª D.Palabra</div>
-            </button>
-            <button class="cbtn fp" id="cbtn-fp" onclick="toggleCalcBonus('fp')"
-              aria-pressed="false" title="Primera palabra del juego: vale el doble">
-              ×2<div class="cbtn-name">1ª Palabra</div>
+            <button class="cbtn dp" id="cbtn-fp" onclick="selectBonus('fp')" aria-pressed="false">
+              <span class="cbtn-icon">⭐</span>
+              <span class="cbtn-label">1ª Palabra</span>
+              <span class="cbtn-desc">×2 total</span>
             </button>
           </div>
 
+          <!-- Paso 3: resultado -->
           <div class="calc-result-box" aria-live="polite">
-            <div class="calc-result-total" id="calc-total">—</div>
-            <div class="calc-result-breakdown" id="calc-breakdown"></div>
+            <div>
+              <div class="calc-result-total" id="calc-total">—</div>
+              <div class="calc-result-label">puntos</div>
+            </div>
+            <div class="calc-result-right" id="calc-breakdown"></div>
           </div>
 
           <button class="calc-use-btn" id="calc-use-btn" onclick="useCalcScore()" disabled>
             ✅ Usar este total en el marcador
           </button>
+
         </div>
       </div>
     </div><!-- end calc-wrap -->
@@ -2916,19 +2896,17 @@
 <script>
   /* ═══ CALCULADORA DE PUNTOS ═══ */
 
-  // Valores de letras en español (Scrabble estándar)
   const LETTER_PTS = {
-    A:1, E:1, I:1, O:1, U:1, S:1, L:1, R:1, N:1, T:1,
-    D:2, G:2,
-    B:3, C:3, M:3, P:3,
-    F:4, H:4, V:4, Y:4,
-    J:8, Ñ:8,
-    K:10, Q:10, W:10, X:10, Z:10,
-    ' ':0  // ficha comodín (en blanco)
+    A:1,E:1,I:1,O:1,U:1,S:1,L:1,R:1,N:1,T:1,
+    D:2,G:2,
+    B:3,C:3,M:3,P:3,
+    F:4,H:4,V:4,Y:4,
+    J:8,Ñ:8,
+    K:10,Q:10,W:10,X:10,Z:10
   };
 
-  // Estado de la calculadora
-  let calcBonuses = { dl:false, tl:false, dp:false, tp:false, dl2:false, tl2:false, dp2:false, fp:false };
+  // Solo un bonus activo a la vez (radio)
+  let calcBonus = 'none';
   let calcLastResult = 0;
 
   function toggleCalc() {
@@ -2942,98 +2920,76 @@
     if (isOpen) setTimeout(() => document.getElementById('calc-input').focus(), 320);
   }
 
-  function toggleCalcBonus(key) {
-    calcBonuses[key] = !calcBonuses[key];
-    const btn = document.getElementById('cbtn-' + key);
-    if (btn) {
-      btn.classList.toggle('active', calcBonuses[key]);
-      btn.setAttribute('aria-pressed', calcBonuses[key]);
-    }
+  function selectBonus(key) {
+    calcBonus = key;
+    // Update button states (radio behaviour)
+    ['none','dl','tl','dp','tp','fp'].forEach(k => {
+      const b = document.getElementById('cbtn-' + k);
+      if (b) {
+        b.classList.toggle('active', k === key);
+        b.setAttribute('aria-pressed', k === key ? 'true' : 'false');
+      }
+    });
     sfxClick();
     recalc();
   }
 
   function onCalcInput(input) {
-    // Normalize: uppercase, remove non-letter chars except space (comodín)
-    let val = input.value.toUpperCase().replace(/[^A-ZÁÉÍÓÚÜÑ ]/g, '');
-    input.value = val;
-    renderCalcTiles(val);
+    input.value = input.value.toUpperCase().replace(/[^A-ZÁÉÍÓÚÜÑ]/g, '');
     recalc();
   }
 
-  function renderCalcTiles(word) {
-    const container = document.getElementById('calc-tiles-preview');
-    if (!container) return;
-    if (!word) { container.innerHTML = ''; return; }
-    container.innerHTML = [...word].map(ch => {
-      const isBlank = ch === ' ';
-      const pts = LETTER_PTS[ch] ?? 0;
-      return `<div class="calc-tile${isBlank ? ' blank-tile' : ''}">
-        <span class="ct-l">${isBlank ? '★' : ch}</span>
-        <span class="ct-p">${pts}</span>
-      </div>`;
-    }).join('');
-  }
-
   function recalc() {
-    const word  = (document.getElementById('calc-input').value || '').toUpperCase();
-    const total = document.getElementById('calc-total');
-    const breakdown = document.getElementById('calc-breakdown');
-    const useBtn = document.getElementById('calc-use-btn');
+    const word     = (document.getElementById('calc-input').value || '').toUpperCase();
+    const totalEl  = document.getElementById('calc-total');
+    const breakEl  = document.getElementById('calc-breakdown');
+    const useBtn   = document.getElementById('calc-use-btn');
 
     if (!word) {
-      total.textContent = '—';
-      breakdown.innerHTML = '';
-      if (useBtn) { useBtn.disabled = true; }
+      totalEl.textContent = '—';
+      totalEl.style.color = 'var(--gold2)';
+      breakEl.innerHTML = '';
+      if (useBtn) useBtn.disabled = true;
       calcLastResult = 0;
       return;
     }
 
-    // 1. Sum base letter values, applying letter multipliers to each letter
-    // DL / TL / DL2 / TL2 — we apply in order: highest-value letter gets highest multiplier
-    let letterValues = [...word].map(ch => LETTER_PTS[ch] ?? 0);
+    // Sum letter values
+    const letterVals = [...word].map(ch => LETTER_PTS[ch] ?? 0);
+    const rawSum     = letterVals.reduce((a, v) => a + v, 0);
 
-    // Collect letter multipliers: DL=×2, TL=×3, DL2=×2, TL2=×3
-    let letterMults = [];
-    if (calcBonuses.dl)  letterMults.push(2);
-    if (calcBonuses.tl)  letterMults.push(3);
-    if (calcBonuses.dl2) letterMults.push(2);
-    if (calcBonuses.tl2) letterMults.push(3);
+    // Apply bonus
+    let finalScore = rawSum;
+    let bonusLine  = '';
 
-    // Apply letter multipliers to the highest-value letters (greedy, optimal)
-    let sortedIdx = letterValues.map((v,i)=>({v,i})).sort((a,b)=>b.v-a.v);
-    let applied   = new Array(letterValues.length).fill(1);
-    let mSorted   = [...letterMults].sort((a,b)=>b-a);
-    mSorted.forEach((m, mi) => {
-      if (sortedIdx[mi]) applied[sortedIdx[mi].i] = m;
-    });
+    if (calcBonus === 'dl') {
+      // Best letter gets doubled
+      const best = Math.max(...letterVals);
+      finalScore = rawSum + best;          // rawSum already has best once, add it again
+      bonusLine = `+${best} (mejor letra ×2)`;
+    } else if (calcBonus === 'tl') {
+      const best = Math.max(...letterVals);
+      finalScore = rawSum + best * 2;      // best counted once, add 2× more
+      bonusLine = `+${best * 2} (mejor letra ×3)`;
+    } else if (calcBonus === 'dp' || calcBonus === 'fp') {
+      finalScore = rawSum * 2;
+      bonusLine = `× 2 = ${finalScore}`;
+    } else if (calcBonus === 'tp') {
+      finalScore = rawSum * 3;
+      bonusLine = `× 3 = ${finalScore}`;
+    }
 
-    let baseSum  = letterValues.reduce((acc, v, i) => acc + v * applied[i], 0);
-    let wordMult = 1;
-    if (calcBonuses.dp)  wordMult *= 2;
-    if (calcBonuses.dp2) wordMult *= 2;
-    if (calcBonuses.tp)  wordMult *= 3;
-    if (calcBonuses.fp)  wordMult *= 2;
-
-    const finalScore = baseSum * wordMult;
     calcLastResult = finalScore;
 
-    total.textContent = finalScore;
-    total.style.color = finalScore >= 50 ? 'var(--gold3)' : finalScore >= 30 ? 'var(--gold2)' : 'var(--cream)';
+    totalEl.textContent = finalScore;
+    totalEl.style.color = finalScore >= 50 ? 'var(--gold3)' : finalScore >= 25 ? 'var(--gold2)' : 'var(--cream)';
 
-    // Breakdown text
-    let lines = [];
-    let baseRaw = letterValues.reduce((a,v)=>a+v, 0);
-    lines.push(`Letras: ${letterValues.join('+')} = ${baseRaw}`);
-    if (letterMults.length) {
-      lines.push(`× casillas letra → ${baseSum}`);
-    }
-    if (wordMult > 1) {
-      lines.push(`× ${wordMult} (palabra) → ${finalScore}`);
-    }
-    breakdown.innerHTML = lines.map((l,i) =>
-      `<span class="${i===lines.length-1 && wordMult>1 ? 'brk-bonus' : ''}">${l}</span>`
-    ).join('');
+    // Breakdown
+    const letterStr = letterVals.join(' + ') + ' = ' + rawSum;
+    let html = `<span class="r-base">Letras: ${letterStr}</span>`;
+    if (bonusLine) html += `<span class="r-bonus">Bonus: ${bonusLine}</span>`;
+    if (bonusLine) html += `<span class="r-total">Total: ${finalScore} pts</span>`;
+    breakEl.innerHTML = html;
 
     if (useBtn) useBtn.disabled = false;
   }
@@ -3044,31 +3000,26 @@
     if (inp) {
       inp.value = calcLastResult;
       inp.classList.add('score-bump');
-      inp.addEventListener('animationend', ()=> inp.classList.remove('score-bump'), {once:true});
+      inp.addEventListener('animationend', () => inp.classList.remove('score-bump'), {once:true});
       inp.focus();
     }
     // Close calculator
-    const body = document.getElementById('calc-body');
+    const body  = document.getElementById('calc-body');
     const arrow = document.getElementById('ctoggle-arrow');
-    const btn = document.getElementById('calc-toggle');
+    const btn   = document.getElementById('calc-toggle');
     if (body && body.classList.contains('open')) {
       body.classList.remove('open');
-      arrow && arrow.classList.remove('open');
-      btn && btn.classList.remove('open');
-      btn && btn.setAttribute('aria-expanded', 'false');
+      if (arrow) arrow.classList.remove('open');
+      if (btn)   { btn.classList.remove('open'); btn.setAttribute('aria-expanded','false'); }
     }
-    showToast('✅ Puntuación cargada: ' + calcLastResult);
+    showToast('✅ ' + calcLastResult + ' puntos cargados');
     sfxScore(calcLastResult);
     haptic([10, 15]);
-    // Reset calculator bonuses
-    Object.keys(calcBonuses).forEach(k => {
-      calcBonuses[k] = false;
-      const b = document.getElementById('cbtn-' + k);
-      if (b) { b.classList.remove('active'); b.setAttribute('aria-pressed','false'); }
-    });
+    // Reset
+    selectBonus('none');
     document.getElementById('calc-input').value = '';
-    document.getElementById('calc-tiles-preview').innerHTML = '';
     document.getElementById('calc-total').textContent = '—';
+    document.getElementById('calc-total').style.color = 'var(--gold2)';
     document.getElementById('calc-breakdown').innerHTML = '';
     document.getElementById('calc-use-btn').disabled = true;
     calcLastResult = 0;
