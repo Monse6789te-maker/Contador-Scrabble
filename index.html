@@ -605,7 +605,7 @@
     border-radius:0 0 14px 14px;
     padding:1.2rem 1.4rem 1.5rem; text-align:center;
   }
-  .validator-sub { font-size:.82rem; color:var(--text-mute); margin-bottom:1rem; line-height:1.55; }
+  .validator-sub { font-size:.9rem; color:var(--text-mute); margin-bottom:1rem; line-height:1.65; }
   .validator-row { display:flex; gap:.6rem; align-items:stretch; justify-content:center; }
 
   .validator-input {
@@ -633,16 +633,209 @@
   .validator-btn:disabled { opacity:.45; cursor:not-allowed; transform:none; }
 
   .validator-result {
-    margin-top:.85rem; padding:.85rem 1.1rem; border-radius:10px;
+    margin-top:.85rem; padding:1rem 1.2rem; border-radius:12px;
     font-size:.95rem; display:none; animation:fadeIn .3s ease;
-    border:1px solid; line-height:1.6; text-align:center;
+    border:1px solid; line-height:1.6; text-align:left;
   }
-  .validator-result.valid   { background:rgba(78,205,196,.08); border-color:rgba(78,205,196,.35); color:#4ecdc4; display:block; }
-  .validator-result.invalid { background:rgba(168,50,40,.1);   border-color:rgba(168,50,40,.35);  color:#e07060; display:block; }
-  .validator-result.loading { background:rgba(201,148,58,.07); border-color:rgba(201,148,58,.25); color:var(--gold2); display:block; }
-  .v-result-word   { font-family:'Playfair Display',serif; font-weight:900; font-size:1.2rem; margin-bottom:.25rem; }
-  .v-result-reason { font-size:.88rem; opacity:.9; }
-  .v-result-def    { font-size:.82rem; margin-top:.4rem; opacity:.75; font-style:italic; line-height:1.5; color:inherit; }
+  .validator-result.valid   { background:rgba(78,205,196,.08); border-color:rgba(78,205,196,.35); display:block; }
+  .validator-result.invalid { background:rgba(168,50,40,.1);   border-color:rgba(168,50,40,.35);  display:block; }
+  .validator-result.loading { background:rgba(201,148,58,.07); border-color:rgba(201,148,58,.25); color:var(--gold2); display:block; text-align:center; }
+
+  .v-result-header {
+    display:flex; align-items:center; gap:.75rem; margin-bottom:.65rem;
+  }
+  .v-result-icon { font-size:1.6rem; flex-shrink:0; }
+  .v-result-word {
+    font-family:'Playfair Display',serif; font-weight:900; font-size:1.25rem;
+    letter-spacing:.04em; line-height:1.1;
+  }
+  .validator-result.valid   .v-result-word { color:#4ecdc4; }
+  .validator-result.invalid .v-result-word { color:#e07060; }
+  .v-result-badge {
+    font-family:'DM Mono',monospace; font-size:.68rem; font-weight:700;
+    padding:.15rem .5rem; border-radius:20px; letter-spacing:.06em;
+    text-transform:uppercase; margin-left:.3rem; vertical-align:middle;
+  }
+  .validator-result.valid   .v-result-badge { background:rgba(78,205,196,.2);  color:#4ecdc4; border:1px solid rgba(78,205,196,.35); }
+  .validator-result.invalid .v-result-badge { background:rgba(168,50,40,.2);   color:#e07060; border:1px solid rgba(168,50,40,.35); }
+
+  .v-result-tipo {
+    font-size:.78rem; color:var(--text-dim); text-transform:uppercase;
+    letter-spacing:.12em; margin-bottom:.45rem; font-weight:700;
+  }
+  .v-result-def {
+    font-size:.92rem; line-height:1.7; color:var(--cream2);
+    border-top:1px solid rgba(255,255,255,.06); padding-top:.55rem; margin-top:.3rem;
+  }
+  .validator-result.invalid .v-result-def { color:var(--text-dim); }
+  .v-result-suggestion {
+    font-size:.82rem; color:var(--text-dim); margin-top:.5rem;
+    font-style:italic; line-height:1.55;
+    border-top:1px solid rgba(255,255,255,.04); padding-top:.45rem;
+  }
+
+  /* Loading dots animation */
+  .v-loading-dots { display:inline-flex; gap:4px; margin-top:.5rem; }
+  .v-loading-dots span {
+    width:7px; height:7px; border-radius:50%; background:var(--gold2);
+    animation:vDotBounce 1.2s ease-in-out infinite;
+  }
+  .v-loading-dots span:nth-child(2){ animation-delay:.18s; }
+  .v-loading-dots span:nth-child(3){ animation-delay:.36s; }
+  @keyframes vDotBounce {
+    0%,80%,100%{ transform:scale(0.6); opacity:.4; }
+    40%{ transform:scale(1.1); opacity:1; }
+  }
+
+
+  /* ══════ CALCULADORA DE PUNTOS ══════ */
+  .calc-wrap { margin-bottom:.75rem; }
+
+  .calc-toggle {
+    width:100%; display:flex; align-items:center; justify-content:space-between;
+    padding:.7rem 1.1rem; border-radius:12px;
+    background:linear-gradient(135deg, rgba(22,16,8,.95), rgba(14,10,4,.98));
+    border:1px solid rgba(201,148,58,.2); color:var(--text-dim);
+    font-family:'Lato',sans-serif; font-size:.9rem; font-weight:700;
+    cursor:pointer; transition:all .2s; letter-spacing:.04em;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.04);
+    min-height:44px;
+  }
+  .calc-toggle:hover { border-color:rgba(201,148,58,.45); color:var(--cream2); }
+  .calc-toggle.open  { border-color:rgba(201,148,58,.4); color:var(--cream2); border-radius:12px 12px 0 0; }
+  .ctoggle-arrow { transition:transform .25s; font-size:.75rem; }
+  .ctoggle-arrow.open { transform:rotate(180deg); }
+
+  .calc-body {
+    max-height:0; overflow:hidden;
+    transition:max-height .35s cubic-bezier(.4,0,.2,1);
+    border:1px solid rgba(201,148,58,.2); border-top:none;
+    border-radius:0 0 12px 12px;
+    background:linear-gradient(160deg, rgba(18,13,6,.97), rgba(10,8,3,.99));
+  }
+  .calc-body.open { max-height:640px; }
+
+  .calc-card { padding:1rem 1.1rem 1.2rem; }
+
+  .calc-sub {
+    font-size:.78rem; color:var(--text-dim); text-align:center;
+    margin-bottom:.9rem; letter-spacing:.04em; line-height:1.5;
+  }
+
+  /* Letter tiles input row */
+  .calc-word-row {
+    display:flex; gap:.5rem; align-items:center; margin-bottom:.85rem;
+  }
+  .calc-word-input {
+    flex:1; background:rgba(0,0,0,.38);
+    border:1.5px solid rgba(201,148,58,.2); border-radius:10px;
+    padding:.7rem 1rem; color:var(--cream);
+    font-family:'Playfair Display',serif; font-size:1.4rem; font-weight:900;
+    letter-spacing:.12em; text-transform:uppercase; text-align:center;
+    outline:none; transition:border-color .2s, box-shadow .2s;
+  }
+  .calc-word-input:focus {
+    border-color:rgba(201,148,58,.6);
+    box-shadow:0 0 0 3px rgba(201,148,58,.1);
+  }
+  .calc-word-input::placeholder {
+    font-size:.95rem; letter-spacing:.06em; color:var(--text-mute);
+    font-family:'Lato',sans-serif; font-weight:400;
+  }
+
+  /* Tiles preview */
+  .calc-tiles-preview {
+    display:flex; flex-wrap:wrap; gap:4px; justify-content:center;
+    min-height:32px; margin-bottom:.85rem;
+  }
+  .calc-tile {
+    width:32px; height:32px;
+    background:linear-gradient(145deg,#f0dfa8 0%,#d4aa50 55%,#b88820 100%);
+    border-radius:5px; display:flex; flex-direction:column;
+    align-items:center; justify-content:center;
+    box-shadow:2px 3px 0 rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.4);
+    position:relative; flex-shrink:0;
+  }
+  .calc-tile .ct-l {
+    font-family:'Playfair Display',serif; font-weight:900; font-size:.9rem;
+    color:#1a0e00; line-height:1;
+  }
+  .calc-tile .ct-p {
+    font-family:'DM Mono',monospace; font-size:.32rem; color:#3a1a00;
+    position:absolute; bottom:2px; right:3px; font-weight:700;
+  }
+  .calc-tile.blank-tile {
+    background:linear-gradient(145deg,#d0c8b0,#a09060);
+    opacity:.75;
+  }
+  .calc-tile.blank-tile .ct-l { color:#3a3020; }
+
+  /* Bonus buttons grid */
+  .calc-bonus-label {
+    font-size:.75rem; color:var(--gold2); text-transform:uppercase;
+    letter-spacing:.14em; font-weight:700; margin-bottom:.55rem; text-align:center;
+  }
+  .calc-bonus-grid {
+    display:grid; grid-template-columns:repeat(4,1fr); gap:.45rem;
+    margin-bottom:.9rem;
+  }
+  .cbtn {
+    padding:.55rem .3rem; border-radius:9px;
+    border:1.5px solid; font-family:'DM Mono',monospace;
+    font-size:.8rem; font-weight:700; cursor:pointer;
+    transition:all .18s; text-align:center; min-height:44px;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    gap:1px; line-height:1.2;
+  }
+  .cbtn .cbtn-name { font-size:.65rem; opacity:.75; font-weight:500; }
+  /* DL — light blue */
+  .cbtn.dl { background:rgba(94,184,255,.08); border-color:rgba(94,184,255,.35); color:#7ec8f0; }
+  .cbtn.dl:hover, .cbtn.dl.active { background:rgba(94,184,255,.22); border-color:#7ec8f0; box-shadow:0 0 12px rgba(94,184,255,.25); }
+  /* TL — dark blue */
+  .cbtn.tl { background:rgba(50,100,220,.1); border-color:rgba(80,140,255,.35); color:#8ab0ff; }
+  .cbtn.tl:hover, .cbtn.tl.active { background:rgba(80,140,255,.22); border-color:#8ab0ff; box-shadow:0 0 12px rgba(80,140,255,.25); }
+  /* DP — pink */
+  .cbtn.dp { background:rgba(230,90,120,.08); border-color:rgba(230,90,120,.35); color:#f08098; }
+  .cbtn.dp:hover, .cbtn.dp.active { background:rgba(230,90,120,.22); border-color:#f08098; box-shadow:0 0 12px rgba(230,90,120,.25); }
+  /* TP — red */
+  .cbtn.tp { background:rgba(180,40,40,.1); border-color:rgba(220,80,80,.4); color:#e07070; }
+  .cbtn.tp:hover, .cbtn.tp.active { background:rgba(220,80,80,.22); border-color:#e07070; box-shadow:0 0 12px rgba(220,80,80,.3); }
+  /* Primera palabra */
+  .cbtn.fp { background:rgba(59,92,47,.12); border-color:rgba(94,184,102,.35); color:#7ecf82; }
+  .cbtn.fp:hover, .cbtn.fp.active { background:rgba(94,184,102,.22); border-color:#7ecf82; box-shadow:0 0 12px rgba(94,184,102,.25); }
+  .cbtn.active { transform:scale(.96); }
+
+  /* Result display */
+  .calc-result-box {
+    background:rgba(0,0,0,.3); border:1px solid rgba(201,148,58,.2);
+    border-radius:12px; padding:.9rem 1rem;
+    display:flex; align-items:center; justify-content:space-between;
+    gap:.75rem; margin-bottom:.75rem;
+  }
+  .calc-result-total {
+    font-family:'Playfair Display',serif; font-weight:900;
+    font-size:2.4rem; color:var(--gold2); line-height:1;
+    text-shadow:0 0 20px rgba(232,184,75,.3);
+    transition:all .25s;
+  }
+  .calc-result-breakdown {
+    font-family:'DM Mono',monospace; font-size:.72rem;
+    color:var(--text-dim); line-height:1.8; text-align:right; flex:1;
+  }
+  .calc-result-breakdown span { display:block; }
+  .calc-result-breakdown .brk-bonus { color:var(--gold3); }
+  .calc-result-breakdown .brk-scr   { color:var(--gold2); }
+
+  .calc-use-btn {
+    width:100%; padding:.8rem;
+    background:linear-gradient(135deg, rgba(59,92,47,.8), rgba(45,72,35,.9));
+    border:1px solid rgba(94,184,102,.35); border-radius:10px;
+    color:#d0f0be; font-family:'Playfair Display',serif;
+    font-size:1rem; font-weight:700; cursor:pointer;
+    transition:all .2s; letter-spacing:.04em; min-height:44px;
+  }
+  .calc-use-btn:hover { background:linear-gradient(135deg,#587a42,#456234); transform:translateY(-1px); }
+  .calc-use-btn:disabled { opacity:.35; cursor:not-allowed; transform:none; }
 
   /* ── First word banner ── */
   .first-word-banner {
@@ -659,8 +852,8 @@
   .score-input-wrap { width:100%; }
 
   .sil {
-    font-size:.82rem; color:var(--gold); margin-bottom:.5rem;
-    display:block; letter-spacing:.1em; text-transform:uppercase; opacity:.85;
+    font-size:.92rem; color:var(--gold); margin-bottom:.5rem;
+    display:block; letter-spacing:.1em; text-transform:uppercase; opacity:.9;
     text-align:center; font-weight:700;
   }
 
@@ -686,11 +879,11 @@
 
   /* Large quick buttons */
   .qbtn {
-    padding:.55rem 1.1rem; border-radius:10px;
+    padding:.65rem 1.2rem; border-radius:10px;
     border:1.5px solid rgba(201,148,58,.25); background:var(--surface3);
-    color:var(--cream2); font-family:'DM Mono',monospace; font-size:.95rem;
-    font-weight:600; cursor:pointer; transition:all .15s; min-width:58px;
-    min-height: 44px; box-shadow: 0 2px 8px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.04);
+    color:var(--cream2); font-family:'DM Mono',monospace; font-size:1.05rem;
+    font-weight:600; cursor:pointer; transition:all .15s; min-width:64px;
+    min-height: 48px; box-shadow: 0 2px 8px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.04);
   }
   .qbtn:hover { border-color:var(--gold); color:var(--gold2); background:rgba(201,148,58,.1); transform:translateY(-2px); }
   .qbtn:active { transform:scale(.94) translateY(0); }
@@ -862,8 +1055,8 @@
   }
 
   /* Bigger modal text */
-  .modal-title { font-family:'Playfair Display',serif; font-size:1.35rem; font-style:italic; color:var(--cream); margin-bottom:.65rem; }
-  .modal-text  { color:var(--text-dim); font-size:.95rem; margin-bottom:1.5rem; line-height:1.7; }
+  .modal-title { font-family:'Playfair Display',serif; font-size:1.45rem; font-style:italic; color:var(--cream); margin-bottom:.65rem; }
+  .modal-text  { color:var(--text-dim); font-size:1rem; margin-bottom:1.5rem; line-height:1.8; }
   .modal-btns  { display:flex; gap:.65rem; }
 
   .mbtn {
@@ -911,28 +1104,28 @@
   .help-section { margin-bottom:1.25rem; }
   .help-section:last-child { margin-bottom:0; }
   .help-section-title {
-    font-family:'Playfair Display',serif; font-size:1.1rem; font-weight:700;
+    font-family:'Playfair Display',serif; font-size:1.2rem; font-weight:700;
     margin-bottom:.65rem; display:flex; align-items:center; gap:.45rem;
   }
   .help-rule {
     display:flex; align-items:flex-start; gap:.6rem;
-    font-size:.95rem; color:var(--cream2); line-height:1.7;
-    padding:.45rem 0; border-bottom:1px solid rgba(255,255,255,.04);
+    font-size:1rem; color:var(--cream2); line-height:1.8;
+    padding:.5rem 0; border-bottom:1px solid rgba(255,255,255,.04);
   }
   .help-rule:last-child { border-bottom:none; }
-  .help-rule-icon { flex-shrink:0; font-size:1.05rem; margin-top:.1rem; }
+  .help-rule-icon { flex-shrink:0; font-size:1.15rem; margin-top:.1rem; }
   .help-divider { height:1px; margin:1rem 0; background:linear-gradient(90deg, transparent, rgba(201,148,58,.2), transparent); }
 
   /* Bonus table — bigger, clearer */
   .bonus-table { width:100%; border-collapse:collapse; margin-top:.65rem; }
   .bonus-table th {
-    font-family:'Playfair Display',serif; font-size:.85rem; font-weight:700;
+    font-family:'Playfair Display',serif; font-size:.95rem; font-weight:700;
     letter-spacing:.08em; color:var(--gold); text-transform:uppercase;
-    padding:.5rem .65rem; border-bottom:1px solid rgba(201,148,58,.2); text-align:left;
+    padding:.55rem .65rem; border-bottom:1px solid rgba(201,148,58,.2); text-align:left;
   }
   .bonus-table td {
-    padding:.55rem .65rem; border-bottom:1px solid rgba(255,255,255,.04);
-    color:var(--cream2); line-height:1.6; font-size:.95rem;
+    padding:.6rem .65rem; border-bottom:1px solid rgba(255,255,255,.04);
+    color:var(--cream2); line-height:1.7; font-size:1rem;
   }
   .bonus-table tr:last-child td { border-bottom:none; }
   .bonus-badge {
@@ -953,12 +1146,12 @@
   }
   .help-toggle {
     width:100%; display:flex; align-items:center; justify-content:space-between;
-    padding:.95rem 1.4rem;
+    padding:1.1rem 1.4rem;
     background:linear-gradient(160deg, rgba(14,22,10,.97), rgba(8,14,5,.99));
-    border:1px solid rgba(94,184,102,.25); border-radius:16px;
+    border:1px solid rgba(94,184,102,.35); border-radius:16px;
     color:#7ecf82; cursor:pointer;
-    font-family:'Playfair Display',serif; font-size:1.05rem; font-weight:700;
-    transition:all .25s ease; box-shadow: var(--shadow-card); min-height:54px;
+    font-family:'Playfair Display',serif; font-size:1.15rem; font-weight:700;
+    transition:all .25s ease; box-shadow: var(--shadow-card); min-height:60px;
   }
   .help-toggle:hover { border-color:rgba(94,184,102,.48); }
   .htoggle-arrow { font-size:.85rem; color:#5eb866; transition:transform .3s ease; }
@@ -1127,7 +1320,116 @@
     100%{opacity:0;transform:translateY(var(--travel)) rotate(var(--rot-end))}
   }
 
-  /* Accessibility — reduce motion */
+  /* ═══════════════ TUTORIAL OVERLAY ═══════════════ */
+  #tutorial-overlay {
+    display:none; position:fixed; inset:0; z-index:600;
+    background:rgba(0,0,0,.78); backdrop-filter:blur(3px);
+    align-items:center; justify-content:center;
+  }
+  #tutorial-overlay.open { display:flex; animation:fadeIn .35s ease; }
+
+  .tutorial-box {
+    background:linear-gradient(160deg, rgba(32,24,10,.99), rgba(16,11,4,.99));
+    border:2px solid rgba(201,148,58,.55); border-radius:22px;
+    padding:2.4rem 2.2rem; max-width:480px; width:calc(100% - 2rem);
+    box-shadow: var(--shadow-deep), 0 0 80px rgba(201,148,58,.2);
+    position:relative; animation:slideUp .3s ease;
+    text-align:center;
+  }
+  .tutorial-box::before {
+    content:''; position:absolute; top:0; left:10%; right:10%; height:3px;
+    background:linear-gradient(90deg, transparent, var(--gold2), var(--gold3), var(--gold2), transparent);
+    border-radius:22px 22px 0 0;
+  }
+
+  .tutorial-step-badge {
+    display:inline-flex; align-items:center; justify-content:center;
+    width:52px; height:52px; border-radius:50%;
+    background:linear-gradient(135deg, var(--gold2), var(--gold));
+    color:#100800; font-family:'Playfair Display',serif;
+    font-size:1.6rem; font-weight:900;
+    box-shadow: 0 4px 20px rgba(201,148,58,.5);
+    margin-bottom:1rem;
+  }
+  .tutorial-icon {
+    font-size:3.2rem; display:block; margin-bottom:.6rem;
+    filter:drop-shadow(0 0 12px rgba(201,148,58,.4));
+  }
+  .tutorial-title {
+    font-family:'Playfair Display',serif; font-size:1.45rem; font-weight:900;
+    color:var(--cream); margin-bottom:.75rem; line-height:1.25;
+  }
+  .tutorial-text {
+    font-size:1.05rem; color:var(--cream2); line-height:1.85;
+    margin-bottom:1.5rem;
+  }
+  .tutorial-highlight {
+    background:rgba(201,148,58,.18); border:1px solid rgba(201,148,58,.4);
+    border-radius:8px; padding:.2rem .55rem;
+    color:var(--gold2); font-weight:700;
+    display:inline-block; margin:0 .1rem;
+  }
+  .tutorial-dots {
+    display:flex; justify-content:center; gap:.45rem; margin-bottom:1.3rem;
+  }
+  .tutorial-dot {
+    width:10px; height:10px; border-radius:50%;
+    background:rgba(201,148,58,.2); border:1px solid rgba(201,148,58,.3);
+    transition:all .2s;
+  }
+  .tutorial-dot.active {
+    background:var(--gold2); border-color:var(--gold3);
+    box-shadow:0 0 8px rgba(201,148,58,.5); transform:scale(1.2);
+  }
+  .tutorial-dot.done {
+    background:rgba(201,148,58,.45);
+  }
+  .tutorial-nav {
+    display:flex; gap:.75rem; justify-content:center; align-items:center;
+  }
+  .tutorial-btn-next {
+    flex:1; max-width:220px; padding:1.05rem 1.5rem;
+    background:linear-gradient(140deg, var(--gold2), var(--gold), #a8741e);
+    border:none; border-radius:13px; color:#100800;
+    font-family:'Playfair Display',serif; font-size:1.1rem; font-weight:700;
+    cursor:pointer; transition:all .2s; min-height:54px;
+    box-shadow: 0 5px 20px rgba(201,148,58,.4), inset 0 1px 0 rgba(255,255,255,.3);
+    letter-spacing:.04em;
+  }
+  .tutorial-btn-next:hover { transform:translateY(-2px); box-shadow:0 8px 28px rgba(201,148,58,.55); }
+  .tutorial-btn-skip {
+    padding:.7rem 1rem; border-radius:10px;
+    background:transparent; border:1px solid rgba(201,148,58,.2);
+    color:var(--text-dim); font-size:.9rem; cursor:pointer; transition:all .18s;
+    font-family:'Lato',sans-serif; min-height:46px;
+  }
+  .tutorial-btn-skip:hover { border-color:rgba(201,148,58,.4); color:var(--cream2); }
+
+  /* Make the "two timer buttons" label clearer */
+  .hbtn-timer-label {
+    font-size:.72rem; color:var(--text-mute); text-align:center;
+    margin-top:2px; display:block; letter-spacing:.02em;
+    white-space:nowrap; line-height:1;
+  }
+  .hbtn-with-label {
+    display:flex; flex-direction:column; align-items:center;
+    gap:0;
+  }
+
+  /* Zero-score warning style (used in toast) */
+  .toast.warn { border-color:rgba(255,180,50,.5); color:#ffd070; }
+
+  /* Bigger add button text */
+  .add-btn { font-size:1.2rem; }
+
+  /* Bigger scrabble toggle text */
+  .scrabble-text { font-size:1rem; }
+  .scrabble-text strong { font-family:'DM Mono',monospace; font-size:1rem; font-weight:700; }
+
+  /* Pass button — clearer text for seniors */
+  .pass-btn { font-size:1.05rem; color:var(--text-dim); }
+
+
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { animation-duration:0.01ms !important; animation-iteration-count:1 !important; transition-duration:0.01ms !important; }
     .logo-tile, .bg-tile { animation:none !important; }
@@ -1153,6 +1455,39 @@
 
 <!-- Floating background tiles -->
 <div class="bg-tiles-container" id="bg-tiles"></div>
+
+<!-- ═══════ TUTORIAL ═══════ -->
+<div id="tutorial-overlay" role="dialog" aria-modal="true" aria-labelledby="tutorial-title">
+  <div class="tutorial-box">
+    <div id="tutorial-icon" class="tutorial-icon">🎲</div>
+    <div id="tutorial-step-badge" class="tutorial-step-badge">1</div>
+    <h2 class="tutorial-title" id="tutorial-title"></h2>
+    <p class="tutorial-text" id="tutorial-text"></p>
+    <div class="tutorial-dots" id="tutorial-dots"></div>
+    <div class="tutorial-nav">
+      <button class="tutorial-btn-skip" onclick="closeTutorial()" id="tutorial-skip-btn">Saltar tutorial</button>
+      <button class="tutorial-btn-next" onclick="nextTutorialStep()" id="tutorial-next-btn">Siguiente →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ RESUME BANNER ═══════ -->
+<div id="resume-banner" style="display:none;position:fixed;top:0;left:0;right:0;z-index:200;
+  background:linear-gradient(135deg,rgba(22,16,8,.98),rgba(30,22,10,.98));
+  border-bottom:1px solid rgba(201,148,58,.4);
+  padding:.85rem 1.25rem;
+  flex-direction:column; align-items:center; gap:.6rem;
+  box-shadow:0 4px 24px rgba(0,0,0,.7);" aria-live="polite">
+  <div style="display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;justify-content:center;">
+    <span style="font-size:1.1rem">💾</span>
+    <span style="font-family:'Playfair Display',serif;font-size:1.05rem;color:var(--cream);font-weight:700">¿Continuar la partida anterior?</span>
+  </div>
+  <div id="resume-banner-detail" style="font-family:'DM Mono',monospace;font-size:.75rem;color:var(--text-dim);letter-spacing:.06em;text-align:center"></div>
+  <div style="display:flex;gap:.65rem;flex-wrap:wrap;justify-content:center;">
+    <button onclick="resumeGame()" style="padding:.6rem 1.4rem;background:linear-gradient(135deg,var(--gold2),var(--gold));border:none;border-radius:10px;color:#100800;font-family:'Playfair Display',serif;font-size:.95rem;font-weight:700;cursor:pointer;box-shadow:0 3px 14px rgba(201,148,58,.4);min-height:42px;">▶ Continuar</button>
+    <button onclick="dismissResume()" style="padding:.6rem 1.2rem;background:transparent;border:1px solid rgba(201,148,58,.25);border-radius:10px;color:var(--text-dim);font-family:'Lato',sans-serif;font-size:.9rem;cursor:pointer;min-height:42px;">Nueva partida</button>
+  </div>
+</div>
 
 <!-- ═══════ SETUP ═══════ -->
 <div id="setup-screen">
@@ -1227,7 +1562,10 @@
         </div>
       </div>
     </div>
-  </div>
+  </div><!-- end help-wrap -->
+  <button onclick="openTutorial()" style="margin-top:.55rem;background:transparent;border:1px solid rgba(201,148,58,.22);border-radius:12px;color:var(--text-dim);font-family:'Lato',sans-serif;font-size:.9rem;padding:.7rem 1.4rem;cursor:pointer;transition:all .2s;width:100%;max-width:520px;" onmouseover="this.style.borderColor='rgba(201,148,58,.5)';this.style.color='var(--cream2)'" onmouseout="this.style.borderColor='rgba(201,148,58,.22)';this.style.color='var(--text-dim)'">
+    📖 Ver tutorial paso a paso
+  </button>
 </div><!-- end setup-screen -->
 
 <!-- ═══════ GAME ═══════ -->
@@ -1239,11 +1577,18 @@
     </div>
     <div class="header-btns">
       <button class="hbtn" onclick="undoLast()" aria-label="Deshacer última jugada">↩ Deshacer</button>
-      <button class="hbtn" id="timer-toggle-btn" onclick="toggleTimer()"
-        aria-label="Activar o desactivar temporizador" aria-pressed="false">⏱ Timer</button>
-      <button class="hbtn" id="timer-settings-btn" onclick="openTimerSettings()"
-        aria-label="Configurar temporizador" title="Ajustar duración y penalizaciones">⚙ Timer</button>
+      <div class="hbtn-with-label">
+        <button class="hbtn" id="timer-toggle-btn" onclick="toggleTimer()"
+          aria-label="Activar o desactivar temporizador" aria-pressed="false">⏱ Reloj</button>
+        <span class="hbtn-timer-label">activar/apagar</span>
+      </div>
+      <div class="hbtn-with-label">
+        <button class="hbtn" id="timer-settings-btn" onclick="openTimerSettings()"
+          aria-label="Configurar temporizador" title="Ajustar duración y penalizaciones">⚙ Reloj</button>
+        <span class="hbtn-timer-label">configurar</span>
+      </div>
       <button class="hbtn" onclick="openHelpModal()" aria-label="Ver instrucciones">❓ Ayuda</button>
+      <button class="hbtn" onclick="openTutorial()" aria-label="Ver tutorial paso a paso">📖 Tutorial</button>
       <button class="hbtn" onclick="endGamePrompt()" aria-label="Finalizar partida">🏆 Finalizar</button>
       <button class="hbtn danger" onclick="resetPrompt()" aria-label="Reiniciar partida">↺ Reiniciar</button>
     </div>
@@ -1297,13 +1642,94 @@
             <button class="validator-btn" id="validator-btn" onclick="checkWord()">Verificar</button>
           </div>
           <div class="validator-result" id="validator-result" role="status" aria-live="polite">
-            <div class="v-result-word" id="v-word"></div>
-            <div class="v-result-reason" id="v-reason"></div>
-            <div class="v-result-def" id="v-def"></div>
+            <div id="v-loading-content" style="display:none;text-align:center;padding:.4rem 0">
+              <div style="color:var(--gold2);font-size:.95rem;margin-bottom:.4rem">Consultando el diccionario…</div>
+              <div class="v-loading-dots"><span></span><span></span><span></span></div>
+            </div>
+            <div id="v-result-content" style="display:none">
+              <div class="v-result-header">
+                <span class="v-result-icon" id="v-icon"></span>
+                <div>
+                  <div class="v-result-word" id="v-word"></div>
+                  <span class="v-result-badge" id="v-badge"></span>
+                </div>
+              </div>
+              <div class="v-result-tipo" id="v-tipo"></div>
+              <div class="v-result-def" id="v-def"></div>
+              <div class="v-result-suggestion" id="v-suggestion" style="display:none"></div>
+            </div>
           </div>
         </div>
       </div>
     </div>
+
+    <!-- ═══ CALCULADORA DE PUNTOS ═══ -->
+    <div class="calc-wrap">
+      <button class="calc-toggle" onclick="toggleCalc()" id="calc-toggle"
+        aria-expanded="false" aria-controls="calc-body">
+        <span>🧮 Calculadora de Puntos</span>
+        <span class="ctoggle-arrow" id="ctoggle-arrow">▼</span>
+      </button>
+      <div class="calc-body" id="calc-body" role="region">
+        <div class="calc-card">
+          <p class="calc-sub">Escribe tu palabra, selecciona las casillas especiales y obtén el total automáticamente.</p>
+
+          <div class="calc-word-row">
+            <input class="calc-word-input" type="text" id="calc-input"
+              placeholder="Escribe la palabra…" maxlength="15"
+              oninput="onCalcInput(this)"
+              aria-label="Palabra para calcular puntos">
+          </div>
+
+          <div class="calc-tiles-preview" id="calc-tiles-preview" aria-hidden="true"></div>
+
+          <div class="calc-bonus-label">Casillas especiales activadas</div>
+          <div class="calc-bonus-grid" role="group" aria-label="Bonificaciones del tablero">
+            <button class="cbtn dl" id="cbtn-dl" onclick="toggleCalcBonus('dl')"
+              aria-pressed="false" title="Doble Letra: duplica el valor de UNA letra">
+              ×2<div class="cbtn-name">Doble Letra</div>
+            </button>
+            <button class="cbtn tl" id="cbtn-tl" onclick="toggleCalcBonus('tl')"
+              aria-pressed="false" title="Triple Letra: triplica el valor de UNA letra">
+              ×3<div class="cbtn-name">Triple Letra</div>
+            </button>
+            <button class="cbtn dp" id="cbtn-dp" onclick="toggleCalcBonus('dp')"
+              aria-pressed="false" title="Doble Palabra: duplica el total de la palabra">
+              ×2<div class="cbtn-name">Doble Palabra</div>
+            </button>
+            <button class="cbtn tp" id="cbtn-tp" onclick="toggleCalcBonus('tp')"
+              aria-pressed="false" title="Triple Palabra: triplica el total de la palabra">
+              ×3<div class="cbtn-name">Triple Palabra</div>
+            </button>
+            <button class="cbtn dl" id="cbtn-dl2" onclick="toggleCalcBonus('dl2')"
+              aria-pressed="false" title="Segunda casilla Doble Letra">
+              ×2<div class="cbtn-name">2ª D.Letra</div>
+            </button>
+            <button class="cbtn tl" id="cbtn-tl2" onclick="toggleCalcBonus('tl2')"
+              aria-pressed="false" title="Segunda casilla Triple Letra">
+              ×3<div class="cbtn-name">2ª T.Letra</div>
+            </button>
+            <button class="cbtn dp" id="cbtn-dp2" onclick="toggleCalcBonus('dp2')"
+              aria-pressed="false" title="Segunda casilla Doble Palabra">
+              ×2<div class="cbtn-name">2ª D.Palabra</div>
+            </button>
+            <button class="cbtn fp" id="cbtn-fp" onclick="toggleCalcBonus('fp')"
+              aria-pressed="false" title="Primera palabra del juego: vale el doble">
+              ×2<div class="cbtn-name">1ª Palabra</div>
+            </button>
+          </div>
+
+          <div class="calc-result-box" aria-live="polite">
+            <div class="calc-result-total" id="calc-total">—</div>
+            <div class="calc-result-breakdown" id="calc-breakdown"></div>
+          </div>
+
+          <button class="calc-use-btn" id="calc-use-btn" onclick="useCalcScore()" disabled>
+            ✅ Usar este total en el marcador
+          </button>
+        </div>
+      </div>
+    </div><!-- end calc-wrap -->
 
     <div class="turn-controls">
       <div class="score-input-wrap">
@@ -1331,8 +1757,8 @@
       </div>
 
       <div class="action-col">
-        <button class="add-btn" onclick="addScore()" aria-label="Confirmar y añadir puntos">Añadir Puntos →</button>
-        <button class="pass-btn" onclick="passTurn()" aria-label="Pasar turno sin puntuar">— Pasar turno</button>
+        <button class="add-btn" onclick="addScore()" aria-label="Confirmar y añadir puntos">✅ Añadir Puntos</button>
+        <button class="pass-btn" onclick="passTurn()" aria-label="Pasar turno sin puntuar">⏭ No puedo jugar (Pasar)</button>
       </div>
     </div>
   </div>
@@ -1682,6 +2108,7 @@
       });
     }
     state = { players, currentTurn:0, round:1, scrabbleOn:false, history:[], log:[] };
+    clearSavedState();
     document.getElementById('setup-screen').style.display = 'none';
     document.getElementById('game-screen').style.display  = 'block';
     haptic([10,30,10]);
@@ -1802,6 +2229,13 @@
       showToast('⚠ Máximo 999 puntos por jugada');
       haptic([50]); return;
     }
+    // FIX: warn if 0 pts and no scrabble — likely an accidental tap
+    if (pts === 0 && !state.scrabbleOn) {
+      showToast('⚠ Escribe los puntos primero, o usa "Pasar turno"');
+      inp.classList.add('shake');
+      inp.addEventListener('animationend', () => inp.classList.remove('shake'), {once:true});
+      haptic([30]); return;
+    }
 
     const isScrabble = state.scrabbleOn;
     const total      = pts + (isScrabble ? 50 : 0);
@@ -1813,7 +2247,7 @@
     p.streak = pts > 0 ? p.streak + 1 : 0;
     if (total > p.bestScore) p.bestScore = total;
 
-    p.rounds.push({ pts:total, scr:isScrabble });
+    p.rounds.push({ pts:pts, total:total, scr:isScrabble });
     let action = `anotó ${pts} pts`;
     if (isScrabble) action += ` + 50 ¡Scrabble!`;
     state.log.push({ name:p.name, hex:p.hex, action, pts:total, ptsStr:`+${total}` });
@@ -1859,9 +2293,14 @@
     const p = state.players[state.currentTurn];
     setTimeout(() => showTurnTransition(p.name, p.hex), 120);
     if (timerEnabled) startTimerRun();
+    saveState();
   }
 
-  function jumpTo(idx) { state.currentTurn = idx; sfxClick(); render(); }
+  function jumpTo(idx) {
+    state.currentTurn = idx;
+    sfxClick();
+    render(); // render calls renderTurnPanel which clears input and scrabble
+  }
 
   function animateScoreCount(el, from, to) {
     const dur = 500, start = performance.now();
@@ -1913,9 +2352,11 @@
     const p      = state.players[last.idx];
     const prev   = p.score;
     p.score     -= last.delta;
+    if (!last.passed) { p.streak = Math.max(0, p.streak - 1); }
     p.rounds.pop(); state.log.pop();
+    // FIX: decrement round only if the undone turn was player 0 (start of a new round)
+    if (last.idx === 0 && state.round > 1) state.round--;
     state.currentTurn = last.idx;
-    if (state.currentTurn===state.players.length-1 && state.round>1) state.round--;
     sfxUndo(); haptic([10,10]);
     setTimeout(() => {
       const el = document.getElementById(`score-${last.idx}`);
@@ -1924,6 +2365,7 @@
     showToast('Jugada deshecha ↩');
     render();
     if (timerEnabled) startTimerRun();
+    saveState();
   }
 
   function endGamePrompt() { document.getElementById('end-modal').classList.add('open'); }
@@ -1950,6 +2392,7 @@
     closeModal('reset-modal');
     state.players.forEach(p => { p.score=0; p.rounds=[]; p.passes=0; p.streak=0; p.bestScore=0; });
     state.currentTurn=0; state.round=1; state.history=[]; state.log=[];
+    clearSavedState();
     haptic([20,10,20]);
     stopTimer();
     if (timerEnabled) startTimerRun();
@@ -1986,6 +2429,7 @@
     const ws = document.getElementById('winner-screen');
     ws.classList.remove('show'); ws.style.display='none';
     stopTimer();
+    clearSavedState();
     document.getElementById('setup-screen').style.display='flex';
   }
 
@@ -2065,23 +2509,32 @@
     } else {
       btn.textContent = '⏸ Pausar';
       btn.classList.remove('paused');
-      // resume countdown
-      timerInterval = setInterval(() => {
-        timerSeconds--;
-        updateTimerDisplay();
-        if (timerSeconds <= WARN_THRESHOLD && timerSeconds > 0) haptic([5]);
-        if (timerSeconds <= 0) {
-          stopTimer();
-          sfxPass(); haptic([30,20,50]);
-          showToast('⏱ ¡Tiempo! Pasa el turno');
-        }
-      }, 1000);
+      // FIX: reuse the shared countdown starter instead of creating a new raw interval
+      _resumeTimerInterval();
     }
+    updateTimerDisplay();
     sfxClick();
   }
 
+  function _resumeTimerInterval() {
+    if (timerInterval) clearInterval(timerInterval);
+    timerInterval = setInterval(() => {
+      if (timerPaused) return;
+      timerSeconds--;
+      updateTimerDisplay();
+      if (timerSeconds <= WARN_THRESHOLD && timerSeconds > 0) haptic([5]);
+      if (timerSeconds <= 0) {
+        stopTimer();
+        sfxPass(); haptic([30,20,50]);
+        showToast('⏱ ¡Tiempo! Pasa el turno');
+      }
+    }, 1000);
+  }
+
   function applyPenalty() {
-    if (!timerEnabled) return;
+    if (!timerEnabled || !timerInterval) {
+      showToast('El reloj no está activo'); return;
+    }
     timerSeconds = Math.min(timerSeconds + PENALTY_SECS, TIMER_DURATION * 3);
     const bar = document.getElementById('timer-bar');
     bar.classList.add('penalty');
@@ -2099,17 +2552,7 @@
     const pauseBtn = document.getElementById('timer-pause-btn');
     if (pauseBtn) { pauseBtn.textContent = '⏸ Pausar'; pauseBtn.classList.remove('paused'); }
     updateTimerDisplay();
-    timerInterval = setInterval(() => {
-      if (timerPaused) return;
-      timerSeconds--;
-      updateTimerDisplay();
-      if (timerSeconds <= WARN_THRESHOLD && timerSeconds > 0) haptic([5]);
-      if (timerSeconds <= 0) {
-        stopTimer();
-        sfxPass(); haptic([30,20,50]);
-        showToast('⏱ ¡Tiempo! Pasa el turno');
-      }
-    }, 1000);
+    _resumeTimerInterval();
   }
 
   function stopTimer() {
@@ -2212,7 +2655,7 @@
 
     const series = players.map(p => {
       let cum = 0; const pts = [0];
-      p.rounds.forEach(r => { cum += r.passed ? 0 : r.pts; pts.push(cum); });
+      p.rounds.forEach(r => { cum += r.passed ? 0 : (r.total ?? r.pts); pts.push(cum); });
       return pts;
     });
     const maxV = Math.max(...series.flat(), 10);
@@ -2286,13 +2729,356 @@
     if (e.key==='Enter' && document.activeElement===document.getElementById('score-input')) addScore();
   });
 
+  /* ═══ TUTORIAL ═══ */
+  const TUTORIAL_STEPS = [
+    {
+      icon: '👋',
+      title: '¡Bienvenido al Marcador de Scrabble!',
+      text: 'Esta app te ayuda a llevar los puntos mientras juegas.\n\nTe explicaremos cómo usarla en unos pocos pasos, ¡es muy fácil!'
+    },
+    {
+      icon: '👥',
+      title: 'Paso 1 — Elige los jugadores',
+      text: 'Primero, elige cuántos jugadores van a jugar (de 2 a 6).\n\nLuego escribe el nombre de cada jugador en los espacios de la pantalla principal.'
+    },
+    {
+      icon: '✏️',
+      title: 'Paso 2 — Anota los puntos',
+      text: 'Cuando un jugador termina su turno, escribe cuántos puntos hizo en el <span class="tutorial-highlight">cuadro grande</span> del centro.\n\nTambién puedes pulsar <span class="tutorial-highlight">+10</span>, <span class="tutorial-highlight">+20</span> o <span class="tutorial-highlight">+30</span> para sumar rápido.'
+    },
+    {
+      icon: '⭐',
+      title: 'Paso 3 — ¡Scrabble! (bonus de 50)',
+      text: '¿El jugador usó sus 7 fichas de una sola vez? ¡Eso es un Scrabble!\n\nAntes de confirmar los puntos, activa el botón <span class="tutorial-highlight">⭐ ¡Scrabble! +50</span> para añadir 50 puntos extra automáticamente.'
+    },
+    {
+      icon: '✅',
+      title: 'Paso 4 — Confirmar o pasar',
+      text: 'Cuando estés listo, pulsa el botón verde <span class="tutorial-highlight">✅ Añadir Puntos</span>.\n\nSi el jugador no puede colocar ninguna ficha este turno, pulsa <span class="tutorial-highlight">⏭ No puedo jugar (Pasar)</span>.'
+    },
+    {
+      icon: '↩️',
+      title: '¿Te equivocaste?',
+      text: 'No te preocupes. El botón <span class="tutorial-highlight">↩ Deshacer</span> (arriba) borra el último número que anotaste.\n\nPuedes usarlo tantas veces como necesites.'
+    },
+    {
+      icon: '🏆',
+      title: 'Fin de la partida',
+      text: 'Cuando el juego termine, pulsa el botón <span class="tutorial-highlight">🏆 Finalizar</span> para ver al ganador y los puntos finales de todos.\n\n¡Buena suerte y a jugar!'
+    }
+  ];
+
+  let tutorialStep = 0;
+
+  function openTutorial() {
+    tutorialStep = 0;
+    _renderTutorialStep();
+    document.getElementById('tutorial-overlay').classList.add('open');
+    sfxClick();
+  }
+
+  function closeTutorial() {
+    document.getElementById('tutorial-overlay').classList.remove('open');
+    localStorage.setItem('scrabble_tutorial_seen', '1');
+    sfxClick();
+  }
+
+  function nextTutorialStep() {
+    tutorialStep++;
+    if (tutorialStep >= TUTORIAL_STEPS.length) {
+      closeTutorial();
+      return;
+    }
+    _renderTutorialStep();
+    sfxScore(10);
+  }
+
+  function _renderTutorialStep() {
+    const step = TUTORIAL_STEPS[tutorialStep];
+    document.getElementById('tutorial-icon').textContent = step.icon;
+    document.getElementById('tutorial-step-badge').textContent = tutorialStep + 1;
+    document.getElementById('tutorial-title').textContent = step.title;
+    document.getElementById('tutorial-text').innerHTML = step.text.replace(/\n/g, '<br>');
+
+    // Dots
+    const dots = document.getElementById('tutorial-dots');
+    dots.innerHTML = TUTORIAL_STEPS.map((_,i) =>
+      `<div class="tutorial-dot${i===tutorialStep?' active':i<tutorialStep?' done':''}"></div>`
+    ).join('');
+
+    // Last step button
+    const nextBtn = document.getElementById('tutorial-next-btn');
+    const skipBtn = document.getElementById('tutorial-skip-btn');
+    const isLast = tutorialStep === TUTORIAL_STEPS.length - 1;
+    nextBtn.textContent = isLast ? '✓ ¡Entendido!' : 'Siguiente →';
+    skipBtn.style.display = isLast ? 'none' : '';
+  }
+
+  // Auto-show tutorial on first visit
+  if (!localStorage.getItem('scrabble_tutorial_seen')) {
+    window.addEventListener('DOMContentLoaded', () => {
+      setTimeout(openTutorial, 700);
+    }, { once: true });
+  }
+
+  /* ═══ PERSISTENCIA (localStorage) ═══ */
+  const SAVE_KEY = 'scrabble_state_v1';
+
+  function saveState() {
+    try {
+      const snap = {
+        players: state.players,
+        currentTurn: state.currentTurn,
+        round: state.round,
+        scrabbleOn: state.scrabbleOn,
+        history: state.history,
+        log: state.log,
+        savedAt: Date.now()
+      };
+      localStorage.setItem(SAVE_KEY, JSON.stringify(snap));
+    } catch(e) {}
+  }
+
+  function loadSavedState() {
+    try {
+      const raw = localStorage.getItem(SAVE_KEY);
+      if (!raw) return null;
+      const snap = JSON.parse(raw);
+      if (!snap?.players?.length) return null;
+      return snap;
+    } catch(e) { return null; }
+  }
+
+  function clearSavedState() {
+    try { localStorage.removeItem(SAVE_KEY); } catch(e) {}
+  }
+
+  function showResumeBanner(snap) {
+    const banner = document.getElementById('resume-banner');
+    if (!banner) return;
+    const names = snap.players.map(p => p.name).join(', ');
+    const date  = new Date(snap.savedAt);
+    const dateStr = date.toLocaleDateString('es-MX', { month:'short', day:'numeric' }) + ' ' +
+                    date.toLocaleTimeString('es-MX', { hour:'2-digit', minute:'2-digit' });
+    document.getElementById('resume-banner-detail').textContent =
+      names + ' · Ronda ' + snap.round + ' · ' + dateStr;
+    banner.style.display = 'flex';
+  }
+
+  function resumeGame() {
+    const snap = loadSavedState();
+    if (!snap) return;
+    state = {
+      players:     snap.players,
+      currentTurn: snap.currentTurn,
+      round:       snap.round,
+      scrabbleOn:  false,
+      history:     snap.history || [],
+      log:         snap.log || []
+    };
+    playerCount = state.players.length;
+    document.getElementById('resume-banner').style.display = 'none';
+    document.getElementById('setup-screen').style.display = 'none';
+    document.getElementById('game-screen').style.display  = 'block';
+    haptic([10,30,10]);
+    render();
+    const p = state.players[state.currentTurn];
+    setTimeout(function(){ showTurnTransition(p.name, p.hex); }, 400);
+    if (timerEnabled) startTimerRun();
+    sfxClick();
+  }
+
+  function dismissResume() {
+    clearSavedState();
+    document.getElementById('resume-banner').style.display = 'none';
+    sfxClick();
+  }
+
   /* ═══ INIT ═══ */
   setCount(3);
   renderSetupList();
+
+  // Check for saved game on load — show resume banner if found
+  (function() {
+    var _snap = loadSavedState();
+    if (_snap) {
+      if (document.readyState === 'loading') {
+        window.addEventListener('DOMContentLoaded', function(){ showResumeBanner(_snap); }, { once: true });
+      } else {
+        showResumeBanner(_snap);
+      }
+    }
+  })();
+</script>
+
 </script>
 
 <script>
-  /* ═══ DICTIONARY ═══ */
+  /* ═══ CALCULADORA DE PUNTOS ═══ */
+
+  // Valores de letras en español (Scrabble estándar)
+  const LETTER_PTS = {
+    A:1, E:1, I:1, O:1, U:1, S:1, L:1, R:1, N:1, T:1,
+    D:2, G:2,
+    B:3, C:3, M:3, P:3,
+    F:4, H:4, V:4, Y:4,
+    J:8, Ñ:8,
+    K:10, Q:10, W:10, X:10, Z:10,
+    ' ':0  // ficha comodín (en blanco)
+  };
+
+  // Estado de la calculadora
+  let calcBonuses = { dl:false, tl:false, dp:false, tp:false, dl2:false, tl2:false, dp2:false, fp:false };
+  let calcLastResult = 0;
+
+  function toggleCalc() {
+    const body  = document.getElementById('calc-body');
+    const arrow = document.getElementById('ctoggle-arrow');
+    const btn   = document.getElementById('calc-toggle');
+    const isOpen = body.classList.toggle('open');
+    arrow.classList.toggle('open', isOpen);
+    btn.classList.toggle('open', isOpen);
+    btn.setAttribute('aria-expanded', isOpen);
+    if (isOpen) setTimeout(() => document.getElementById('calc-input').focus(), 320);
+  }
+
+  function toggleCalcBonus(key) {
+    calcBonuses[key] = !calcBonuses[key];
+    const btn = document.getElementById('cbtn-' + key);
+    if (btn) {
+      btn.classList.toggle('active', calcBonuses[key]);
+      btn.setAttribute('aria-pressed', calcBonuses[key]);
+    }
+    sfxClick();
+    recalc();
+  }
+
+  function onCalcInput(input) {
+    // Normalize: uppercase, remove non-letter chars except space (comodín)
+    let val = input.value.toUpperCase().replace(/[^A-ZÁÉÍÓÚÜÑ ]/g, '');
+    input.value = val;
+    renderCalcTiles(val);
+    recalc();
+  }
+
+  function renderCalcTiles(word) {
+    const container = document.getElementById('calc-tiles-preview');
+    if (!container) return;
+    if (!word) { container.innerHTML = ''; return; }
+    container.innerHTML = [...word].map(ch => {
+      const isBlank = ch === ' ';
+      const pts = LETTER_PTS[ch] ?? 0;
+      return `<div class="calc-tile${isBlank ? ' blank-tile' : ''}">
+        <span class="ct-l">${isBlank ? '★' : ch}</span>
+        <span class="ct-p">${pts}</span>
+      </div>`;
+    }).join('');
+  }
+
+  function recalc() {
+    const word  = (document.getElementById('calc-input').value || '').toUpperCase();
+    const total = document.getElementById('calc-total');
+    const breakdown = document.getElementById('calc-breakdown');
+    const useBtn = document.getElementById('calc-use-btn');
+
+    if (!word) {
+      total.textContent = '—';
+      breakdown.innerHTML = '';
+      if (useBtn) { useBtn.disabled = true; }
+      calcLastResult = 0;
+      return;
+    }
+
+    // 1. Sum base letter values, applying letter multipliers to each letter
+    // DL / TL / DL2 / TL2 — we apply in order: highest-value letter gets highest multiplier
+    let letterValues = [...word].map(ch => LETTER_PTS[ch] ?? 0);
+
+    // Collect letter multipliers: DL=×2, TL=×3, DL2=×2, TL2=×3
+    let letterMults = [];
+    if (calcBonuses.dl)  letterMults.push(2);
+    if (calcBonuses.tl)  letterMults.push(3);
+    if (calcBonuses.dl2) letterMults.push(2);
+    if (calcBonuses.tl2) letterMults.push(3);
+
+    // Apply letter multipliers to the highest-value letters (greedy, optimal)
+    let sortedIdx = letterValues.map((v,i)=>({v,i})).sort((a,b)=>b.v-a.v);
+    let applied   = new Array(letterValues.length).fill(1);
+    let mSorted   = [...letterMults].sort((a,b)=>b-a);
+    mSorted.forEach((m, mi) => {
+      if (sortedIdx[mi]) applied[sortedIdx[mi].i] = m;
+    });
+
+    let baseSum  = letterValues.reduce((acc, v, i) => acc + v * applied[i], 0);
+    let wordMult = 1;
+    if (calcBonuses.dp)  wordMult *= 2;
+    if (calcBonuses.dp2) wordMult *= 2;
+    if (calcBonuses.tp)  wordMult *= 3;
+    if (calcBonuses.fp)  wordMult *= 2;
+
+    const finalScore = baseSum * wordMult;
+    calcLastResult = finalScore;
+
+    total.textContent = finalScore;
+    total.style.color = finalScore >= 50 ? 'var(--gold3)' : finalScore >= 30 ? 'var(--gold2)' : 'var(--cream)';
+
+    // Breakdown text
+    let lines = [];
+    let baseRaw = letterValues.reduce((a,v)=>a+v, 0);
+    lines.push(`Letras: ${letterValues.join('+')} = ${baseRaw}`);
+    if (letterMults.length) {
+      lines.push(`× casillas letra → ${baseSum}`);
+    }
+    if (wordMult > 1) {
+      lines.push(`× ${wordMult} (palabra) → ${finalScore}`);
+    }
+    breakdown.innerHTML = lines.map((l,i) =>
+      `<span class="${i===lines.length-1 && wordMult>1 ? 'brk-bonus' : ''}">${l}</span>`
+    ).join('');
+
+    if (useBtn) useBtn.disabled = false;
+  }
+
+  function useCalcScore() {
+    if (!calcLastResult) return;
+    const inp = document.getElementById('score-input');
+    if (inp) {
+      inp.value = calcLastResult;
+      inp.classList.add('score-bump');
+      inp.addEventListener('animationend', ()=> inp.classList.remove('score-bump'), {once:true});
+      inp.focus();
+    }
+    // Close calculator
+    const body = document.getElementById('calc-body');
+    const arrow = document.getElementById('ctoggle-arrow');
+    const btn = document.getElementById('calc-toggle');
+    if (body && body.classList.contains('open')) {
+      body.classList.remove('open');
+      arrow && arrow.classList.remove('open');
+      btn && btn.classList.remove('open');
+      btn && btn.setAttribute('aria-expanded', 'false');
+    }
+    showToast('✅ Puntuación cargada: ' + calcLastResult);
+    sfxScore(calcLastResult);
+    haptic([10, 15]);
+    // Reset calculator bonuses
+    Object.keys(calcBonuses).forEach(k => {
+      calcBonuses[k] = false;
+      const b = document.getElementById('cbtn-' + k);
+      if (b) { b.classList.remove('active'); b.setAttribute('aria-pressed','false'); }
+    });
+    document.getElementById('calc-input').value = '';
+    document.getElementById('calc-tiles-preview').innerHTML = '';
+    document.getElementById('calc-total').textContent = '—';
+    document.getElementById('calc-breakdown').innerHTML = '';
+    document.getElementById('calc-use-btn').disabled = true;
+    calcLastResult = 0;
+  }
+
+</script>
+
+<script>
+  /* ═══ DICTIONARY — Claude AI powered ═══ */
+
   const INVALIDAS_SIEMPRE = new Set([
     'mexico','españa','francia','italia','alemania','japon','china','brasil',
     'argentina','colombia','peru','chile','cuba','canada','rusia','india',
@@ -2305,90 +3091,113 @@
   const PREFIJOS = ['anti','sub','pre','pos','post','re','des','in','im','bi','tri','mega','micro','mini','macro'];
 
   function esObviamenteInvalida(w) {
-    if (INVALIDAS_SIEMPRE.has(w)) return { invalida:true, razon:'Nombre propio, país, marca o acrónimo: no permitido.' };
-    if (/^[A-ZÁÉÍÓÚ]{2,}$/.test(w)) return { invalida:true, razon:'Acrónimo: no permitido en Scrabble.' };
-    if (PREFIJOS.includes(w))        return { invalida:true, razon:'Prefijo aislado: no es una palabra válida.' };
+    if (INVALIDAS_SIEMPRE.has(w)) return { invalida:true, razon:'Nombre propio, país, marca o acrónimo: no permitido en Scrabble.' };
+    if (/^[A-ZÁÉÍÓÚ]{2,}$/.test(w)) return { invalida:true, razon:'Acrónimo: no se permite en Scrabble.' };
+    if (PREFIJOS.includes(w))        return { invalida:true, razon:'Prefijo aislado: no es una palabra válida por sí sola.' };
     return null;
   }
 
-  async function consultarDiccionary(word) {
-    const r = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/es/${encodeURIComponent(word)}`);
-    if (r.status===404) return null;
-    if (!r.ok) throw new Error('api-error');
-    const data = await r.json();
-    if (!Array.isArray(data)||!data.length) return null;
-    const entry = data[0];
-    if (entry.word && /^[A-ZÁÉÍÓÚ]/.test(entry.word) && entry.word.toLowerCase()===word)
-      return { valida:false, razon:'Nombre propio: no permitido.', def:null };
-    const meanings = entry.meanings||[];
-    if (!meanings.length) return null;
-    const tipo = meanings[0].partOfSpeech||'palabra';
-    const def  = meanings[0]?.definitions?.[0]?.definition||null;
-    return { valida:true, razon:`Válida · ${tipo}`, def };
-  }
+  async function consultarConClaude(word) {
+    const prompt = `Eres un árbitro experto de Scrabble en español. Analiza la palabra "${word}" y responde ÚNICAMENTE con un objeto JSON válido, sin texto adicional, sin bloques de código, sin explicaciones.
 
-  async function consultarWiktionary(word) {
-    const url = `https://es.wiktionary.org/w/api.php?action=query&titles=${encodeURIComponent(word)}&prop=categories|extracts&cllimit=20&exintro=1&exchars=200&format=json&origin=*`;
-    const r = await fetch(url);
-    if (!r.ok) throw new Error('wiki-error');
-    const data = await r.json();
-    const pages = Object.values(data?.query?.pages||{});
-    if (!pages.length||pages[0].missing!==undefined) return null;
-    const page = pages[0];
-    const cats = (page.categories||[]).map(c=>c.title.toLowerCase());
-    const esPropio = cats.some(c=>c.includes('nombre propio')||c.includes('topónimo')||c.includes('antropónimo'));
-    if (esPropio) return { valida:false, razon:'Nombre propio o topónimo: no permitido.', def:null };
-    const tieneES = cats.some(c=>c.includes('es:')||c.includes('español'));
-    if (tieneES) {
-      const tipo = cats.some(c=>c.includes('sustantivo'))?'sustantivo':cats.some(c=>c.includes('verbo'))?'verbo':cats.some(c=>c.includes('adjetivo'))?'adjetivo':'palabra';
-      let def = null;
-      if (page.extract) {
-        def = page.extract.replace(/<[^>]+>/g,'').replace(/\s+/g,' ').trim();
-        if (def.length>120) def=def.slice(0,120).replace(/\s\S+$/,'')+'…';
-      }
-      return { valida:true, razon:`Válida · ${tipo}`, def };
-    }
-    return null;
+El JSON debe tener exactamente esta estructura:
+{
+  "valida": true o false,
+  "tipo": "sustantivo" | "verbo" | "adjetivo" | "adverbio" | "preposición" | "interjección" | "pronombre" | "artículo" | "otro" | "no aplica",
+  "definicion": "Una definición clara y completa en español (2-3 oraciones). Si es inválida, explica brevemente por qué no se permite en Scrabble.",
+  "sugerencia": "Si la palabra es inválida pero tiene una forma correcta o palabras relacionadas válidas, sugiérelas aquí. Si no aplica, pon null."
+}
+
+Reglas para determinar si es válida en Scrabble español:
+- SÍ es válida: palabras del diccionario RAE (sustantivos, verbos, adjetivos, adverbios, formas conjugadas de verbos, plurales, formas femeninas)
+- NO es válida: nombres propios, países, marcas comerciales, siglas o acrónimos, prefijos sueltos, palabras de otros idiomas, groserías graves
+- Conjugaciones verbales correctas según la RAE son válidas aunque sean poco comunes
+- Formas plurales o femeninas válidas de palabras conocidas son válidas`;
+
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 300,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+
+    if (!response.ok) throw new Error('claude-error');
+    const data = await response.json();
+    const text = data.content?.find(b => b.type === 'text')?.text || '';
+    const clean = text.replace(/```json|```/g, '').trim();
+    return JSON.parse(clean);
   }
 
   async function checkWord() {
     const input     = document.getElementById('validator-input');
     const btn       = document.getElementById('validator-btn');
     const resultDiv = document.getElementById('validator-result');
-    const wordEl    = document.getElementById('v-word');
-    const reasonEl  = document.getElementById('v-reason');
-    const defEl     = document.getElementById('v-def');
+    const loadingEl = document.getElementById('v-loading-content');
+    const contentEl = document.getElementById('v-result-content');
 
     const word = input.value.trim().toLowerCase().normalize('NFC');
     if (!word) { input.focus(); return; }
 
     btn.disabled = true;
-    resultDiv.className = 'validator-result loading';
+    resultDiv.className     = 'validator-result loading';
     resultDiv.style.display = 'block';
-    wordEl.textContent   = word.toUpperCase();
-    reasonEl.textContent = 'Consultando el diccionario...';
-    defEl.textContent    = '';
+    loadingEl.style.display = 'block';
+    contentEl.style.display = 'none';
 
     const local = esObviamenteInvalida(word);
     if (local) {
-      reasonEl.textContent = local.razon;
-      defEl.textContent    = '';
-      resultDiv.className  = 'validator-result invalid';
-      btn.disabled = false; return;
+      _renderResult(word, { valida:false, tipo:'no aplica', definicion:local.razon, sugerencia:null });
+      btn.disabled = false;
+      return;
     }
 
     let resultado = null;
-    try { resultado = await consultarDiccionary(word); } catch(e) {}
-    if (!resultado) { try { resultado = await consultarWiktionary(word); } catch(e) {} }
-    if (!resultado) resultado = { valida:false, razon:'No encontrada. Puede no ser válida en Scrabble.', def:null };
+    try {
+      resultado = await consultarConClaude(word);
+    } catch(e) {
+      resultado = { valida:false, tipo:'no aplica', definicion:'No se pudo consultar el diccionario en este momento. Intenta de nuevo.', sugerencia:null };
+    }
 
-    wordEl.textContent   = word.toUpperCase();
-    reasonEl.textContent = resultado.razon;
-    defEl.textContent    = resultado.valida && resultado.def ? resultado.def : '';
-    resultDiv.className  = 'validator-result ' + (resultado.valida?'valid':'invalid');
+    _renderResult(word, resultado);
     btn.disabled = false;
   }
 
+  function _renderResult(word, r) {
+    const resultDiv = document.getElementById('validator-result');
+    const loadingEl = document.getElementById('v-loading-content');
+    const contentEl = document.getElementById('v-result-content');
+    const esValida  = !!r.valida;
+
+    resultDiv.className = 'validator-result ' + (esValida ? 'valid' : 'invalid');
+
+    document.getElementById('v-icon').textContent  = esValida ? '✅' : '❌';
+    document.getElementById('v-word').textContent  = word.toUpperCase();
+    document.getElementById('v-badge').textContent = esValida ? 'Válida' : 'No válida';
+
+    const tipoEl = document.getElementById('v-tipo');
+    if (r.tipo && r.tipo !== 'no aplica') {
+      tipoEl.textContent   = r.tipo.charAt(0).toUpperCase() + r.tipo.slice(1);
+      tipoEl.style.display = 'block';
+    } else {
+      tipoEl.style.display = 'none';
+    }
+
+    document.getElementById('v-def').textContent = r.definicion || '';
+
+    const sugEl = document.getElementById('v-suggestion');
+    if (!esValida && r.sugerencia) {
+      sugEl.textContent   = '💡 ' + r.sugerencia;
+      sugEl.style.display = 'block';
+    } else {
+      sugEl.style.display = 'none';
+    }
+
+    loadingEl.style.display = 'none';
+    contentEl.style.display = 'block';
+  }
   /* ═══ BACKGROUND TILES ═══ */
   (function() {
     const LETTERS = 'ABCDEFGHIJKLMNÑOPQRSTUVWXYZ';
