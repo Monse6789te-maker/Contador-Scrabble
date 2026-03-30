@@ -412,48 +412,64 @@
     letter-spacing:.03em; text-transform:none; line-height:1;
   }
 
-  /* ── Timer bar ── */
+  /* ── Timer block ── */
   .timer-bar-wrap {
-    position:relative; height:10px; background:rgba(255,255,255,.06);
-    border-radius:5px; margin:.5rem 0 1.1rem; overflow:visible;
+    background:rgba(0,0,0,.25);
+    border:1px solid rgba(201,148,58,.18); border-radius:14px;
+    padding:1rem 1.1rem 1rem;
+    margin:.2rem 0 1.2rem;
+  }
+
+  /* Big countdown number — easy to read */
+  .timer-countdown {
+    font-family:'DM Mono',monospace; font-size:3rem; font-weight:700;
+    color:var(--gold2); text-align:center; line-height:1;
+    margin-bottom:.6rem; letter-spacing:.04em;
+    transition:color .3s;
+  }
+  .timer-countdown.warning { color:#ff6b9d; }
+
+  /* Progress bar */
+  .timer-track {
+    height:12px; background:rgba(255,255,255,.07);
+    border-radius:6px; overflow:hidden; margin-bottom:.85rem;
   }
   .timer-bar {
-    height:100%; width:100%; border-radius:5px;
+    height:100%; width:100%; border-radius:6px;
     background:linear-gradient(90deg, var(--gold3), var(--gold2));
-    transition:width .15s linear, background .3s;
-    box-shadow:0 0 8px rgba(201,148,58,.4);
+    transition:width .18s linear, background .35s;
+    box-shadow:0 0 8px rgba(201,148,58,.35);
   }
-  .timer-bar.warning { background:linear-gradient(90deg,#ff6b35,#ff3d77); box-shadow:0 0 14px rgba(255,61,119,.55); }
-  .timer-bar.penalty { background:linear-gradient(90deg,#5eb8e0,#4ecdc4); box-shadow:0 0 14px rgba(94,184,224,.5); }
-  .timer-text {
-    position:absolute; right:0; top:-24px;
-    font-family:'DM Mono',monospace; font-size:.95rem;
-    color:var(--gold2); font-weight:700; letter-spacing:.04em;
+  .timer-bar.warning { background:linear-gradient(90deg,#ff6b35,#ff3d77); box-shadow:0 0 12px rgba(255,61,119,.5); }
+  .timer-bar.penalty { background:linear-gradient(90deg,#5eb8e0,#4ecdc4); box-shadow:0 0 12px rgba(94,184,224,.45); }
+
+  /* Two big buttons side by side */
+  .timer-btn-row {
+    display:flex; gap:.6rem;
   }
-  .timer-text.warning { color:#ff6b9d; }
-  .timer-info-row {
-    display:flex; align-items:center; justify-content:space-between;
-    margin-bottom:.5rem; gap:.5rem;
-  }
-  .timer-label {
-    font-family:'DM Mono',monospace; font-size:.72rem;
-    color:var(--text-dim); letter-spacing:.08em; text-transform:uppercase;
-  }
-  .timer-action-btns { display:flex; gap:.4rem; }
   .timer-act-btn {
-    padding:.28rem .65rem; border-radius:7px;
-    border:1px solid rgba(201,148,58,.25); background:rgba(201,148,58,.08);
-    color:var(--gold2); font-family:'DM Mono',monospace; font-size:.72rem;
-    font-weight:700; cursor:pointer; transition:all .15s; letter-spacing:.04em;
-    white-space:nowrap;
+    flex:1; padding:.7rem .5rem; border-radius:10px; border:1.5px solid;
+    font-family:'Lato',sans-serif; font-size:.95rem; font-weight:700;
+    cursor:pointer; transition:all .18s; text-align:center;
+    min-height:46px; display:flex; align-items:center; justify-content:center; gap:.4rem;
   }
-  .timer-act-btn:hover { background:rgba(201,148,58,.18); border-color:rgba(201,148,58,.5); }
+  .timer-act-btn.pause-btn {
+    border-color:rgba(201,148,58,.35); background:rgba(201,148,58,.1); color:var(--gold2);
+  }
+  .timer-act-btn.pause-btn:hover { background:rgba(201,148,58,.2); border-color:var(--gold); }
+  .timer-act-btn.pause-btn.paused {
+    border-color:rgba(78,205,196,.45); background:rgba(78,205,196,.12); color:#4ecdc4;
+  }
   .timer-act-btn.penalty-btn {
     border-color:rgba(94,184,224,.3); background:rgba(94,184,224,.08); color:#5eb8e0;
   }
   .timer-act-btn.penalty-btn:hover { background:rgba(94,184,224,.18); border-color:rgba(94,184,224,.55); }
-  .timer-act-btn.pause-btn.paused {
-    border-color:rgba(78,205,196,.4); background:rgba(78,205,196,.1); color:#4ecdc4;
+
+  /* Small paused label */
+  .timer-status {
+    text-align:center; font-size:.78rem; color:var(--text-dim);
+    letter-spacing:.08em; text-transform:uppercase; margin-bottom:.5rem;
+    min-height:1.1em;
   }
 
   /* ── Timer settings modal ── */
@@ -1242,21 +1258,24 @@
   <div class="turn-panel">
     <div class="turn-panel-header" id="turn-header" aria-live="assertive">Turno actual</div>
 
-    <!-- Timer bar (hidden until activated) -->
+    <!-- Timer block (hidden until activated) -->
     <div class="timer-bar-wrap" id="timer-bar-wrap" style="display:none" aria-hidden="true">
-      <div class="timer-info-row">
-        <span class="timer-label" id="timer-label">Tiempo restante</span>
-        <div class="timer-action-btns">
-          <button class="timer-act-btn pause-btn" id="timer-pause-btn"
-            onclick="toggleTimerPause()" aria-label="Pausar o reanudar temporizador"
-            title="Pausar / Reanudar">⏸ Pausar</button>
-          <button class="timer-act-btn penalty-btn" id="timer-penalty-btn"
-            onclick="applyPenalty()" aria-label="Añadir tiempo de penalización"
-            title="Añadir tiempo de penalización">+⏱ Penal.</button>
-        </div>
+      <div class="timer-status" id="timer-status">Tiempo restante</div>
+      <div class="timer-countdown" id="timer-text" aria-live="polite">1:00</div>
+      <div class="timer-track">
+        <div class="timer-bar" id="timer-bar"></div>
       </div>
-      <div class="timer-text" id="timer-text" aria-live="polite">60</div>
-      <div class="timer-bar" id="timer-bar"></div>
+      <div class="timer-btn-row">
+        <button class="timer-act-btn pause-btn" id="timer-pause-btn"
+          onclick="toggleTimerPause()" aria-label="Pausar o reanudar el tiempo">
+          ⏸ Pausar
+        </button>
+        <button class="timer-act-btn penalty-btn" id="timer-penalty-btn"
+          onclick="applyPenalty()" aria-label="Añadir tiempo extra de penalización"
+          title="Añadir tiempo por palabra inválida">
+          +⏱ Penalización
+        </button>
+      </div>
     </div>
 
     <!-- Verify Word accordion -->
@@ -1342,56 +1361,83 @@
 
 <!-- ═══════ MODALS ═══════ -->
 
-<!-- Help modal (in-game) — FIX: properly structured -->
+<!-- Help modal (in-game) -->
 <div class="modal-overlay" id="help-modal" role="dialog" aria-modal="true" aria-labelledby="help-modal-title">
   <div class="help-modal-box">
     <button class="help-modal-close" onclick="closeModal('help-modal')" aria-label="Cerrar ayuda">✕</button>
-    <h3 class="modal-title" id="help-modal-title" style="text-align:left;margin-bottom:1.25rem">❓ Guía rápida</h3>
+    <h3 class="modal-title" id="help-modal-title" style="text-align:left;margin-bottom:1.4rem">📖 ¿Cómo se usa?</h3>
 
+    <!-- Step 1 -->
     <div class="help-section">
-      <div class="help-section-title" style="color:#7ecf82">✏️ Anotar puntos</div>
-      <div class="help-rule"><span class="help-rule-icon">🔢</span><span>Escribe los puntos en el campo grande, o usa los botones rápidos <strong>+10 · +20 · +30</strong>.</span></div>
-      <div class="help-rule"><span class="help-rule-icon">⭐</span><span>Si el jugador usó las 7 fichas (<strong>¡Scrabble!</strong>), activa ese botón antes de pulsar Añadir — se suman 50 puntos extra.</span></div>
-      <div class="help-rule"><span class="help-rule-icon">➕</span><span>Pulsa <strong>Añadir Puntos</strong> para confirmar y pasar al siguiente jugador.</span></div>
-      <div class="help-rule"><span class="help-rule-icon">⏭️</span><span>Si no puedes colocar ninguna ficha, pulsa <strong>Pasar turno</strong>.</span></div>
+      <div class="help-section-title" style="color:#7ecf82">
+        <span style="background:#7ecf82;color:#0a1a0a;border-radius:50%;width:26px;height:26px;display:inline-flex;align-items:center;justify-content:center;font-size:.85rem;flex-shrink:0">1</span>
+        Cuando termines tu turno, escribe cuántos puntos hiciste
+      </div>
+      <div class="help-rule"><span class="help-rule-icon">🔢</span><span>Toca el número grande del centro y escribe los puntos. Por ejemplo: <strong>18</strong>.</span></div>
+      <div class="help-rule"><span class="help-rule-icon">➕</span><span>También puedes usar los botones rápidos <strong>+10</strong>, <strong>+20</strong> o <strong>+30</strong> para sumar de golpe.</span></div>
     </div>
 
     <div class="help-divider"></div>
 
+    <!-- Step 2 -->
     <div class="help-section">
-      <div class="help-section-title" style="color:#7ecf82">🛠️ Botones del menú</div>
-      <div class="help-rule"><span class="help-rule-icon">↩️</span><span><strong>Deshacer</strong> — borra el último punto anotado si te equivocaste.</span></div>
-      <div class="help-rule"><span class="help-rule-icon">⏱️</span><span><strong>Timer</strong> — activa el contador de turno. Con <strong>⚙ Timer</strong> puedes ajustar la duración (20s, 1:30, 2:00…), las penalizaciones por palabra inválida y el umbral de aviso.</span></div>
-      <div class="help-rule"><span class="help-rule-icon">🏆</span><span><strong>Finalizar</strong> — termina la partida y muestra al ganador.</span></div>
-      <div class="help-rule"><span class="help-rule-icon">↺</span><span><strong>Reiniciar</strong> — pone todos los puntos a cero.</span></div>
+      <div class="help-section-title" style="color:#7ecf82">
+        <span style="background:#7ecf82;color:#0a1a0a;border-radius:50%;width:26px;height:26px;display:inline-flex;align-items:center;justify-content:center;font-size:.85rem;flex-shrink:0">2</span>
+        Si usaste todas tus 7 fichas de una vez (¡Scrabble!)
+      </div>
+      <div class="help-rule"><span class="help-rule-icon">⭐</span><span>Activa el botón <strong>¡Scrabble! +50</strong> antes de confirmar. Se añadirán 50 puntos extra automáticamente.</span></div>
     </div>
 
     <div class="help-divider"></div>
 
+    <!-- Step 3 -->
     <div class="help-section">
-      <div class="help-section-title" style="color:#7ecf82">🗺️ Casillas especiales del tablero</div>
+      <div class="help-section-title" style="color:#7ecf82">
+        <span style="background:#7ecf82;color:#0a1a0a;border-radius:50%;width:26px;height:26px;display:inline-flex;align-items:center;justify-content:center;font-size:.85rem;flex-shrink:0">3</span>
+        Confirma o pasa
+      </div>
+      <div class="help-rule"><span class="help-rule-icon">✅</span><span>Pulsa el botón verde <strong>Añadir Puntos →</strong> para guardar los puntos y pasar al siguiente jugador.</span></div>
+      <div class="help-rule"><span class="help-rule-icon">⏭️</span><span>Si no puedes colocar ninguna ficha en este turno, pulsa <strong>— Pasar turno</strong> sin escribir nada.</span></div>
+    </div>
+
+    <div class="help-divider"></div>
+
+    <!-- Botones del menú — simplified -->
+    <div class="help-section">
+      <div class="help-section-title" style="color:var(--gold2)">🔘 Botones de arriba</div>
+      <div class="help-rule"><span class="help-rule-icon">↩️</span><span><strong>Deshacer</strong> — ¿Te equivocaste al escribir los puntos? Este botón borra el último número anotado.</span></div>
+      <div class="help-rule"><span class="help-rule-icon">⏱️</span><span><strong>Timer</strong> — Activa un reloj de cuenta atrás para cada turno. Con <strong>⚙ Timer</strong> puedes elegir cuánto tiempo.</span></div>
+      <div class="help-rule"><span class="help-rule-icon">🏆</span><span><strong>Finalizar</strong> — Cuando la partida termine, pulsa aquí para ver quién ganó.</span></div>
+      <div class="help-rule"><span class="help-rule-icon">↺</span><span><strong>Reiniciar</strong> — Borra todos los puntos y empieza de cero (los nombres de los jugadores se quedan).</span></div>
+    </div>
+
+    <div class="help-divider"></div>
+
+    <!-- Casillas -->
+    <div class="help-section">
+      <div class="help-section-title" style="color:var(--gold2)">🗺️ Casillas de colores del tablero</div>
       <table class="bonus-table" aria-label="Casillas especiales de Scrabble">
-        <thead><tr><th>Casilla</th><th>¿Qué hace?</th></tr></thead>
+        <thead><tr><th>Casilla</th><th>¿Qué significa?</th></tr></thead>
         <tbody>
-          <tr><td><span class="bonus-badge bb-dl">DL</span></td><td><strong>Doble Letra</strong> — esa ficha vale el doble.</td></tr>
-          <tr><td><span class="bonus-badge bb-tl">TL</span></td><td><strong>Triple Letra</strong> — esa ficha vale el triple.</td></tr>
-          <tr><td><span class="bonus-badge bb-dp">DP</span></td><td><strong>Doble Palabra</strong> — la palabra completa vale el doble.</td></tr>
-          <tr><td><span class="bonus-badge bb-tp">TP</span></td><td><strong>Triple Palabra</strong> — la palabra completa vale el triple.</td></tr>
-          <tr><td><span class="bonus-badge bb-st">★</span></td><td><strong>Centro</strong> — la primera palabra dobla su valor y debe pasar por aquí.</td></tr>
+          <tr><td><span class="bonus-badge bb-dl">DL</span></td><td><strong>Doble Letra</strong> — esa ficha cuenta el doble.</td></tr>
+          <tr><td><span class="bonus-badge bb-tl">TL</span></td><td><strong>Triple Letra</strong> — esa ficha cuenta el triple.</td></tr>
+          <tr><td><span class="bonus-badge bb-dp">DP</span></td><td><strong>Doble Palabra</strong> — toda la palabra cuenta el doble.</td></tr>
+          <tr><td><span class="bonus-badge bb-tp">TP</span></td><td><strong>Triple Palabra</strong> — toda la palabra cuenta el triple.</td></tr>
+          <tr><td><span class="bonus-badge bb-st">★</span></td><td><strong>Centro</strong> — la primera ficha va aquí y la palabra vale el doble.</td></tr>
         </tbody>
       </table>
-      <div class="help-rule" style="margin-top:.75rem"><span class="help-rule-icon">💡</span><span>Si una palabra cruza varias casillas de Doble/Triple Palabra, los multiplicadores se aplican uno tras otro.</span></div>
     </div>
 
     <div class="help-divider"></div>
 
+    <!-- Verificar palabra -->
     <div class="help-section">
-      <div class="help-section-title" style="color:#7ecf82">📖 Verificar Palabra</div>
-      <div class="help-rule"><span class="help-rule-icon">🔍</span><span>Abre la sección <strong>Verificar Palabra</strong>, escribe la palabra en duda y pulsa Verificar.</span></div>
+      <div class="help-section-title" style="color:var(--gold2)">📖 ¿Esa palabra existe?</div>
+      <div class="help-rule"><span class="help-rule-icon">🔍</span><span>Si hay dudas sobre si una palabra es válida, abre la sección <strong>Verificar Palabra</strong>, escríbela y pulsa el botón <strong>Verificar</strong>. La app consultará el diccionario.</span></div>
     </div>
 
-    <div style="margin-top:1.5rem">
-      <button class="mbtn confirm-g" style="width:100%;font-size:1.05rem;padding:1rem" onclick="closeModal('help-modal')">✓ Entendido</button>
+    <div style="margin-top:1.6rem">
+      <button class="mbtn confirm-g" style="width:100%;font-size:1.1rem;padding:1.1rem" onclick="closeModal('help-modal')">✓ ¡Entendido!</button>
     </div>
   </div>
 </div>
@@ -1400,33 +1446,33 @@
 <div class="modal-overlay" id="timer-modal" role="dialog" aria-modal="true" aria-labelledby="timer-modal-title">
   <div class="timer-modal-box">
     <button class="timer-modal-close" onclick="closeModal('timer-modal')" aria-label="Cerrar ajustes del temporizador">✕</button>
-    <h3 class="modal-title" id="timer-modal-title" style="text-align:left;margin-bottom:1.4rem">⚙ Ajustar Temporizador</h3>
+    <h3 class="modal-title" id="timer-modal-title" style="text-align:left;margin-bottom:1.4rem">⚙ Configurar el reloj</h3>
 
     <!-- Presets -->
-    <div class="timer-section-title">⏱ Duración por turno</div>
+    <div class="timer-section-title">¿Cuánto tiempo por turno?</div>
     <div class="timer-preset-grid" id="timer-preset-grid">
       <button class="timer-preset-btn" onclick="selectPreset(20)" data-secs="20">
-        <span class="pval">0:20</span><span class="plabel">Rápido</span>
+        <span class="pval">20 seg</span><span class="plabel">Muy rápido</span>
       </button>
       <button class="timer-preset-btn" onclick="selectPreset(30)" data-secs="30">
-        <span class="pval">0:30</span><span class="plabel">Normal</span>
+        <span class="pval">30 seg</span><span class="plabel">Rápido</span>
       </button>
       <button class="timer-preset-btn active" onclick="selectPreset(60)" data-secs="60">
-        <span class="pval">1:00</span><span class="plabel">Clásico</span>
+        <span class="pval">1 min</span><span class="plabel">Normal</span>
       </button>
       <button class="timer-preset-btn" onclick="selectPreset(90)" data-secs="90">
-        <span class="pval">1:30</span><span class="plabel">Cómodo</span>
+        <span class="pval">1½ min</span><span class="plabel">Con calma</span>
       </button>
       <button class="timer-preset-btn" onclick="selectPreset(120)" data-secs="120">
-        <span class="pval">2:00</span><span class="plabel">Relajado</span>
+        <span class="pval">2 min</span><span class="plabel">Sin prisa</span>
       </button>
       <button class="timer-preset-btn" onclick="selectPreset(180)" data-secs="180">
-        <span class="pval">3:00</span><span class="plabel">Libre</span>
+        <span class="pval">3 min</span><span class="plabel">Libre</span>
       </button>
     </div>
 
     <!-- Custom -->
-    <div class="timer-section-title">✏️ Tiempo personalizado</div>
+    <div class="timer-section-title">⌨️ O elige un tiempo exacto</div>
     <div class="timer-custom-row">
       <label for="timer-custom-min">Minutos</label>
       <input class="timer-custom-input" type="number" id="timer-custom-min"
@@ -1435,33 +1481,33 @@
       <label for="timer-custom-sec">Segundos</label>
       <input class="timer-custom-input" type="number" id="timer-custom-sec"
         min="0" max="59" value="0" aria-label="Segundos del temporizador">
-      <button class="timer-act-btn" onclick="applyCustomTime()" style="padding:.6rem 1rem;font-size:.82rem">
+      <button class="timer-act-btn pause-btn" onclick="applyCustomTime()" style="flex:0;padding:.6rem 1rem;font-size:.9rem">
         Aplicar
       </button>
     </div>
 
     <!-- Penalty -->
-    <div class="timer-section-title" style="margin-top:.2rem">⚡ Penalización por palabra inválida</div>
+    <div class="timer-section-title" style="margin-top:.2rem">⚡ Tiempo extra por palabra inválida</div>
     <div class="timer-penalty-section">
       <div class="timer-penalty-row">
-        <label for="timer-penalty-val">Al equivocarse de palabra, se añaden</label>
+        <label for="timer-penalty-val">Si alguien pone una palabra que no vale, se le añaden</label>
         <input class="timer-penalty-input" type="number" id="timer-penalty-val"
           min="5" max="120" value="20" aria-label="Segundos de penalización">
-        <span class="timer-penalty-unit">seg. al turno actual</span>
+        <span class="timer-penalty-unit">segundos más</span>
       </div>
     </div>
 
     <!-- Warning threshold -->
-    <div class="timer-section-title">🔴 Aviso de tiempo bajo</div>
+    <div class="timer-section-title">🔴 ¿Cuándo avisar que queda poco tiempo?</div>
     <div class="timer-warn-row">
-      <label for="timer-warn-val">Mostrar aviso cuando queden</label>
+      <label for="timer-warn-val">Poner el reloj en rojo cuando queden</label>
       <input class="timer-warn-input" type="number" id="timer-warn-val"
         min="3" max="30" value="10" aria-label="Segundos para mostrar aviso">
       <span class="timer-penalty-unit">segundos</span>
     </div>
 
-    <button class="mbtn confirm-g" style="width:100%;font-size:1rem;padding:.95rem;margin-top:.3rem"
-      onclick="saveTimerSettings()">✓ Guardar y cerrar</button>
+    <button class="mbtn confirm-g" style="width:100%;font-size:1rem;padding:1rem;margin-top:.3rem"
+      onclick="saveTimerSettings()">✓ Guardar</button>
   </div>
 </div>
 
@@ -2075,14 +2121,14 @@
   }
 
   function updateTimerDisplay() {
-    const bar  = document.getElementById('timer-bar');
-    const text = document.getElementById('timer-text');
-    const lbl  = document.getElementById('timer-label');
+    const bar    = document.getElementById('timer-bar');
+    const text   = document.getElementById('timer-text');
+    const status = document.getElementById('timer-status');
     if (!bar || !text) return;
     const pct  = Math.min((timerSeconds / TIMER_DURATION) * 100, 100);
     bar.style.width = pct + '%';
     text.textContent = formatTime(timerSeconds);
-    if (lbl) lbl.textContent = timerPaused ? '⏸ Pausado' : 'Tiempo restante';
+    if (status) status.textContent = timerPaused ? '⏸ En pausa' : 'Tiempo restante';
     const isWarn = timerSeconds <= WARN_THRESHOLD && !timerPaused;
     bar.classList.toggle('warning', isWarn);
     text.classList.toggle('warning', isWarn);
