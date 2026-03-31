@@ -766,7 +766,25 @@
   }
 
 
-  /* ══════ CALCULADORA DE PUNTOS ══════ */
+  /* ── SC Logo ── */
+  .sc-logo-wrap {
+    display:flex; justify-content:center; margin-bottom:.5rem;
+  }
+  .sc-logo-svg {
+    width:110px; height:110px;
+    animation:scLogoSpin 6s ease-in-out infinite alternate, logoFloat 4s ease-in-out infinite;
+    filter: drop-shadow(0 0 18px rgba(201,148,58,0.45)) drop-shadow(0 6px 18px rgba(0,0,0,0.7));
+  }
+  @keyframes scLogoSpin {
+    0%   { filter: drop-shadow(0 0 12px rgba(201,148,58,0.3)) drop-shadow(0 6px 18px rgba(0,0,0,0.7)); }
+    100% { filter: drop-shadow(0 0 28px rgba(232,184,75,0.65)) drop-shadow(0 0 50px rgba(201,148,58,0.3)) drop-shadow(0 6px 18px rgba(0,0,0,0.7)); }
+  }
+  @keyframes logoFloat {
+    0%,100% { transform: translateY(0px); }
+    50%     { transform: translateY(-6px); }
+  }
+
+  /* ══════ CALCULADORA MEJORADA ══════ */
   .calc-wrap { margin-bottom:.75rem; }
 
   .calc-toggle {
@@ -791,7 +809,7 @@
     border-radius:0 0 12px 12px;
     background:linear-gradient(160deg, rgba(18,13,6,.97), rgba(10,8,3,.99));
   }
-  .calc-body.open { max-height:520px; }
+  .calc-body.open { max-height:700px; }
 
   .calc-card { padding:1rem 1.1rem 1.2rem; }
 
@@ -860,6 +878,89 @@
   .cbtn.active.tl   { background:rgba(80,140,255,.18);  border-color:#8ab0ff; box-shadow:0 0 14px rgba(80,140,255,.2); }
   .cbtn.active.dp   { background:rgba(230,90,120,.18);  border-color:#f08098; box-shadow:0 0 14px rgba(230,90,120,.2); }
   .cbtn.active.tp   { background:rgba(220,80,80,.18);   border-color:#e07070; box-shadow:0 0 14px rgba(220,80,80,.25); }
+
+  /* ── Per-letter tiles row ── */
+  .calc-tiles-row {
+    display:flex; flex-wrap:wrap; gap:6px; margin-bottom:1rem;
+    min-height:58px; align-items:flex-start;
+  }
+  .calc-tile-btn {
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    width:46px; min-height:56px; border-radius:8px; cursor:pointer;
+    background:linear-gradient(145deg,#f8edca 0%,#e8c870 35%,#c89838 70%,#a07020 100%);
+    border:2.5px solid transparent; position:relative;
+    box-shadow: 2px 3px 0 rgba(0,0,0,.55), inset 0 2px 0 rgba(255,255,255,.55), inset -1px -1px 0 rgba(0,0,0,.2);
+    transition:all .18s; user-select:none; gap:2px;
+  }
+  .calc-tile-btn::before {
+    content:''; position:absolute; inset:3px; border-radius:4px;
+    border:1px solid rgba(255,255,255,.3); pointer-events:none;
+  }
+  .calc-tile-btn .ct-letter {
+    font-family:'Playfair Display',serif; font-weight:900; font-size:1.3rem;
+    color:#1a0800; line-height:1; text-shadow:0 1px 0 rgba(255,255,255,.4);
+  }
+  .calc-tile-btn .ct-pts {
+    font-family:'DM Mono',monospace; font-size:.5rem; color:#4a2800; font-weight:700;
+  }
+  .calc-tile-btn .ct-bonus {
+    font-size:.5rem; font-weight:700; font-family:'DM Mono',monospace;
+    letter-spacing:.02em; text-transform:uppercase; line-height:1;
+    padding:1px 4px; border-radius:3px; margin-top:1px;
+  }
+  /* Bonus states for tiles */
+  .calc-tile-btn.bonus-dl { border-color:#5eb8e0; box-shadow:2px 3px 0 rgba(0,0,0,.55), 0 0 10px rgba(94,184,224,.4), inset 0 2px 0 rgba(255,255,255,.55); }
+  .calc-tile-btn.bonus-dl .ct-bonus { background:rgba(94,184,224,.25); color:#3a8cb0; }
+  .calc-tile-btn.bonus-tl { border-color:#8ab0ff; box-shadow:2px 3px 0 rgba(0,0,0,.55), 0 0 10px rgba(138,176,255,.4), inset 0 2px 0 rgba(255,255,255,.55); }
+  .calc-tile-btn.bonus-tl .ct-bonus { background:rgba(138,176,255,.25); color:#4a70e0; }
+  .calc-tile-btn:hover { transform:translateY(-3px); }
+  .calc-tile-btn:active { transform:translateY(0) scale(.95); }
+
+  /* Letter bonus popup (modal-like) */
+  .calc-letter-popup {
+    position:fixed; z-index:800;
+    background:linear-gradient(160deg, rgba(30,22,10,.99), rgba(14,10,4,.99));
+    border:1px solid rgba(201,148,58,.45); border-radius:14px;
+    padding:.85rem 1rem; box-shadow:0 16px 48px rgba(0,0,0,.8), 0 0 30px rgba(201,148,58,.12);
+    display:flex; gap:.5rem; align-items:center;
+    animation:fadeIn .15s ease;
+  }
+  .clp-btn {
+    width:48px; height:48px; border-radius:9px; cursor:pointer;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    gap:2px; border:1.5px solid; font-size:.7rem; font-weight:700;
+    font-family:'DM Mono',monospace; transition:all .15s; background:rgba(0,0,0,.3);
+  }
+  .clp-btn .clp-icon { font-size:1.1rem; }
+  .clp-btn.none  { border-color:rgba(255,255,255,.15); color:var(--text-dim); }
+  .clp-btn.dl    { border-color:rgba(94,184,224,.5);  color:#5eb8e0; }
+  .clp-btn.tl    { border-color:rgba(138,176,255,.5); color:#8ab0ff; }
+  .clp-btn.none.active  { background:rgba(255,255,255,.12); border-color:rgba(255,255,255,.4);  color:var(--cream); }
+  .clp-btn.dl.active    { background:rgba(94,184,224,.2);  border-color:#5eb8e0; box-shadow:0 0 12px rgba(94,184,224,.3); }
+  .clp-btn.tl.active    { background:rgba(138,176,255,.2); border-color:#8ab0ff; box-shadow:0 0 12px rgba(138,176,255,.3); }
+  .clp-btn:hover { transform:scale(1.08); }
+  .clp-title { font-size:.68rem; color:var(--text-mute); text-align:center; margin-bottom:.3rem; letter-spacing:.08em; text-transform:uppercase; }
+
+  /* Word bonus row — compact 4-button strip */
+  .calc-word-bonus-row {
+    display:flex; gap:.45rem; margin-bottom:1rem; flex-wrap:wrap;
+  }
+  .cwbtn {
+    flex:1; min-width:60px; padding:.5rem .3rem; border-radius:9px;
+    border:1.5px solid; cursor:pointer; transition:all .18s;
+    text-align:center; display:flex; flex-direction:column;
+    align-items:center; justify-content:center; gap:2px;
+    line-height:1.2; background:rgba(0,0,0,.25); min-height:48px;
+  }
+  .cwbtn .cbtn-icon { font-size:.95rem; }
+  .cwbtn .cbtn-label { font-family:'DM Mono',monospace; font-size:.65rem; font-weight:700; }
+  .cwbtn.none { border-color:rgba(255,255,255,.1);  color:var(--text-dim); }
+  .cwbtn.dp   { border-color:rgba(230,90,120,.3);   color:#f08098; }
+  .cwbtn.tp   { border-color:rgba(220,80,80,.35);   color:#e07070; }
+  .cwbtn.none.active { background:rgba(255,255,255,.1);  border-color:rgba(255,255,255,.4);  color:var(--cream); }
+  .cwbtn.dp.active   { background:rgba(230,90,120,.18);  border-color:#f08098; box-shadow:0 0 14px rgba(230,90,120,.2); }
+  .cwbtn.tp.active   { background:rgba(220,80,80,.18);   border-color:#e07070; box-shadow:0 0 14px rgba(220,80,80,.25); }
+  .cwbtn:hover { filter:brightness(1.15); }
 
   /* Result */
   .calc-result-box {
@@ -1638,17 +1739,51 @@
 <!-- ═══════ SETUP ═══════ -->
 <div id="setup-screen">
   <div class="logo-area">
-    <div class="logo-gothic">Scrabble</div>
-    <div class="logo-tiles">
-      <div class="logo-tile"><span class="letter">S</span><span class="pts">1</span></div>
-      <div class="logo-tile"><span class="letter">C</span><span class="pts">3</span></div>
-      <div class="logo-tile"><span class="letter">R</span><span class="pts">1</span></div>
-      <div class="logo-tile"><span class="letter">A</span><span class="pts">1</span></div>
-      <div class="logo-tile"><span class="letter">B</span><span class="pts">3</span></div>
-      <div class="logo-tile"><span class="letter">B</span><span class="pts">3</span></div>
-      <div class="logo-tile"><span class="letter">L</span><span class="pts">1</span></div>
-      <div class="logo-tile"><span class="letter">E</span><span class="pts">1</span></div>
+    <!-- SC Icon Logo -->
+    <div class="sc-logo-wrap" aria-hidden="true">
+      <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" class="sc-logo-svg">
+        <defs>
+          <radialGradient id="circleGrad" cx="50%" cy="40%" r="60%">
+            <stop offset="0%" stop-color="#1e1408"/>
+            <stop offset="100%" stop-color="#0a0804"/>
+          </radialGradient>
+          <linearGradient id="tileGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#f8edca"/>
+            <stop offset="35%" stop-color="#e8c870"/>
+            <stop offset="70%" stop-color="#c89838"/>
+            <stop offset="100%" stop-color="#a07020"/>
+          </linearGradient>
+          <filter id="tileShadow" x="-20%" y="-20%" width="160%" height="160%">
+            <feDropShadow dx="2" dy="3" stdDeviation="2" flood-color="rgba(0,0,0,0.6)"/>
+          </filter>
+          <filter id="circleGlow">
+            <feGaussianBlur stdDeviation="2" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+        <!-- Outer ring glow -->
+        <circle cx="60" cy="60" r="57" fill="none" stroke="rgba(201,148,58,0.3)" stroke-width="1.5"/>
+        <!-- Main circle -->
+        <circle cx="60" cy="60" r="54" fill="url(#circleGrad)" stroke="#c9943a" stroke-width="3" filter="url(#circleGlow)"/>
+        <!-- Inner ring -->
+        <circle cx="60" cy="60" r="50" fill="none" stroke="rgba(201,148,58,0.18)" stroke-width="0.8"/>
+        <!-- S tile (top-left, slight rotation) -->
+        <g transform="rotate(-8, 42, 42)" filter="url(#tileShadow)">
+          <rect x="20" y="20" width="44" height="44" rx="6" fill="url(#tileGrad)"/>
+          <rect x="23" y="23" width="38" height="38" rx="4" fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="1"/>
+          <text x="42" y="52" font-family="Georgia,serif" font-size="26" font-weight="900" fill="#1a0800" text-anchor="middle">S</text>
+          <text x="57" y="60" font-family="monospace" font-size="8" font-weight="700" fill="#4a2800" text-anchor="middle">1</text>
+        </g>
+        <!-- C tile (bottom-right, slight rotation) -->
+        <g transform="rotate(7, 78, 78)" filter="url(#tileShadow)">
+          <rect x="56" y="56" width="44" height="44" rx="6" fill="url(#tileGrad)"/>
+          <rect x="59" y="59" width="38" height="38" rx="4" fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="1"/>
+          <text x="78" y="88" font-family="Georgia,serif" font-size="26" font-weight="900" fill="#1a0800" text-anchor="middle">C</text>
+          <text x="93" y="96" font-family="monospace" font-size="8" font-weight="700" fill="#4a2800" text-anchor="middle">3</text>
+        </g>
+      </svg>
     </div>
+    <div class="logo-gothic">Scrabble</div>
     <p class="logo-tagline">Marcador de Puntos</p>
   </div>
 
@@ -1717,9 +1852,38 @@
 <!-- ═══════ GAME ═══════ -->
 <div id="game-screen">
   <div class="game-header">
-    <div class="game-title-block">
-      <div class="game-title-gothic">Scrabble</div>
-      <div class="game-subtitle">Marcador de Puntos</div>
+    <div class="game-title-block" style="display:flex;align-items:center;gap:.7rem">
+      <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" style="width:48px;height:48px;flex-shrink:0" aria-hidden="true">
+        <defs>
+          <radialGradient id="circleGrad2" cx="50%" cy="40%" r="60%">
+            <stop offset="0%" stop-color="#1e1408"/>
+            <stop offset="100%" stop-color="#0a0804"/>
+          </radialGradient>
+          <linearGradient id="tileGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#f8edca"/>
+            <stop offset="35%" stop-color="#e8c870"/>
+            <stop offset="70%" stop-color="#c89838"/>
+            <stop offset="100%" stop-color="#a07020"/>
+          </linearGradient>
+        </defs>
+        <circle cx="60" cy="60" r="54" fill="url(#circleGrad2)" stroke="#c9943a" stroke-width="3"/>
+        <g transform="rotate(-8, 42, 42)">
+          <rect x="20" y="20" width="44" height="44" rx="6" fill="url(#tileGrad2)" filter="drop-shadow(2px 3px 2px rgba(0,0,0,0.6))"/>
+          <rect x="23" y="23" width="38" height="38" rx="4" fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="1"/>
+          <text x="42" y="52" font-family="Georgia,serif" font-size="26" font-weight="900" fill="#1a0800" text-anchor="middle">S</text>
+          <text x="57" y="60" font-family="monospace" font-size="8" font-weight="700" fill="#4a2800" text-anchor="middle">1</text>
+        </g>
+        <g transform="rotate(7, 78, 78)">
+          <rect x="56" y="56" width="44" height="44" rx="6" fill="url(#tileGrad2)" filter="drop-shadow(2px 3px 2px rgba(0,0,0,0.6))"/>
+          <rect x="59" y="59" width="38" height="38" rx="4" fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="1"/>
+          <text x="78" y="88" font-family="Georgia,serif" font-size="26" font-weight="900" fill="#1a0800" text-anchor="middle">C</text>
+          <text x="93" y="96" font-family="monospace" font-size="8" font-weight="700" fill="#4a2800" text-anchor="middle">3</text>
+        </g>
+      </svg>
+      <div>
+        <div class="game-title-gothic">Scrabble</div>
+        <div class="game-subtitle">Marcador de Puntos</div>
+      </div>
     </div>
     <div class="header-btns">
       <button class="hbtn" onclick="undoLast()" aria-label="Deshacer última jugada">↩ Deshacer</button>
@@ -1778,7 +1942,25 @@
       </button>
       <div class="validator-body" id="validator-body" role="region">
         <div class="validator-card">
-          <p class="validator-sub">¿Es válida esta palabra en Scrabble? Escríbela y pulsa Verificar.</p>
+          <p class="validator-sub">Verificador powered by IA · Introduce tu <strong>API Key de Anthropic</strong> una vez y queda guardada para la sesión.</p>
+
+          <!-- API Key prompt (shown until key is entered) -->
+          <div id="v-key-prompt" style="margin-bottom:.9rem;padding:.85rem 1rem;border-radius:10px;background:rgba(201,148,58,.07);border:1px solid rgba(201,148,58,.3);">
+            <div style="font-size:.78rem;color:var(--gold2);font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:.5rem">🔑 API Key de Anthropic</div>
+            <div style="font-size:.82rem;color:var(--text-dim);margin-bottom:.65rem;line-height:1.5">
+              Consíguela gratis en <a href="https://console.anthropic.com" target="_blank" rel="noopener" style="color:var(--gold3)">console.anthropic.com</a> → API Keys.<br>
+              Solo se usa localmente en tu dispositivo.
+            </div>
+            <div style="display:flex;gap:.5rem;align-items:center">
+              <input id="v-api-key-input" type="password"
+                placeholder="sk-ant-api03-..."
+                style="flex:1;background:rgba(0,0,0,.4);border:1.5px solid rgba(201,148,58,.25);border-radius:8px;padding:.6rem .85rem;color:var(--cream);font-family:'DM Mono',monospace;font-size:.85rem;outline:none;"
+                onkeydown="if(event.key==='Enter'){document.getElementById('validator-input').focus()}"
+                oninput="this.style.borderColor=this.value.startsWith('sk-')?'rgba(78,205,196,.5)':'rgba(201,148,58,.25)'">
+              <button onclick="guardarApiKey()" style="padding:.6rem 1rem;border-radius:8px;background:linear-gradient(135deg,var(--gold2),var(--gold));border:none;color:#100800;font-weight:700;font-size:.85rem;cursor:pointer;white-space:nowrap">Guardar</button>
+            </div>
+          </div>
+
           <div class="validator-row">
             <input class="validator-input" type="text" id="validator-input"
               placeholder="Escribe aquí..." maxlength="30"
@@ -1803,6 +1985,7 @@
               <div class="v-result-tipo" id="v-tipo"></div>
               <div class="v-result-def" id="v-def"></div>
               <div class="v-result-suggestion" id="v-suggestion" style="display:none"></div>
+              <div id="v-source" style="display:none;margin-top:.4rem;padding-top:.4rem;border-top:1px solid rgba(255,255,255,.05)"></div>
             </div>
           </div>
         </div>
@@ -1819,49 +2002,39 @@
       <div class="calc-body" id="calc-body" role="region">
         <div class="calc-card">
 
-          <!-- Paso 1: palabra -->
+          <!-- Paso 1: escribe la palabra -->
           <div class="calc-step"><span class="calc-step-num">1</span> Escribe la palabra</div>
           <input class="calc-word-input" type="text" id="calc-input"
             placeholder="P · A · L · A · B · R · A" maxlength="15"
             oninput="onCalcInput(this)"
             aria-label="Palabra para calcular puntos">
 
-          <!-- Paso 2: casilla especial -->
-          <div class="calc-step"><span class="calc-step-num">2</span> ¿Cayó en alguna casilla especial?</div>
-          <div class="calc-bonus-row" role="group" aria-label="Casilla especial de la palabra">
-            <button class="cbtn none active" id="cbtn-none" onclick="selectBonus('none')" aria-pressed="true">
+          <!-- Paso 2: casillas especiales por letra -->
+          <div class="calc-step"><span class="calc-step-num">2</span> Toca cada letra para asignarle su casilla</div>
+          <div id="calc-tiles-row" class="calc-tiles-row" role="group" aria-label="Fichas de la palabra con sus casillas"></div>
+
+          <!-- Paso 3: bonus de palabra completa -->
+          <div class="calc-step"><span class="calc-step-num">3</span> ¿Algún bonus de Palabra?</div>
+          <div class="calc-word-bonus-row" role="group" aria-label="Bonus de palabra">
+            <button class="cwbtn none active" id="cwbtn-none" onclick="selectWordBonus('none')" aria-pressed="true">
               <span class="cbtn-icon">⬜</span>
-              <span class="cbtn-label">Ninguna</span>
-              <span class="cbtn-desc">sin bonus</span>
+              <span class="cbtn-label">Ninguno</span>
             </button>
-            <button class="cbtn dl" id="cbtn-dl" onclick="selectBonus('dl')" aria-pressed="false">
-              <span class="cbtn-icon">🔵</span>
-              <span class="cbtn-label">Doble Letra</span>
-              <span class="cbtn-desc">×2 una letra</span>
-            </button>
-            <button class="cbtn tl" id="cbtn-tl" onclick="selectBonus('tl')" aria-pressed="false">
-              <span class="cbtn-icon">🟦</span>
-              <span class="cbtn-label">Triple Letra</span>
-              <span class="cbtn-desc">×3 una letra</span>
-            </button>
-            <button class="cbtn dp" id="cbtn-dp" onclick="selectBonus('dp')" aria-pressed="false">
+            <button class="cwbtn dp" id="cwbtn-dp" onclick="selectWordBonus('dp')" aria-pressed="false">
               <span class="cbtn-icon">🟣</span>
-              <span class="cbtn-label">Doble Palabra</span>
-              <span class="cbtn-desc">×2 total</span>
+              <span class="cbtn-label">DP ×2</span>
             </button>
-            <button class="cbtn tp" id="cbtn-tp" onclick="selectBonus('tp')" aria-pressed="false">
+            <button class="cwbtn tp" id="cwbtn-tp" onclick="selectWordBonus('tp')" aria-pressed="false">
               <span class="cbtn-icon">🔴</span>
-              <span class="cbtn-label">Triple Palabra</span>
-              <span class="cbtn-desc">×3 total</span>
+              <span class="cbtn-label">TP ×3</span>
             </button>
-            <button class="cbtn dp" id="cbtn-fp" onclick="selectBonus('fp')" aria-pressed="false">
+            <button class="cwbtn dp" id="cwbtn-fp" onclick="selectWordBonus('fp')" aria-pressed="false">
               <span class="cbtn-icon">⭐</span>
-              <span class="cbtn-label">1ª Palabra</span>
-              <span class="cbtn-desc">×2 total</span>
+              <span class="cbtn-label">1ª ×2</span>
             </button>
           </div>
 
-          <!-- Paso 3: resultado -->
+          <!-- Resultado -->
           <div class="calc-result-box" aria-live="polite">
             <div>
               <div class="calc-result-total" id="calc-total">—</div>
@@ -3108,10 +3281,12 @@
     K:10,Q:10,W:10,X:10,Z:10
   };
 
-  // Solo un bonus activo a la vez (radio)
-  let calcBonus = 'none';
+  let calcWordBonus = 'none';   // 'none' | 'dp' | 'tp' | 'fp'
+  let calcLetterBonuses = [];   // array of 'none'|'dl'|'tl' per letter index
   let calcLastResult = 0;
+  let calcActivePopup = null;   // currently open letter popup
 
+  /* ── Toggle calculator panel ── */
   function toggleCalc() {
     const body  = document.getElementById('calc-body');
     const arrow = document.getElementById('ctoggle-arrow');
@@ -3123,11 +3298,11 @@
     if (isOpen) setTimeout(() => document.getElementById('calc-input').focus(), 320);
   }
 
-  function selectBonus(key) {
-    calcBonus = key;
-    // Update button states (radio behaviour)
-    ['none','dl','tl','dp','tp','fp'].forEach(k => {
-      const b = document.getElementById('cbtn-' + k);
+  /* ── Word bonus buttons ── */
+  function selectWordBonus(key) {
+    calcWordBonus = key;
+    ['none','dp','tp','fp'].forEach(k => {
+      const b = document.getElementById('cwbtn-' + k);
       if (b) {
         b.classList.toggle('active', k === key);
         b.setAttribute('aria-pressed', k === key ? 'true' : 'false');
@@ -3137,11 +3312,109 @@
     recalc();
   }
 
+  /* ── Word input handler ── */
   function onCalcInput(input) {
     input.value = input.value.toUpperCase().replace(/[^A-ZÁÉÍÓÚÜÑ]/g, '');
+    const word = input.value;
+    // Sync letter bonus array
+    calcLetterBonuses = Array.from({length: word.length}, (_, i) => calcLetterBonuses[i] || 'none');
+    renderCalcTiles(word);
     recalc();
   }
 
+  /* ── Render letter tiles ── */
+  function renderCalcTiles(word) {
+    const row = document.getElementById('calc-tiles-row');
+    if (!word) { row.innerHTML = ''; return; }
+    row.innerHTML = '';
+    [...word].forEach((ch, i) => {
+      const pts = LETTER_PTS[ch] ?? 0;
+      const bonus = calcLetterBonuses[i] || 'none';
+      const btn = document.createElement('button');
+      btn.className = 'calc-tile-btn' + (bonus !== 'none' ? ' bonus-' + bonus : '');
+      btn.setAttribute('aria-label', `Letra ${ch}, ${pts} puntos, bonus: ${bonus}`);
+      btn.setAttribute('title', 'Toca para cambiar la casilla');
+      const bonusLabel = bonus === 'dl' ? 'DL' : bonus === 'tl' ? 'TL' : '';
+      btn.innerHTML = `
+        <span class="ct-letter">${ch}</span>
+        <span class="ct-pts">${pts}</span>
+        ${bonusLabel ? `<span class="ct-bonus">${bonusLabel}</span>` : '<span class="ct-bonus" style="opacity:0">·</span>'}
+      `;
+      btn.onclick = (e) => { e.stopPropagation(); openLetterPopup(i, btn, bonus); };
+      row.appendChild(btn);
+    });
+  }
+
+  /* ── Letter bonus popup ── */
+  function openLetterPopup(idx, anchorEl, currentBonus) {
+    closeLetterPopup();
+    sfxClick();
+
+    const popup = document.createElement('div');
+    popup.className = 'calc-letter-popup';
+    popup.id = 'calc-letter-popup';
+
+    const options = [
+      { key:'none', icon:'⬜', label:'Sin casilla' },
+      { key:'dl',   icon:'🔵', label:'DL ×2' },
+      { key:'tl',   icon:'🟦', label:'TL ×3' },
+    ];
+
+    const titleEl = document.createElement('div');
+    titleEl.style.cssText = 'display:flex;flex-direction:column;gap:.2rem';
+    const titleText = document.createElement('div');
+    titleText.className = 'clp-title';
+    const ch = document.getElementById('calc-input').value[idx] || '?';
+    titleText.textContent = `Letra "${ch}"`;
+    titleEl.appendChild(titleText);
+
+    const btnRow = document.createElement('div');
+    btnRow.style.cssText = 'display:flex;gap:.4rem';
+
+    options.forEach(opt => {
+      const b = document.createElement('button');
+      b.className = `clp-btn ${opt.key}${opt.key === currentBonus ? ' active' : ''}`;
+      b.innerHTML = `<span class="clp-icon">${opt.icon}</span>${opt.label}`;
+      b.onclick = (e) => {
+        e.stopPropagation();
+        calcLetterBonuses[idx] = opt.key;
+        renderCalcTiles(document.getElementById('calc-input').value);
+        recalc();
+        closeLetterPopup();
+        sfxClick();
+      };
+      btnRow.appendChild(b);
+    });
+
+    titleEl.appendChild(btnRow);
+    popup.appendChild(titleEl);
+
+    document.body.appendChild(popup);
+    calcActivePopup = popup;
+
+    // Position near the tile
+    const rect = anchorEl.getBoundingClientRect();
+    const pw = 210, ph = 90;
+    let left = rect.left + rect.width/2 - pw/2;
+    let top  = rect.top - ph - 10;
+    if (left < 8) left = 8;
+    if (left + pw > window.innerWidth - 8) left = window.innerWidth - pw - 8;
+    if (top < 8) top = rect.bottom + 10;
+    popup.style.cssText += `left:${left}px;top:${top}px;width:${pw}px`;
+
+    // Close on outside click
+    setTimeout(() => {
+      document.addEventListener('click', closeLetterPopup, {once:true});
+    }, 10);
+  }
+
+  function closeLetterPopup() {
+    const p = document.getElementById('calc-letter-popup');
+    if (p) p.remove();
+    calcActivePopup = null;
+  }
+
+  /* ── Main recalc ── */
   function recalc() {
     const word     = (document.getElementById('calc-input').value || '').toUpperCase();
     const totalEl  = document.getElementById('calc-total');
@@ -3157,41 +3430,44 @@
       return;
     }
 
-    // Sum letter values
-    const letterVals = [...word].map(ch => LETTER_PTS[ch] ?? 0);
-    const rawSum     = letterVals.reduce((a, v) => a + v, 0);
+    // Sum each letter with its own bonus
+    let baseSum = 0;
+    const letterDetails = [...word].map((ch, i) => {
+      const pts   = LETTER_PTS[ch] ?? 0;
+      const bonus = calcLetterBonuses[i] || 'none';
+      let val = pts;
+      if (bonus === 'dl') val = pts * 2;
+      if (bonus === 'tl') val = pts * 3;
+      baseSum += val;
+      return { ch, pts, bonus, val };
+    });
 
-    // Apply bonus
-    let finalScore = rawSum;
-    let bonusLine  = '';
-
-    if (calcBonus === 'dl') {
-      // Best letter gets doubled
-      const best = Math.max(...letterVals);
-      finalScore = rawSum + best;          // rawSum already has best once, add it again
-      bonusLine = `+${best} (mejor letra ×2)`;
-    } else if (calcBonus === 'tl') {
-      const best = Math.max(...letterVals);
-      finalScore = rawSum + best * 2;      // best counted once, add 2× more
-      bonusLine = `+${best * 2} (mejor letra ×3)`;
-    } else if (calcBonus === 'dp' || calcBonus === 'fp') {
-      finalScore = rawSum * 2;
-      bonusLine = `× 2 = ${finalScore}`;
-    } else if (calcBonus === 'tp') {
-      finalScore = rawSum * 3;
-      bonusLine = `× 3 = ${finalScore}`;
-    }
+    // Apply word bonus
+    let finalScore = baseSum;
+    let wordMult = 1;
+    if (calcWordBonus === 'dp' || calcWordBonus === 'fp') wordMult = 2;
+    if (calcWordBonus === 'tp') wordMult = 3;
+    finalScore = baseSum * wordMult;
 
     calcLastResult = finalScore;
 
     totalEl.textContent = finalScore;
     totalEl.style.color = finalScore >= 50 ? 'var(--gold3)' : finalScore >= 25 ? 'var(--gold2)' : 'var(--cream)';
 
-    // Breakdown
-    const letterStr = letterVals.join(' + ') + ' = ' + rawSum;
-    let html = `<span class="r-base">Letras: ${letterStr}</span>`;
-    if (bonusLine) html += `<span class="r-bonus">Bonus: ${bonusLine}</span>`;
-    if (bonusLine) html += `<span class="r-total">Total: ${finalScore} pts</span>`;
+    // Build breakdown
+    const letterStr = letterDetails.map(d => {
+      if (d.bonus === 'dl') return `<span style="color:#5eb8e0">${d.ch}(${d.val})</span>`;
+      if (d.bonus === 'tl') return `<span style="color:#8ab0ff">${d.ch}(${d.val})</span>`;
+      return `${d.ch}(${d.pts})`;
+    }).join(' + ');
+
+    let html = `<span class="r-base">${letterStr}</span>`;
+    if (wordMult > 1) {
+      const label = calcWordBonus === 'fp' ? '1ª' : calcWordBonus.toUpperCase();
+      html += `<span class="r-bonus">${label}: ×${wordMult} → ${finalScore}</span>`;
+    } else {
+      html += `<span class="r-base">= ${baseSum} pts</span>`;
+    }
     breakEl.innerHTML = html;
 
     if (useBtn) useBtn.disabled = false;
@@ -3218,9 +3494,11 @@
     showToast('✅ ' + calcLastResult + ' puntos cargados');
     sfxScore(calcLastResult);
     haptic([10, 15]);
-    // Reset
-    selectBonus('none');
+    // Reset calculator
+    selectWordBonus('none');
+    calcLetterBonuses = [];
     document.getElementById('calc-input').value = '';
+    document.getElementById('calc-tiles-row').innerHTML = '';
     document.getElementById('calc-total').textContent = '—';
     document.getElementById('calc-total').style.color = 'var(--gold2)';
     document.getElementById('calc-breakdown').innerHTML = '';
@@ -3231,132 +3509,149 @@
 </script>
 
 <script>
-  /* ═══ DICTIONARY — Wiktionary en español (gratis, sin API key) ═══ */
+  /* ═══ VERIFICADOR DE PALABRAS — Anthropic Direct Browser API ═══ */
 
   const INVALIDAS_SIEMPRE = new Set([
     'mexico','españa','francia','italia','alemania','japon','china','brasil',
     'argentina','colombia','peru','chile','cuba','canada','rusia','india',
     'maria','jose','juan','pedro','ana','luis','carlos','jorge','miguel',
-    'rosa','elena','pablo','isabel','diego','sofia','lucía','lucia',
+    'rosa','elena','pablo','isabel','diego','sofia','lucia',
     'google','facebook','twitter','apple','samsung','nike','adidas','coca',
     'pepsi','toyota','honda','ford','netflix','amazon','microsoft',
     'onu','oms','fbi','cia','nasa','otan','uefa','fifa',
   ]);
-  const PREFIJOS = ['anti','sub','pre','pos','post','re','des','in','im','bi','tri','mega','micro','mini','macro'];
 
-  const TIPO_MAP = {
-    'Sustantivo':'sustantivo','Verbo':'verbo','Adjetivo':'adjetivo',
-    'Adverbio':'adverbio','Preposición':'preposición','Interjección':'interjección',
-    'Pronombre':'pronombre','Artículo':'artículo','Conjunción':'conjunción',
-    'Contracción':'contracción','Locución':'otro','Forma verbal':'verbo',
-    'Forma sustantiva':'sustantivo','Forma adjetiva':'adjetivo',
-    'Participio':'verbo','Gerundio':'verbo',
-  };
-  const INVALIDA_CATEGORY = /nombre propio|topónimo|antropónimo|sigla|acrónimo/i;
-
-  function esObviamenteInvalida(w) {
-    if (INVALIDAS_SIEMPRE.has(w)) return { invalida:true, razon:'Nombre propio, país, marca o acrónimo: no permitido en Scrabble.' };
-    if (/^[A-ZÁÉÍÓÚ]{2,}$/.test(w)) return { invalida:true, razon:'Acrónimo: no se permite en Scrabble.' };
-    if (PREFIJOS.includes(w))        return { invalida:true, razon:'Prefijo aislado: no es una palabra válida por sí sola.' };
+  function filtroPrevio(w) {
+    if (w.length < 2) return 'Mínimo 2 letras para jugar en Scrabble.';
+    if (INVALIDAS_SIEMPRE.has(w)) return 'Nombre propio, país, marca o acrónimo: no permitido en Scrabble.';
+    if (/^\d/.test(w)) return 'Las palabras no pueden empezar por número.';
     return null;
   }
 
-  function normalizarParaWiki(w) {
-    return w.charAt(0).toUpperCase() + w.slice(1).toLowerCase();
+  async function consultarClaude(word) {
+    const prompt = `Eres un árbitro experto de Scrabble en español (RAE). Analiza si "${word}" es válida en Scrabble.
+
+Responde SOLO con JSON válido, sin texto extra, sin bloques de código:
+{"valida":true,"tipo":"sustantivo","definicion":"Definición breve en español.","sugerencia":null}
+
+Campos:
+- valida: true si existe en el diccionario RAE como palabra común (no nombre propio, no marca, no sigla, no palabra de otro idioma)
+- tipo: "sustantivo"|"verbo"|"adjetivo"|"adverbio"|"preposición"|"interjección"|"pronombre"|"otro"|"no aplica"
+- definicion: definición corta (1-2 oraciones). Si inválida, explica por qué.
+- sugerencia: string con alternativa si existe, o null`;
+
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': window._ANTHROPIC_KEY || '',
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true',
+      },
+      body: JSON.stringify({
+        model: 'claude-haiku-4-5-20251001',
+        max_tokens: 200,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+
+    if (res.status === 401) throw new Error('sin-clave');
+    if (!res.ok) throw new Error('api-error');
+
+    const data = await res.json();
+    const text = data.content?.find(b => b.type === 'text')?.text || '';
+    return JSON.parse(text.replace(/```json|```/g, '').trim());
   }
 
-  async function consultarWiktionary(word) {
-    const titulo = normalizarParaWiki(word);
-    const url = `https://es.wiktionary.org/api/rest_v1/page/summary/${encodeURIComponent(titulo)}`;
-    const res = await fetch(url, { headers: { 'Accept': 'application/json' } });
-    if (res.status === 404) {
-      const sinTilde = word.normalize('NFD').replace(/[\u0300-\u036f]/g,'');
-      if (sinTilde !== word) {
-        const url2 = `https://es.wiktionary.org/api/rest_v1/page/summary/${encodeURIComponent(normalizarParaWiki(sinTilde))}`;
-        const res2 = await fetch(url2, { headers: { 'Accept': 'application/json' } });
-        if (res2.status === 404) return null;
-        if (!res2.ok) throw new Error('wiki-error');
-        return res2.json();
-      }
-      return null;
-    }
-    if (!res.ok) throw new Error('wiki-error');
-    return res.json();
-  }
-
-  function parsearWikiResponse(data, word) {
-    if (!data) return null;
-    const desc    = data.description || '';
-    const extract = data.extract || '';
-    const title   = (data.title || '').toLowerCase();
-    const wordNorm  = word.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
-    const titleNorm = title.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
-    if (titleNorm !== wordNorm && titleNorm !== word.toLowerCase()) return null;
-    if (INVALIDA_CATEGORY.test(desc) || INVALIDA_CATEGORY.test(extract)) {
-      return { valida:false, tipo:'nombre propio', definicion:'Nombre propio: no permitido en Scrabble.', sugerencia:null };
-    }
-    let tipo = 'otro';
-    for (const [k,v] of Object.entries(TIPO_MAP)) {
-      if (desc.toLowerCase().includes(k.toLowerCase()) || extract.toLowerCase().includes(k.toLowerCase())) {
-        tipo = v; break;
-      }
-    }
-    let definicion = extract.split('\n')[0] || desc || 'Palabra válida en español.';
-    if (definicion.length > 220) definicion = definicion.slice(0, 220) + '…';
-    return { valida:true, tipo, definicion, sugerencia:null };
-  }
-
+  /* ── UI principal ── */
   async function checkWord() {
     const input     = document.getElementById('validator-input');
     const btn       = document.getElementById('validator-btn');
     const resultDiv = document.getElementById('validator-result');
     const loadingEl = document.getElementById('v-loading-content');
     const contentEl = document.getElementById('v-result-content');
+    const keyPrompt = document.getElementById('v-key-prompt');
 
     const word = input.value.trim().toLowerCase().normalize('NFC');
     if (!word) { input.focus(); return; }
 
+    // Filtro local rápido
+    const filtro = filtroPrevio(word);
+    if (filtro) {
+      _renderResult(word, { valida:false, tipo:'no aplica', definicion:filtro, sugerencia:null });
+      return;
+    }
+
+    // Verificar que hay clave API
+    const apiKey = (document.getElementById('v-api-key-input')?.value || '').trim();
+    if (!apiKey) {
+      if (keyPrompt) keyPrompt.style.display = 'block';
+      document.getElementById('v-api-key-input')?.focus();
+      return;
+    }
+    window._ANTHROPIC_KEY = apiKey;
+    if (keyPrompt) keyPrompt.style.display = 'none';
+
+    // Mostrar loading
     btn.disabled = true;
     resultDiv.className     = 'validator-result loading';
     resultDiv.style.display = 'block';
     loadingEl.style.display = 'block';
     contentEl.style.display = 'none';
 
-    const local = esObviamenteInvalida(word);
-    if (local) {
-      _renderResult(word, { valida:false, tipo:'no aplica', definicion:local.razon, sugerencia:null });
-      btn.disabled = false;
-      return;
-    }
-
-    let resultado = null;
     try {
-      const wikiData = await consultarWiktionary(word);
-      const parsed   = parsearWikiResponse(wikiData, word);
-      if (parsed) {
-        resultado = parsed;
-      } else {
-        resultado = {
-          valida: false, tipo: 'no aplica',
-          definicion: `"${word.toUpperCase()}" no se encontró en el diccionario. Puede ser inexistente, un nombre propio o un término no registrado.`,
-          sugerencia: 'Verifica la ortografía. Recuerda que conjugaciones verbales y plurales sí son válidas si aparecen en el diccionario.'
-        };
-      }
+      const resultado = await consultarClaude(word);
+      _renderResult(word, resultado);
     } catch(e) {
-      resultado = { valida:false, tipo:'no aplica', definicion:'No se pudo consultar el diccionario (sin conexión o error de red). Intenta de nuevo.', sugerencia:null };
+      if (e.message === 'sin-clave') {
+        _renderResult(word, { valida:false, tipo:'no aplica',
+          definicion:'Clave API incorrecta o sin permisos. Verifica tu API key de Anthropic.',
+          sugerencia:null });
+      } else {
+        _renderResult(word, { valida:false, tipo:'no aplica',
+          definicion:'No se pudo consultar el diccionario. Revisa tu conexión e inténtalo de nuevo.',
+          sugerencia:null });
+      }
     }
-
-    _renderResult(word, resultado);
     btn.disabled = false;
   }
 
-  function _renderResult(word, r) {
+  function guardarApiKey() {
+    const val = (document.getElementById('v-api-key-input')?.value || '').trim();
+    if (!val.startsWith('sk-')) {
+      const inp = document.getElementById('v-api-key-input');
+      if (inp) { inp.style.borderColor='rgba(168,50,40,.6)'; inp.focus(); }
+      return;
+    }
+    window._ANTHROPIC_KEY = val;
+    try { sessionStorage.setItem('_ak', val); } catch(e) {}
+    const prompt = document.getElementById('v-key-prompt');
+    if (prompt) prompt.style.display = 'none';
+    document.getElementById('validator-input')?.focus();
+    showToast('🔑 API Key guardada para esta sesión');
+  }
+
+  // Restore key from session on load
+  (function() {
+    try {
+      const saved = sessionStorage.getItem('_ak');
+      if (saved) {
+        window._ANTHROPIC_KEY = saved;
+        const inp = document.getElementById('v-api-key-input');
+        if (inp) inp.value = saved;
+        const prompt = document.getElementById('v-key-prompt');
+        if (prompt) prompt.style.display = 'none';
+      }
+    } catch(e) {}
+  })();
+
     const resultDiv = document.getElementById('validator-result');
     const loadingEl = document.getElementById('v-loading-content');
     const contentEl = document.getElementById('v-result-content');
     const esValida  = !!r.valida;
 
     resultDiv.className = 'validator-result ' + (esValida ? 'valid' : 'invalid');
+    resultDiv.style.display = 'block';
 
     document.getElementById('v-icon').textContent  = esValida ? '✅' : '❌';
     document.getElementById('v-word').textContent  = word.toUpperCase();
@@ -3380,9 +3675,13 @@
       sugEl.style.display = 'none';
     }
 
+    const srcEl = document.getElementById('v-source');
+    if (srcEl) srcEl.style.display = 'none';
+
     loadingEl.style.display = 'none';
     contentEl.style.display = 'block';
   }
+
   /* ═══ BACKGROUND TILES ═══ */
   (function() {
     const LETTERS = 'ABCDEFGHIJKLMNÑOPQRSTUVWXYZ';
