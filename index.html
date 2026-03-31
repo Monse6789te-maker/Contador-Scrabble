@@ -246,6 +246,7 @@
   .player-row {
     display:flex; align-items:center; gap:.75rem;
     animation:fadeIn .3s ease both;
+    position:relative;
   }
 
   /* Color swatch — now a pill that matches the player color */
@@ -293,14 +294,12 @@
 
   /* Avatar picker popover */
   .avatar-popover {
-    position:absolute; z-index:200;
-    background:linear-gradient(160deg, rgba(34,25,12,.99), rgba(16,12,5,.99));
-    border:1px solid rgba(201,148,58,.35); border-radius:14px;
+    position:fixed; z-index:9999;
+    background:#1c1409;
+    border:1px solid rgba(201,148,58,.5); border-radius:14px;
     padding:.75rem; display:grid; grid-template-columns:repeat(6,1fr); gap:6px;
-    box-shadow: 0 16px 48px rgba(0,0,0,.85), 0 0 0 1px rgba(201,148,58,.1);
+    box-shadow: 0 16px 48px rgba(0,0,0,.95), 0 0 0 1px rgba(201,148,58,.15);
     animation:fadeIn .18s ease;
-    top:calc(100% + 6px); left:0;
-    min-width:220px;
   }
   .avatar-option {
     width:32px; height:32px; border-radius:8px; border:2px solid transparent;
@@ -2538,7 +2537,19 @@
       `<button class="avatar-option${playerAvatars[playerIdx]===ai?' selected':''}"
         onclick="selectAvatar(${playerIdx},${ai})" title="${em}">${em}</button>`
     ).join('');
-    btn.parentElement.appendChild(pop);
+
+    // Append to body so it escapes flex layout and stacking contexts completely
+    document.body.appendChild(pop);
+
+    // Position with fixed coords aligned to the button
+    const rect = btn.getBoundingClientRect();
+    const popW = 232;
+    let left = rect.left;
+    let top  = rect.bottom + 6;
+    if (left + popW > window.innerWidth - 8) left = window.innerWidth - popW - 8;
+    if (left < 8) left = 8;
+    if (top + 200 > window.innerHeight) top = rect.top - 200 - 6;
+    pop.style.cssText = `position:fixed;left:${left}px;top:${top}px;width:${popW}px;`;
 
     // Close on outside click
     setTimeout(() => {
@@ -2556,7 +2567,6 @@
     const pop = document.getElementById(`avatar-pop-${playerIdx}`);
     if (pop) pop.remove();
     openAvatarPopover = null;
-    // Update the button emoji
     const btn = document.getElementById(`avatar-btn-${playerIdx}`);
     if (btn) btn.textContent = AVATARS[avatarIdx];
   }
@@ -3495,8 +3505,6 @@
       }
     }
   })();
-</script>
-
 </script>
 
 <script>
