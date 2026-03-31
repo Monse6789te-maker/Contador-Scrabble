@@ -278,6 +278,90 @@
     color:var(--text-dim);
   }
 
+  /* ── Avatar picker ── */
+  .avatar-btn {
+    width:46px; height:46px; border-radius:12px; flex-shrink:0;
+    border:2px solid rgba(201,148,58,.22);
+    background:linear-gradient(145deg, rgba(30,22,10,.92), rgba(16,12,5,.97));
+    font-size:1.45rem; cursor:pointer; transition:all .18s;
+    display:flex; align-items:center; justify-content:center;
+    box-shadow: 0 2px 8px rgba(0,0,0,.35);
+    position:relative;
+  }
+  .avatar-btn:hover { border-color:rgba(201,148,58,.6); transform:scale(1.08); }
+  .avatar-btn:active { transform:scale(.95); }
+
+  /* Avatar picker popover */
+  .avatar-popover {
+    position:absolute; z-index:200;
+    background:linear-gradient(160deg, rgba(34,25,12,.99), rgba(16,12,5,.99));
+    border:1px solid rgba(201,148,58,.35); border-radius:14px;
+    padding:.75rem; display:grid; grid-template-columns:repeat(6,1fr); gap:6px;
+    box-shadow: 0 16px 48px rgba(0,0,0,.85), 0 0 0 1px rgba(201,148,58,.1);
+    animation:fadeIn .18s ease;
+    top:calc(100% + 6px); left:0;
+    min-width:220px;
+  }
+  .avatar-option {
+    width:32px; height:32px; border-radius:8px; border:2px solid transparent;
+    background:rgba(255,255,255,.04); font-size:1.2rem; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    transition:all .14s;
+  }
+  .avatar-option:hover { background:rgba(201,148,58,.18); border-color:rgba(201,148,58,.5); transform:scale(1.15); }
+  .avatar-option.selected { border-color:var(--gold2); background:rgba(201,148,58,.2); }
+
+  /* Avatar in scoreboard */
+  .p-avatar {
+    font-size:1.6rem; line-height:1; flex-shrink:0;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,.6));
+  }
+  .player-card.active .p-avatar { font-size:2rem; }
+
+  /* ── Stats block at end-screen ── */
+  .stats-block {
+    background:linear-gradient(160deg, rgba(28,20,8,.98), rgba(14,10,4,.99));
+    border:1px solid rgba(201,148,58,.22); border-radius:18px;
+    padding:1.4rem 1.6rem; margin:1.2rem auto 0;
+    max-width:580px; width:100%;
+    box-shadow: 0 8px 32px rgba(0,0,0,.55);
+  }
+  .stats-title {
+    font-family:'Playfair Display',serif; font-size:1.05rem; font-weight:700;
+    font-style:italic; color:var(--gold2); text-align:center;
+    margin-bottom:1rem; letter-spacing:.04em;
+  }
+  .stats-grid {
+    display:grid; grid-template-columns:1fr 1fr; gap:.65rem;
+  }
+  @media(min-width:480px){ .stats-grid { grid-template-columns:repeat(3,1fr); } }
+  .stat-card {
+    background:rgba(255,255,255,.03); border:1px solid rgba(255,255,255,.06);
+    border-radius:12px; padding:.75rem .9rem; text-align:center;
+    transition:border-color .2s;
+  }
+  .stat-card:hover { border-color:rgba(201,148,58,.25); }
+  .stat-val {
+    font-family:'Playfair Display',serif; font-size:1.55rem; font-weight:900;
+    line-height:1; margin-bottom:.25rem;
+  }
+  .stat-label {
+    font-size:.68rem; color:var(--text-dim); text-transform:uppercase;
+    letter-spacing:.12em; line-height:1.3;
+  }
+  .stats-mvp-row {
+    margin-top:.85rem; padding-top:.85rem;
+    border-top:1px solid rgba(255,255,255,.06);
+    display:flex; flex-direction:column; gap:.45rem;
+  }
+  .mvp-item {
+    display:flex; align-items:center; justify-content:space-between;
+    font-size:.85rem; padding:.35rem .5rem; border-radius:8px;
+    background:rgba(255,255,255,.02);
+  }
+  .mvp-label { color:var(--text-dim); }
+  .mvp-val   { font-weight:700; font-family:'DM Mono',monospace; font-size:.82rem; }
+
   .start-btn {
     width:100%; padding:1.2rem;
     background:linear-gradient(140deg, #608848 0%, #4d6e38 40%, #384f28 100%);
@@ -357,8 +441,8 @@
     background:linear-gradient(135deg, rgba(30,22,10,.97) 0%, rgba(16,11,4,.99) 100%);
     border:1px solid rgba(201,148,58,.12); border-radius:16px;
     padding:1.1rem 1.4rem;
-    display:grid; grid-template-columns:36px 1fr auto auto;
-    align-items:center; gap:1rem;
+    display:grid; grid-template-columns:36px 44px 1fr auto auto;
+    align-items:center; gap:.75rem;
     transition:all .3s ease; position:relative; overflow:hidden;
     box-shadow: var(--shadow-card);
   }
@@ -1695,6 +1779,7 @@
 <!-- Turn transition overlay -->
 <div class="turn-transition-overlay" id="turn-overlay">
   <div>
+    <div id="turn-overlay-avatar" style="font-size:3rem;line-height:1;margin-bottom:.4rem;filter:drop-shadow(0 4px 12px rgba(0,0,0,.6))">😀</div>
     <div class="turn-transition-name" id="turn-overlay-name"></div>
     <div class="turn-transition-sub">¡Es tu turno!</div>
   </div>
@@ -1971,6 +2056,12 @@
               <div id="v-source" style="display:none;margin-top:.4rem;padding-top:.4rem;border-top:1px solid rgba(255,255,255,.05);font-size:.72rem;color:var(--text-mute)">📚 Fuente: Wiktionary en español</div>
             </div>
           </div>
+
+          <!-- Historial de palabras verificadas en esta partida -->
+          <div id="v-history-wrap" style="display:none;margin-top:.75rem;padding-top:.75rem;border-top:1px solid rgba(255,255,255,.06)">
+            <div style="font-size:.7rem;color:var(--text-mute);text-transform:uppercase;letter-spacing:.14em;margin-bottom:.5rem">📋 Verificadas esta partida</div>
+            <div id="v-history-list" style="display:flex;flex-wrap:wrap;gap:.4rem"></div>
+          </div>
         </div>
       </div>
     </div>
@@ -2081,6 +2172,14 @@
   <h2 class="winner-name" id="winner-name"></h2>
   <p class="winner-score-text" id="winner-score-text"></p>
   <div class="final-card" id="final-scores"></div>
+
+  <!-- Estadísticas de la partida -->
+  <div class="stats-block" id="stats-block" style="display:none">
+    <div class="stats-title">📊 Estadísticas de la partida</div>
+    <div class="stats-grid" id="stats-grid"></div>
+    <div class="stats-mvp-row" id="stats-mvp"></div>
+  </div>
+
   <div class="score-chart-wrap" id="score-chart-wrap">
     <div class="score-chart-title">📈 Evolución de puntos por ronda</div>
     <canvas id="score-chart" width="600" height="220" aria-label="Gráfica de evolución de puntuación"></canvas>
@@ -2382,6 +2481,17 @@
     renderSetupList();
   }
 
+  const AVATARS = [
+    '😀','😎','🤩','🥳','🧠','🦁','🐯','🐻','🦊','🐺',
+    '🦅','🦋','🌟','⚡','🔥','🌊','🎯','🎲','🎸','🏆',
+    '👑','💎','🚀','🌈','🍀','🎭','🎪','🤖','👻','🦄',
+    '🧙','⚔️','🛡️','🌙','☀️','🌺','🦩','🦚','🐉','🎠',
+  ];
+
+  // Per-player avatar selection (index into AVATARS array, default by player index)
+  let playerAvatars = [0,1,2,3,4,5];
+  let openAvatarPopover = null; // index of currently open popover
+
   function renderSetupList() {
     const list = document.getElementById('players-list');
     const oldVals = [...list.querySelectorAll('input')].map(i => i.value);
@@ -2391,9 +2501,15 @@
       row.className = 'player-row';
       row.style.animationDelay = (i * 0.06) + 's';
       const hex = COLORS_HEX[i];
+      const avatarEmoji = AVATARS[playerAvatars[i] ?? i] || AVATARS[0];
       row.innerHTML = `
         <div class="p-color-swatch bc${i}" style="background:${hex};box-shadow:0 0 8px ${hex}88;"></div>
         <div class="p-num-badge" style="border-color:${hex}44;color:${hex}aa">${i+1}</div>
+        <div style="position:relative;flex-shrink:0">
+          <button class="avatar-btn" id="avatar-btn-${i}" onclick="toggleAvatarPicker(${i})"
+            title="Elegir avatar" aria-label="Avatar del jugador ${i+1}"
+            style="border-color:${hex}55">${avatarEmoji}</button>
+        </div>
         <input class="player-input" type="text" placeholder="${DEFAULTS[i]}" maxlength="20"
           id="pname-${i}" value="${oldVals[i]||''}"
           aria-label="Nombre del jugador ${i+1}"
@@ -2404,6 +2520,47 @@
     }
   }
 
+  function toggleAvatarPicker(playerIdx) {
+    // Close existing popover
+    if (openAvatarPopover !== null) {
+      const old = document.getElementById(`avatar-pop-${openAvatarPopover}`);
+      if (old) old.remove();
+      if (openAvatarPopover === playerIdx) { openAvatarPopover = null; return; }
+    }
+    openAvatarPopover = playerIdx;
+    const btn = document.getElementById(`avatar-btn-${playerIdx}`);
+    if (!btn) return;
+
+    const pop = document.createElement('div');
+    pop.className = 'avatar-popover';
+    pop.id = `avatar-pop-${playerIdx}`;
+    pop.innerHTML = AVATARS.map((em, ai) =>
+      `<button class="avatar-option${playerAvatars[playerIdx]===ai?' selected':''}"
+        onclick="selectAvatar(${playerIdx},${ai})" title="${em}">${em}</button>`
+    ).join('');
+    btn.parentElement.appendChild(pop);
+
+    // Close on outside click
+    setTimeout(() => {
+      document.addEventListener('click', function closePop(e) {
+        if (!pop.contains(e.target) && e.target !== btn) {
+          pop.remove(); openAvatarPopover = null;
+          document.removeEventListener('click', closePop);
+        }
+      });
+    }, 10);
+  }
+
+  function selectAvatar(playerIdx, avatarIdx) {
+    playerAvatars[playerIdx] = avatarIdx;
+    const pop = document.getElementById(`avatar-pop-${playerIdx}`);
+    if (pop) pop.remove();
+    openAvatarPopover = null;
+    // Update the button emoji
+    const btn = document.getElementById(`avatar-btn-${playerIdx}`);
+    if (btn) btn.textContent = AVATARS[avatarIdx];
+  }
+
   function startGame() {
     const players = [];
     for (let i = 0; i < playerCount; i++) {
@@ -2411,6 +2568,7 @@
       players.push({
         name: inp?.value.trim() || DEFAULTS[i],
         score:0, color:COLORS[i], hex:COLORS_HEX[i],
+        avatar: AVATARS[playerAvatars[i] ?? i] || AVATARS[0],
         rounds:[], passes:0, streak:0, bestScore:0
       });
     }
@@ -2420,8 +2578,7 @@
     document.getElementById('game-screen').style.display  = 'block';
     haptic([10,30,10]);
     render();
-    setTimeout(() => showTurnTransition(players[0].name, players[0].hex), 400);
-    // FIX: only start timer if it was already enabled (default off)
+    setTimeout(() => showTurnTransition(players[0].name, players[0].hex, players[0].avatar), 400);
     if (timerEnabled) startTimerRun();
   }
 
@@ -2450,11 +2607,13 @@
       }).join('');
       const streakBadge = p.streak>=3 ? `<span class="streak-badge">🔥 ×${p.streak}</span>` : '';
       const barPct = maxScore > 0 ? Math.round((p.score/maxScore)*100) : 0;
+      const avatar = p.avatar || '😀';
       return `
         <div class="player-card ${isCur?'active':''}" style="animation-delay:${idx*0.07}s" id="card-${idx}"
           role="listitem" aria-label="${p.name}: ${p.score} puntos${isCur?' — turno actual':''}">
           <div class="color-bar" style="background:${p.hex}" aria-hidden="true"></div>
           <div class="p-rank" aria-hidden="true">${medal}</div>
+          <div class="p-avatar" aria-hidden="true">${avatar}</div>
           <div class="p-info">
             <div class="p-name ${p.color}">${p.name}${isCur?'<span class="turn-pill">turno</span>':''}${streakBadge}</div>
             <div class="p-chips" aria-label="Últimas jugadas">${chips}</div>
@@ -2474,7 +2633,8 @@
   function renderTurnPanel() {
     const p = state.players[state.currentTurn];
     const header = document.getElementById('turn-header');
-    header.innerHTML = `<span class="turn-label">Turno de</span><span class="turn-player-name ${p.color} turn-wipe">${p.name}</span>`;
+    const av = p.avatar || '😀';
+    header.innerHTML = `<span class="turn-label">Turno de</span><span style="font-size:1.8rem;line-height:1">${av}</span><span class="turn-player-name ${p.color} turn-wipe">${p.name}</span>`;
     document.getElementById('score-input').value = '';
     state.scrabbleOn = false;
     updateScrabbleUI();
@@ -2598,7 +2758,7 @@
     if (state.currentTurn===0) state.round++;
     render();
     const p = state.players[state.currentTurn];
-    setTimeout(() => showTurnTransition(p.name, p.hex), 120);
+    setTimeout(() => showTurnTransition(p.name, p.hex, p.avatar || '😀'), 120);
     if (timerEnabled) startTimerRun();
     saveState();
   }
@@ -2714,8 +2874,9 @@
     const winner = sorted[0];
     const maxScore = Math.max(...sorted.map(p => p.score), 1);
 
+    // Winner name with avatar
     const wname = document.getElementById('winner-name');
-    wname.textContent   = winner.name;
+    wname.textContent   = (winner.avatar || '') + ' ' + winner.name;
     wname.style.color   = winner.hex;
     wname.style.textShadow = `0 0 40px ${winner.hex}88, 0 0 90px ${winner.hex}33, 0 5px 20px rgba(0,0,0,.9)`;
 
@@ -2734,6 +2895,7 @@
           style="animation:fadeIn .4s ${i * .1 + .5}s ease both; opacity:0; animation-fill-mode:both;">
           <div class="final-player">
             <span class="final-medal">${medal}</span>
+            <span style="font-size:1.4rem;line-height:1">${p.avatar||''}</span>
             <div>
               <div class="final-player-name" style="color:${p.hex}">${p.name}</div>
               ${bestStr}
@@ -2749,7 +2911,7 @@
         </div>`;
     }).join('');
 
-    // Animate score bars after a short delay
+    // Animate score bars
     setTimeout(() => {
       sorted.forEach((p, i) => {
         const bar = document.getElementById(`fbar-${i}`);
@@ -2757,11 +2919,94 @@
       });
     }, 600);
 
+    // Stats block
+    buildGameStats(sorted);
+
     const ws = document.getElementById('winner-screen');
     ws.style.display = 'flex'; ws.classList.add('show');
     sfxWinner(); haptic([20,30,20,30,100]);
     launchConfetti();
     setTimeout(drawScoreChart, 500);
+  }
+
+  function buildGameStats(sorted) {
+    const block = document.getElementById('stats-block');
+    const grid  = document.getElementById('stats-grid');
+    const mvp   = document.getElementById('stats-mvp');
+    if (!block || !grid || !mvp) return;
+
+    const players = state.players;
+    const totalRounds = state.round - 1 || 1;
+
+    // ── Aggregate stats ──
+    const allScores = players.flatMap(p => p.rounds.filter(r => !r.passed).map(r => r.total));
+    const totalPts  = players.reduce((s, p) => s + p.score, 0);
+    const scrabbles = players.reduce((s, p) => s + p.rounds.filter(r => r.scr).length, 0);
+    const passes    = players.reduce((s, p) => s + p.passes, 0);
+    const avgTurn   = allScores.length ? Math.round(allScores.reduce((a,b)=>a+b,0) / allScores.length) : 0;
+    const bestSingle= Math.max(...allScores, 0);
+
+    // Who had best single play
+    let bestPlayer = null, bestPts = 0;
+    players.forEach(p => {
+      const top = Math.max(...p.rounds.filter(r=>!r.passed).map(r=>r.total), 0);
+      if (top > bestPts) { bestPts = top; bestPlayer = p; }
+    });
+
+    // Who had most scrabbles
+    let scrabbleKing = null, scrabbleMax = 0;
+    players.forEach(p => {
+      const cnt = p.rounds.filter(r=>r.scr).length;
+      if (cnt > scrabbleMax) { scrabbleMax = cnt; scrabbleKing = p; }
+    });
+
+    // Most consistent player (lowest std dev among those who scored)
+    let consistentPlayer = null, lowestDev = Infinity;
+    players.forEach(p => {
+      const scores = p.rounds.filter(r=>!r.passed && r.total>0).map(r=>r.total);
+      if (scores.length < 2) return;
+      const mean = scores.reduce((a,b)=>a+b,0)/scores.length;
+      const dev  = Math.sqrt(scores.reduce((a,b)=>a+(b-mean)**2,0)/scores.length);
+      if (dev < lowestDev) { lowestDev = dev; consistentPlayer = p; }
+    });
+
+    // Average per player per round
+    const avgByPlayer = players.map(p => ({
+      name: p.name, hex: p.hex, avatar: p.avatar||'',
+      avg: p.rounds.filter(r=>!r.passed).length
+        ? Math.round(p.score / Math.max(p.rounds.filter(r=>!r.passed).length,1))
+        : 0
+    }));
+    const bestAvgPlayer = avgByPlayer.sort((a,b)=>b.avg-a.avg)[0];
+
+    // ── Render stat cards ──
+    grid.innerHTML = [
+      { val: totalRounds,        label: 'Rondas jugadas',       color: 'var(--gold2)' },
+      { val: totalPts,           label: 'Puntos totales',        color: 'var(--cream)' },
+      { val: avgTurn + ' pts',   label: 'Promedio por jugada',   color: '#4ecdc4' },
+      { val: bestSingle + ' pts',label: 'Mejor jugada única',    color: '#f5d070' },
+      { val: scrabbles || '—',   label: '¡Scrabbles! totales',   color: '#ff6b9d' },
+      { val: passes || '—',      label: 'Turnos pasados',        color: 'var(--text-dim)' },
+    ].map(s => `
+      <div class="stat-card">
+        <div class="stat-val" style="color:${s.color}">${s.val}</div>
+        <div class="stat-label">${s.label}</div>
+      </div>`).join('');
+
+    // ── MVP rows ──
+    const rows = [];
+    if (bestPlayer)  rows.push({ icon:'⚡', label:'Jugada más alta', val:`${bestPlayer.avatar} ${bestPlayer.name} (+${bestPts})`, hex:bestPlayer.hex });
+    if (scrabbleKing && scrabbleMax > 0) rows.push({ icon:'⭐', label:'Más Scrabbles', val:`${scrabbleKing.avatar} ${scrabbleKing.name} (×${scrabbleMax})`, hex:scrabbleKing.hex });
+    if (bestAvgPlayer && bestAvgPlayer.avg > 0) rows.push({ icon:'📊', label:'Mejor promedio', val:`${bestAvgPlayer.avatar} ${bestAvgPlayer.name} (~${bestAvgPlayer.avg} pts)`, hex:bestAvgPlayer.hex });
+    if (consistentPlayer) rows.push({ icon:'🎯', label:'Más constante', val:`${consistentPlayer.avatar} ${consistentPlayer.name}`, hex:consistentPlayer.hex });
+
+    mvp.innerHTML = rows.map(r => `
+      <div class="mvp-item">
+        <span class="mvp-label">${r.icon} ${r.label}</span>
+        <span class="mvp-val" style="color:${r.hex}">${r.val}</span>
+      </div>`).join('');
+
+    block.style.display = 'block';
   }
 
   function backToSetup() {
@@ -2795,16 +3040,18 @@
   }
 
   /* ═══ TURN TRANSITION ═══ */
-  function showTurnTransition(playerName, color) {
+  function showTurnTransition(playerName, color, avatar) {
     const overlay = document.getElementById('turn-overlay');
     const nameEl  = document.getElementById('turn-overlay-name');
+    const avEl    = document.getElementById('turn-overlay-avatar');
     nameEl.textContent  = playerName;
     nameEl.style.color  = color;
     nameEl.style.textShadow = `0 0 40px ${color}55`;
+    if (avEl) avEl.textContent = avatar || '😀';
     overlay.classList.remove('show');
     void overlay.offsetWidth;
     overlay.classList.add('show');
-    setTimeout(() => overlay.classList.remove('show'), 800);
+    setTimeout(() => overlay.classList.remove('show'), 900);
   }
 
   /* ═══ TIMER — Full customizable system ═══ */
@@ -3811,6 +4058,9 @@
     };
   }
 
+  /* ── Caché de sesión para verificaciones ── */
+  const _wordCache = new Map();
+
   async function consultarWiktionary(word) {
     // Intentamos primero con la palabra tal como viene (minúsculas)
     // y luego capitalizada, por si la entrada está así en Wiktionary
@@ -3880,10 +4130,43 @@
     }
 
     const srcEl = document.getElementById('v-source');
-    if (srcEl) srcEl.style.display = esValida ? 'block' : 'none';
+    if (srcEl) {
+      const fromCache = _wordCache.has(word) && r.valida;
+      srcEl.textContent = fromCache ? '📚 Fuente: Wiktionary en español (desde caché)' : '📚 Fuente: Wiktionary en español';
+      srcEl.style.display = r.valida ? 'block' : 'none';
+    }
 
     loadingEl.style.display = 'none';
     contentEl.style.display = 'block';
+
+    // Actualizar historial de palabras verificadas
+    _updateWordHistory(word, esValida);
+  }
+
+  /* ── Historial de palabras verificadas ── */
+  const _verifiedHistory = []; // {word, valid}
+
+  function _updateWordHistory(word, valid) {
+    // Evitar duplicados
+    if (_verifiedHistory.some(e => e.word === word)) return;
+    _verifiedHistory.push({ word, valid });
+
+    const wrap = document.getElementById('v-history-wrap');
+    const list = document.getElementById('v-history-list');
+    if (!wrap || !list) return;
+
+    wrap.style.display = 'block';
+    list.innerHTML = _verifiedHistory.slice(-20).reverse().map(e => `
+      <span style="
+        display:inline-flex;align-items:center;gap:4px;
+        font-family:'DM Mono',monospace;font-size:.72rem;font-weight:700;
+        padding:3px 8px;border-radius:6px;letter-spacing:.04em;
+        background:${e.valid?'rgba(78,205,196,.12)':'rgba(168,50,40,.12)'};
+        color:${e.valid?'#4ecdc4':'#e07060'};
+        border:1px solid ${e.valid?'rgba(78,205,196,.28)':'rgba(168,50,40,.28)'};
+        cursor:default;" title="${e.valid?'Válida':'No válida'}">
+        ${e.valid?'✓':'✗'} ${e.word.toUpperCase()}
+      </span>`).join('');
   }
 
   /* ── UI principal ── */
@@ -3908,6 +4191,13 @@
       return;
     }
 
+    // Caché de sesión — respuesta instantánea si ya se verificó
+    if (_wordCache.has(word)) {
+      _renderResult(word, _wordCache.get(word));
+      btn.disabled = false;
+      return;
+    }
+
     // Mostrar loading
     btn.disabled = true;
     resultDiv.className     = 'validator-result loading';
@@ -3917,6 +4207,7 @@
 
     try {
       const resultado = await consultarWiktionary(word);
+      _wordCache.set(word, resultado);
       _renderResult(word, resultado);
     } catch(e) {
       _renderResult(word, {
