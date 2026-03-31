@@ -3492,7 +3492,7 @@
 </script>
 
 <script>
-  /* ═══ VERIFICADOR DE PALABRAS — Wiktionary ES (sin API key, 100% gratuito) ═══ */
+  /* ═══ VERIFICADOR DE PALABRAS — Wiktionary REST API (sin API key, 100% gratuito) ═══ */
 
   const INVALIDAS_SIEMPRE = new Set([
     'mexico','españa','francia','italia','alemania','japon','china','brasil',
@@ -3504,15 +3504,6 @@
     'onu','oms','fbi','cia','nasa','otan','uefa','fifa',
   ]);
 
-  // Mapa de categorías gramaticales de Wiktionary → etiquetas amigables
-  const TIPO_MAP = {
-    'sustantivo': 'sustantivo', 'nombre': 'sustantivo',
-    'verbo': 'verbo', 'adjetivo': 'adjetivo', 'adverbio': 'adverbio',
-    'preposición': 'preposición', 'interjección': 'interjección',
-    'pronombre': 'pronombre', 'conjunción': 'conjunción',
-    'artículo': 'artículo', 'contracción': 'otro', 'locución': 'otro',
-  };
-
   function filtroPrevio(w) {
     if (w.length < 2)              return 'Mínimo 2 letras para jugar en Scrabble.';
     if (INVALIDAS_SIEMPRE.has(w))  return 'Nombre propio, país, marca o acrónimo: no permitido en Scrabble.';
@@ -3520,58 +3511,60 @@
     return null;
   }
 
-  /* Detecta si una sección de Wiktionary corresponde a español */
-  function esSeccionEspanol(titulo) {
-    return /^español$/i.test(titulo.trim());
+  /* Limpia wikitext básico de marcado */
+  function limpiarWiki(txt) {
+    return (txt || '')
+      .replace(/\[\[([^\]|]+)\|([^\]]+)\]\]/g, '$2')
+      .replace(/\[\[([^\]]+)\]\]/g, '$1')
+      .replace(/\{\{[^}]*\}\}/g, '')
+      .replace(/'''([^']+)'''/g, '$1')
+      .replace(/''([^']+)''/g, '$1')
+      .replace(/<[^>]+>/g, '')
+      .replace(/\s+/g, ' ')
+      .trim();
   }
 
-  /* Extrae tipo gramatical y definición de la respuesta de Wiktionary */
-  function parsearWiktionary(data, word) {
-    const pages = data?.query?.pages;
-    if (!pages) return null;
+  /* Usa la API REST de Wiktionary en español (devuelve JSON limpio) */
+  async function consultarWiktionaryREST(word) {
+    // La API REST de Wikcionario: https://es.wiktionary.org/api/rest_v1/page/definition/{word}
+    const url = `https://es.wiktionary.org/api/rest_v1/page/definition/${encodeURIComponent(word)}`;
+    const res = await fetch(url, { headers: { 'Accept': 'application/json' } });
 
-    const page = Object.values(pages)[0];
-    if (!page || page.missing !== undefined) return null;
+    if (res.status === 404) return null; // Palabra no existe
+    if (!res.ok) throw new Error('net-error');
 
-    const sections = page.sections || [];
-    const wikitext = page.revisions?.[0]?.['*'] || '';
+    const data = await res.json();
 
-    if (!wikitext) return null;
+    // La respuesta tiene claves por idioma. Buscamos "es" (español)
+    const seccionES = data['es'];
+    if (!seccionES || seccionES.length === 0) return null;
 
-    // Buscar la sección de Español
-    // Wiktionary usa == Español == como encabezado de nivel 2
-    const espRegex = /==\s*Español\s*==([\s\S]*?)(?===\s*\w|$)/i;
-    const espMatch = wikitext.match(espRegex);
-    if (!espMatch) return null; // La palabra no existe en español
-
-    const espContent = espMatch[1];
-
-    // Detectar tipo gramatical (=== Sustantivo ===, === Verbo ===, etc.)
-    const tipoRegex = /===\s*([^=\n]+?)\s*===/g;
+    // Buscar primera entrada con definiciones
     let tipo = 'otro';
-    let tipoMatch;
-    while ((tipoMatch = tipoRegex.exec(espContent)) !== null) {
-      const raw = tipoMatch[1].toLowerCase().trim();
-      for (const [key, val] of Object.entries(TIPO_MAP)) {
-        if (raw.includes(key)) { tipo = val; break; }
-      }
-      if (tipo !== 'otro') break;
-    }
-
-    // Extraer primera definición (líneas que empiezan con # pero no ##)
-    const defRegex = /^#(?!#)([^\n]+)/m;
-    const defMatch = espContent.match(defRegex);
     let definicion = '';
-    if (defMatch) {
-      definicion = defMatch[1]
-        .replace(/\[\[([^\]|]+)\|([^\]]+)\]\]/g, '$2')  // [[link|texto]] → texto
-        .replace(/\[\[([^\]]+)\]\]/g, '$1')              // [[link]] → link
-        .replace(/\{\{[^}]+\}\}/g, '')                   // {{plantillas}} → vacío
-        .replace(/'''([^']+)'''/g, '$1')                 // negrita
-        .replace(/''([^']+)''/g, '$1')                   // cursiva
-        .replace(/<[^>]+>/g, '')                          // tags HTML
-        .replace(/\s+/g, ' ')
-        .trim();
+
+    for (const entrada of seccionES) {
+      // partOfSpeech viene en español: "Adjetivo", "Sustantivo", etc.
+      const pos = (entrada.partOfSpeech || '').toLowerCase();
+      if (pos.includes('sustantivo') || pos.includes('nombre'))  tipo = 'sustantivo';
+      else if (pos.includes('verbo'))       tipo = 'verbo';
+      else if (pos.includes('adjetivo'))    tipo = 'adjetivo';
+      else if (pos.includes('adverbio'))    tipo = 'adverbio';
+      else if (pos.includes('preposición')) tipo = 'preposición';
+      else if (pos.includes('pronombre'))   tipo = 'pronombre';
+      else if (pos.includes('interjección'))tipo = 'interjección';
+      else if (pos.includes('conjunción'))  tipo = 'conjunción';
+
+      // Primera definición con texto
+      const defs = entrada.definitions || [];
+      for (const d of defs) {
+        const txt = limpiarWiki(d.definition || '');
+        if (txt && txt.length > 3) {
+          definicion = txt;
+          break;
+        }
+      }
+      if (definicion) break;
     }
 
     if (!definicion) definicion = 'Palabra válida en español según el Wikcionario.';
@@ -3579,23 +3572,65 @@
     return { valida: true, tipo, definicion, sugerencia: null };
   }
 
-  async function consultarWiktionary(word) {
-    // Normalizar: primera letra mayúscula para buscar en Wiktionary
-    // pero también probamos en minúscula
-    const consultas = [word, word.charAt(0).toUpperCase() + word.slice(1)];
+  /* Fallback: API de Wikcionario con action=parse (para palabras con tildes, etc.) */
+  async function consultarWiktionaryParse(word) {
+    const url = `https://es.wiktionary.org/w/api.php?action=parse&page=${encodeURIComponent(word)}&prop=sections&format=json&origin=*`;
+    const res = await fetch(url);
+    if (!res.ok) throw new Error('net-error');
+    const data = await res.json();
+    if (data.error) return null;
 
-    for (const termino of consultas) {
-      const url = `https://es.wiktionary.org/w/api.php?action=query&titles=${encodeURIComponent(termino)}&prop=revisions&rvprop=content&format=json&origin=*`;
+    // Si tiene secciones, la página existe. Buscamos sección "Español"
+    const secciones = data?.parse?.sections || [];
+    const tieneEspanol = secciones.some(s =>
+      /^español$/i.test((s.line || '').trim()) ||
+      /^español$/i.test((s.anchor || '').trim())
+    );
 
-      const res = await fetch(url, { method: 'GET' });
-      if (!res.ok) throw new Error('net-error');
+    if (!tieneEspanol) return null;
 
-      const data = await res.json();
-      const resultado = parsearWiktionary(data, termino);
-      if (resultado) return resultado;
+    // Intentar obtener el tipo desde las subsecciones
+    let tipo = 'otro';
+    for (const s of secciones) {
+      const line = (s.line || '').toLowerCase().trim();
+      if (line.includes('sustantivo') || line.includes('nombre')) { tipo = 'sustantivo'; break; }
+      if (line.includes('verbo'))       { tipo = 'verbo'; break; }
+      if (line.includes('adjetivo'))    { tipo = 'adjetivo'; break; }
+      if (line.includes('adverbio'))    { tipo = 'adverbio'; break; }
+      if (line.includes('preposición')) { tipo = 'preposición'; break; }
+      if (line.includes('pronombre'))   { tipo = 'pronombre'; break; }
+      if (line.includes('interjección')){ tipo = 'interjección'; break; }
     }
 
-    // No encontrada en Wiktionary español → inválida para Scrabble
+    return {
+      valida: true, tipo,
+      definicion: 'Palabra válida en español según el Wikcionario.',
+      sugerencia: null
+    };
+  }
+
+  async function consultarWiktionary(word) {
+    // Intentamos primero con la palabra tal como viene (minúsculas)
+    // y luego capitalizada, por si la entrada está así en Wiktionary
+    const variantes = [word, word.charAt(0).toUpperCase() + word.slice(1)];
+
+    for (const variante of variantes) {
+      try {
+        const res = await consultarWiktionaryREST(variante);
+        if (res) return res;
+      } catch(e) {
+        // Si la REST falla, intentar con fallback
+      }
+
+      try {
+        const res2 = await consultarWiktionaryParse(variante);
+        if (res2) return res2;
+      } catch(e) {
+        // Continuar con siguiente variante
+      }
+    }
+
+    // No encontrada en Wiktionary español
     return {
       valida: false,
       tipo: 'no aplica',
