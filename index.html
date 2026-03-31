@@ -3492,23 +3492,185 @@
 </script>
 
 <script>
-  /* ═══ VERIFICADOR DE PALABRAS — Wiktionary REST API (sin API key, 100% gratuito) ═══ */
+  /* ═══ VERIFICADOR DE PALABRAS — Wiktionary REST API + Reglas Scrabble RAE ═══ */
 
-  const INVALIDAS_SIEMPRE = new Set([
-    'mexico','españa','francia','italia','alemania','japon','china','brasil',
-    'argentina','colombia','peru','chile','cuba','canada','rusia','india',
-    'maria','jose','juan','pedro','ana','luis','carlos','jorge','miguel',
-    'rosa','elena','pablo','isabel','diego','sofia','lucia',
-    'google','facebook','twitter','apple','samsung','nike','adidas','coca',
-    'pepsi','toyota','honda','ford','netflix','amazon','microsoft',
-    'onu','oms','fbi','cia','nasa','otan','uefa','fifa',
+  // ── Países y territorios del mundo ──
+  const PAISES = new Set([
+    'afganistan','albania','alemania','andorra','angola','antiguabarbuda','arabia',
+    'argelia','argentina','armenia','australia','austria','azerbaiyan','bahamas',
+    'banglades','barbados','barein','belgica','belice','benin','bielorrusia',
+    'bolivia','bosniaherzegoina','botswana','brasil','brunei','bulgaria','burkina',
+    'burundi','butanes','caboverde','camboya','camerun','canada','catar','chad',
+    'chile','china','chipre','colombia','comoras','congo','corea','costarica',
+    'croacia','cuba','dinamarca','djibouti','dominica','ecuador','egipto',
+    'emiratos','eritrea','eslovaquia','eslovenia','españa','estados','estonia',
+    'etiopia','filipinas','finlandia','fiyi','francia','gabon','gambia','georgia',
+    'ghana','granada','grecia','guatemala','guinea','guyana','haiti','holanda',
+    'honduras','hungria','india','indonesia','iran','irak','irlanda','islandia',
+    'israel','italia','jamaica','japon','jordania','kazajistan','kenia','kirguistan',
+    'kiribati','kuwait','laos','lesoto','letonia','libano','liberia','libia',
+    'liechtenstein','lituania','luxemburgo','macedonia','madagascar','malasia',
+    'malawi','maldivas','mali','malta','marruecos','mauricio','mauritania',
+    'mexico','micronesia','moldavia','monaco','mongolia','montenegro','mozambique',
+    'namibia','nauru','nepal','nicaragua','niger','nigeria','noruega','nueva',
+    'oman','pakistan','palau','panama','papuasia','paraguay','peru','polonia',
+    'portugal','reino','ruanda','rumania','rusia','samoa','sanlucas','sanmarino',
+    'sanvicente','senegal','serbia','seychelles','sierra','singapur','siria',
+    'somalia','srilanka','suazilandia','sudafrica','sudan','suecia','suiza',
+    'surinam','tailandia','tanzania','tayikistan','togo','tonga','trinidad',
+    'tunez','turkmenistan','turquia','tuvalu','ucrania','uganda','uruguay',
+    'uzbekistan','vanuatu','venezuela','vietnam','yemen','yibuti','zambia',
+    'zimbabue',
   ]);
 
+  // ── Ciudades conocidas ──
+  const CIUDADES = new Set([
+    'paris','roma','berlin','madrid','lisboa','amsterdam','bruselas','viena',
+    'varsovia','praga','budapest','bucarest','sofia','atenas','estocolmo',
+    'oslo','helsinki','copenhague','dublin','zagreb','belgrado','sarajevo',
+    'skopje','tirane','chisinau','minsk','kiev','moscu','ankara','nicosia',
+    'tokio','seul','pekín','pekin','beijing','bangkok','hanoi','yakarta',
+    'manila','kualalumpur','singapur','taipei','colombo','katmandu','dacca',
+    'islamabad','kabul','teheran','bagdad','damasco','amman','beirut','jerusalem',
+    'riyadh','dubai','doha','muscat','sanaa','nairobi','lagos','accra','abidjan',
+    'dakar','cairo','alejandria','casablanca','rabat','argel','tripoli','tunis',
+    'addisabeba','jartum','kinshasa','luanda','lusaka','harare','maputo',
+    'antananarivo','pretoria','johannesburgo','capetown','cairo','washington',
+    'nueva','chicago','miami','houston','losangeles','toronto','montreal',
+    'vancouver','bogota','lima','santiago','buenosaires','montevideo','asuncion',
+    'lapaz','quito','caracas','panama','sanjose','managua','tegucigalpa',
+    'guadalajara','monterrey','habana','lahabana','saopaulo','riodejaneiro',
+    'brasilia','sydney','melbourne','auckland','wellington',
+  ]);
+
+  // ── Nombres de persona muy comunes ──
+  const NOMBRES = new Set([
+    // Masculinos
+    'aaron','abraham','adam','adrian','alberto','alejandro','alex','alexis',
+    'alfredo','alvaro','andres','angel','antonio','armando','arturo','augusto',
+    'benjamin','bernardo','carlos','cesar','christian','christopher','claudio',
+    'daniel','david','diego','eduardo','emilio','enrique','ernesto','esteban',
+    'ezequiel','fabio','felipe','felix','fernando','francisco','freddy',
+    'gabriel','gerardo','gonzalo','gregorio','guillermo','gustavo','hector',
+    'hernan','hugo','ignacio','ivan','javier','jesus','joel','jonathan',
+    'jorge','jose','juan','julian','julio','kevin','leonardo','lorenzo',
+    'lucas','luis','manuel','marcos','mario','martin','mateo','mauricio',
+    'miguel','nicolas','omar','oscar','pablo','patricio','pedro','rafael',
+    'raul','renato','ricardo','roberto','rodrigo','ruben','salvador','samuel',
+    'santiago','sebastian','sergio','simon','teodoro','tomas','victor',
+    'vincent','virgilio','walter','xavier','hugo',
+    // Femeninos
+    'adriana','alejandra','alicia','ana','andrea','angela','beatriz','blanca',
+    'camila','carla','carmen','carolina','catalina','cecilia','claudia',
+    'cristina','daniela','diana','elena','elisa','elizabeth','emily',
+    'esperanza','estela','eugenia','eva','fernanda','florencia','gabriela',
+    'gloria','graciela','guadalupe','isabel','jessica','josefina','julia',
+    'juliana','karen','katia','laura','leonor','leticia','lia','lorena',
+    'lucia','luisa','luz','magdalena','marcela','margarita','maria','mariana',
+    'marta','mercedes','miriam','monica','natalia','nora','olivia','pamela',
+    'patricia','paula','raquel','rebeca','rosa','silvia','sofia','sonia',
+    'susana','teresa','valentina','valeria','vanesa','veronica','victoria',
+    'virginia','viviana','ximena','yolanda',
+  ]);
+
+  // ── Marcas comerciales y tecnología ──
+  const MARCAS = new Set([
+    'adidas','airbnb','amazon','android','apple','bmw','canon','chevrolet',
+    'coca','colgate','disney','ebay','ferrari','fiat','ford','google',
+    'gucci','honda','huawei','hyundai','ikea','instagram','intel','iphone',
+    'kawasaki','kia','levis','lenovo','lexus','linkedin','louis','marlboro',
+    'mastercard','mcdonald','mercedes','microsoft','mitsubishi','motorola',
+    'netflix','nike','nissan','nokia','nutella','pepsi','philips','playstation',
+    'porsche','prada','samsung','skype','snapchat','sony','spotify','starbucks',
+    'suzuki','tesla','tiktok','toyota','twitter','uber','volkswagen','walmart',
+    'whatsapp','xbox','yamaha','youtube','zara','zoom',
+  ]);
+
+  // ── Siglas y acrónimos ──
+  const SIGLAS = new Set([
+    'adn','arn','atu','bbc','cdn','cia','cnn','cpu','dna','dvd','fbi',
+    'fifa','fmi','gps','html','http','iban','ied','ife','ine','iva',
+    'lcd','led','nasa','nato','nba','nfl','nhl','oms','onu','otan',
+    'ovni','pdf','pib','pnb','pnud','rfc','rgb','rss','sida','sim',
+    'sms','tnt','tic','uefa','usb','xml',
+  ]);
+
+  // ── Palabras de otros idiomas prohibidas en Scrabble en español ──
+  const EXTRANJERISMOS_PUROS = new Set([
+    // Inglés
+    'the','and','for','that','this','with','have','from','they','will',
+    'what','when','been','would','could','should','their','there','about',
+    'which','after','going','where','being','while','under','think','still',
+    'again','every','never','these','those','thing','right','small','large',
+    'place','point','world','found','great','three','came','back','come',
+    'good','know','just','like','make','some','time','them','then','into',
+    'look','only','over','also','than','well','much','more','same','way',
+    'new','now','old','its','too','out','our','yes','see','him','her',
+    'had','has','one','two','did','not','but','any','are','all','was',
+    'off','run','sit','top','hot','dog','cat','car','box','cup','bed',
+    'boy','day','eye','far','fun','gas','got','hit','job','law','let',
+    'log','lot','low','man','map','may','mix','net','nor','odd','oil',
+    'own','pay','put','raw','row','say','set','six','sky','sun','ten',
+    'try','use','van','war','win','yes','you','zip',
+    // Francés obvio
+    'bonjour','merci','voila','voilà','croissant',
+    // Italiano obvio
+    'ciao','pizza','pasta','risotto',
+    // Alemán obvio
+    'danke','bitte','hallo',
+  ]);
+
+  // ── Categorías gramaticales de Wiktionary que son INVÁLIDAS en Scrabble ──
+  // (nombres propios tal como los clasifica Wiktionary)
+  const POS_INVALIDAS = new Set([
+    'nombre propio', 'proper noun', 'anthroponym', 'antropónimo',
+    'topónimo', 'gentilicio propio', 'sigla', 'acrónimo', 'abreviatura',
+  ]);
+
+  // ── Palabras que en Wiktionary aparecen como español pero son nombres propios ──
+  // detectadas por patrones en la definición
+  const PATRON_NOMBRE_PROPIO = [
+    /\bcapital\s+de\b/i,
+    /\bciudad\s+de\b/i,
+    /\bpaís\s+(de|en)\b/i,
+    /\bcomuna\s+de\b/i,
+    /\bnombre\s+propio\b/i,
+    /\bnombre\s+de\s+(persona|hombre|mujer|ciudad|país|lugar|municipio|región)\b/i,
+    /\bantropónimo\b/i,
+    /\btopónimo\b/i,
+    /\bmunicipio\s+de\b/i,
+    /\bprovincia\s+de\b/i,
+    /\bdepartamento\s+de\b/i,
+    /\bregión\s+de\b/i,
+    /\brepública\s+de\b/i,
+  ];
+
   function filtroPrevio(w) {
-    if (w.length < 2)              return 'Mínimo 2 letras para jugar en Scrabble.';
-    if (INVALIDAS_SIEMPRE.has(w))  return 'Nombre propio, país, marca o acrónimo: no permitido en Scrabble.';
-    if (/^\d/.test(w))             return 'Las palabras no pueden empezar por número.';
+    if (w.length < 2)                return 'Mínimo 2 letras para jugar en Scrabble.';
+    if (w.length > 15)               return 'Máximo 15 letras (límite del atril en Scrabble).';
+    if (/[^a-záéíóúüñ]/i.test(w))   return 'Solo se permiten letras del alfabeto español. Sin números ni símbolos.';
+    if (/^\d/.test(w))               return 'Las palabras no pueden empezar por número.';
+    if (PAISES.has(w))               return `"${w.toUpperCase()}" es el nombre de un país. Los nombres propios no se permiten en Scrabble.`;
+    if (CIUDADES.has(w))             return `"${w.toUpperCase()}" es el nombre de una ciudad. Los nombres propios no se permiten en Scrabble.`;
+    if (NOMBRES.has(w))              return `"${w.toUpperCase()}" es un nombre de persona. Los nombres propios no se permiten en Scrabble.`;
+    if (MARCAS.has(w))               return `"${w.toUpperCase()}" es una marca comercial. Las marcas no se permiten en Scrabble.`;
+    if (SIGLAS.has(w))               return `"${w.toUpperCase()}" es una sigla o acrónimo. No se permiten en Scrabble.`;
+    if (EXTRANJERISMOS_PUROS.has(w)) return `"${w.toUpperCase()}" es una palabra de otro idioma. Solo se permiten palabras del diccionario RAE.`;
+    // Palabras de una sola consonante repetida o muy improbables
+    if (/^(.)\1+$/.test(w) && w.length > 1) return `"${w.toUpperCase()}" no es una palabra válida del español.`;
     return null;
+  }
+
+  // Verifica si la definición de Wiktionary indica nombre propio
+  function esNombrePropioPorDefinicion(definicion, partOfSpeech) {
+    if (!definicion && !partOfSpeech) return false;
+    const pos = (partOfSpeech || '').toLowerCase();
+    if (POS_INVALIDAS.has(pos)) return true;
+    // Algunas entradas tienen pos como "Nombre propio" directamente
+    if (pos.includes('nombre propio') || pos.includes('proper') || pos.includes('topón') || pos.includes('antropón')) return true;
+    // Revisar la definición
+    const def = (definicion || '').toLowerCase();
+    return PATRON_NOMBRE_PROPIO.some(p => p.test(def));
   }
 
   /* Limpia wikitext básico de marcado */
@@ -3526,53 +3688,75 @@
 
   /* Usa la API REST de Wiktionary en español (devuelve JSON limpio) */
   async function consultarWiktionaryREST(word) {
-    // La API REST de Wikcionario: https://es.wiktionary.org/api/rest_v1/page/definition/{word}
     const url = `https://es.wiktionary.org/api/rest_v1/page/definition/${encodeURIComponent(word)}`;
     const res = await fetch(url, { headers: { 'Accept': 'application/json' } });
 
-    if (res.status === 404) return null; // Palabra no existe
+    if (res.status === 404) return null;
     if (!res.ok) throw new Error('net-error');
 
     const data = await res.json();
 
-    // La respuesta tiene claves por idioma. Buscamos "es" (español)
+    // Buscamos sección "es" (español)
     const seccionES = data['es'];
     if (!seccionES || seccionES.length === 0) return null;
 
-    // Buscar primera entrada con definiciones
-    let tipo = 'otro';
-    let definicion = '';
+    // Recorrer todas las entradas para encontrar una que sea palabra común válida
+    let entradaValida = null;
+    let todasNombrePropio = true;
 
     for (const entrada of seccionES) {
-      // partOfSpeech viene en español: "Adjetivo", "Sustantivo", etc.
       const pos = (entrada.partOfSpeech || '').toLowerCase();
-      if (pos.includes('sustantivo') || pos.includes('nombre'))  tipo = 'sustantivo';
-      else if (pos.includes('verbo'))       tipo = 'verbo';
-      else if (pos.includes('adjetivo'))    tipo = 'adjetivo';
-      else if (pos.includes('adverbio'))    tipo = 'adverbio';
-      else if (pos.includes('preposición')) tipo = 'preposición';
-      else if (pos.includes('pronombre'))   tipo = 'pronombre';
-      else if (pos.includes('interjección'))tipo = 'interjección';
-      else if (pos.includes('conjunción'))  tipo = 'conjunción';
-
-      // Primera definición con texto
       const defs = entrada.definitions || [];
+      const primeraDef = limpiarWiki(defs[0]?.definition || '');
+
+      // ¿Es nombre propio según Wiktionary?
+      if (esNombrePropioPorDefinicion(primeraDef, pos)) continue;
+
+      // ¿Es sigla/acrónimo/abreviatura?
+      if (pos.includes('sigla') || pos.includes('acrónimo') || pos.includes('abreviatura') || pos.includes('símbolo')) continue;
+
+      // ¿Es locución o expresión (generalmente no válidas solas en Scrabble)?
+      if (pos.includes('locución')) continue;
+
+      todasNombrePropio = false;
+
+      // Encontramos una entrada válida como palabra común
+      let tipo = 'otro';
+      if (pos.includes('sustantivo') || pos.includes('nombre'))   tipo = 'sustantivo';
+      else if (pos.includes('verbo'))        tipo = 'verbo';
+      else if (pos.includes('adjetivo'))     tipo = 'adjetivo';
+      else if (pos.includes('adverbio'))     tipo = 'adverbio';
+      else if (pos.includes('preposición'))  tipo = 'preposición';
+      else if (pos.includes('pronombre'))    tipo = 'pronombre';
+      else if (pos.includes('interjección')) tipo = 'interjección';
+      else if (pos.includes('conjunción'))   tipo = 'conjunción';
+      else if (pos.includes('artículo'))     tipo = 'otro';
+
+      // Primera definición limpia
+      let definicion = '';
       for (const d of defs) {
         const txt = limpiarWiki(d.definition || '');
-        if (txt && txt.length > 3) {
-          definicion = txt;
-          break;
-        }
+        if (txt && txt.length > 3) { definicion = txt; break; }
       }
-      if (definicion) break;
+      if (!definicion) definicion = 'Palabra válida en español según el Wikcionario.';
+
+      entradaValida = { valida: true, tipo, definicion, sugerencia: null };
+      break;
     }
 
-    if (!definicion) definicion = 'Palabra válida en español según el Wikcionario.';
+    // Si TODAS las entradas en español son nombres propios → inválida
+    if (todasNombrePropio && !entradaValida) {
+      return {
+        valida: false, tipo: 'no aplica',
+        definicion: `"${word.toUpperCase()}" es un nombre propio (ciudad, persona, lugar, etc.). Los nombres propios no están permitidos en Scrabble.`,
+        sugerencia: null
+      };
+    }
 
-    return { valida: true, tipo, definicion, sugerencia: null };
+    return entradaValida;
   }
 
-  /* Fallback: API de Wikcionario con action=parse (para palabras con tildes, etc.) */
+  /* Fallback: API de Wikcionario con action=parse */
   async function consultarWiktionaryParse(word) {
     const url = `https://es.wiktionary.org/w/api.php?action=parse&page=${encodeURIComponent(word)}&prop=sections&format=json&origin=*`;
     const res = await fetch(url);
@@ -3580,26 +3764,44 @@
     const data = await res.json();
     if (data.error) return null;
 
-    // Si tiene secciones, la página existe. Buscamos sección "Español"
     const secciones = data?.parse?.sections || [];
+
+    // Verificar que tiene sección "Español"
     const tieneEspanol = secciones.some(s =>
       /^español$/i.test((s.line || '').trim()) ||
       /^español$/i.test((s.anchor || '').trim())
     );
-
     if (!tieneEspanol) return null;
 
-    // Intentar obtener el tipo desde las subsecciones
+    // ¿Todas las subsecciones son nombres propios?
+    const subsecciones = secciones.filter(s => parseInt(s.level) >= 3);
+    const soloNombresPropio = subsecciones.length > 0 && subsecciones.every(s => {
+      const line = (s.line || '').toLowerCase().trim();
+      return line.includes('nombre propio') || line.includes('topónimo') ||
+             line.includes('antropónimo') || line.includes('sigla') ||
+             line.includes('acrónimo') || line.includes('abreviatura');
+    });
+
+    if (soloNombresPropio) {
+      return {
+        valida: false, tipo: 'no aplica',
+        definicion: `"${word.toUpperCase()}" es un nombre propio. Los nombres propios no están permitidos en Scrabble.`,
+        sugerencia: null
+      };
+    }
+
+    // Detectar tipo gramatical
     let tipo = 'otro';
     for (const s of secciones) {
       const line = (s.line || '').toLowerCase().trim();
+      if (line.includes('nombre propio') || line.includes('topónimo') || line.includes('antropónimo')) continue;
       if (line.includes('sustantivo') || line.includes('nombre')) { tipo = 'sustantivo'; break; }
-      if (line.includes('verbo'))       { tipo = 'verbo'; break; }
-      if (line.includes('adjetivo'))    { tipo = 'adjetivo'; break; }
-      if (line.includes('adverbio'))    { tipo = 'adverbio'; break; }
-      if (line.includes('preposición')) { tipo = 'preposición'; break; }
-      if (line.includes('pronombre'))   { tipo = 'pronombre'; break; }
-      if (line.includes('interjección')){ tipo = 'interjección'; break; }
+      if (line.includes('verbo'))        { tipo = 'verbo'; break; }
+      if (line.includes('adjetivo'))     { tipo = 'adjetivo'; break; }
+      if (line.includes('adverbio'))     { tipo = 'adverbio'; break; }
+      if (line.includes('preposición'))  { tipo = 'preposición'; break; }
+      if (line.includes('pronombre'))    { tipo = 'pronombre'; break; }
+      if (line.includes('interjección')) { tipo = 'interjección'; break; }
     }
 
     return {
@@ -3664,11 +3866,17 @@
     document.getElementById('v-def').textContent = r.definicion || '';
 
     const sugEl = document.getElementById('v-suggestion');
-    if (!esValida && r.sugerencia) {
+    if (r.sugerencia) {
       sugEl.textContent   = '💡 ' + r.sugerencia;
       sugEl.style.display = 'block';
     } else {
-      sugEl.style.display = 'none';
+      // Mostrar regla aplicada si es inválida
+      if (!esValida && r.regla) {
+        sugEl.textContent   = '📜 ' + r.regla;
+        sugEl.style.display = 'block';
+      } else {
+        sugEl.style.display = 'none';
+      }
     }
 
     const srcEl = document.getElementById('v-source');
@@ -3689,10 +3897,14 @@
     const word = input.value.trim().toLowerCase().normalize('NFC');
     if (!word) { input.focus(); return; }
 
-    // Filtro local rápido (nombres propios, marcas, etc.)
+    // Filtro local rápido (nombres propios, marcas, siglas, etc.)
     const filtro = filtroPrevio(word);
     if (filtro) {
-      _renderResult(word, { valida:false, tipo:'no aplica', definicion:filtro, sugerencia:null });
+      _renderResult(word, {
+        valida: false, tipo: 'no aplica', definicion: filtro,
+        regla: 'Regla Scrabble: solo palabras del diccionario RAE, sin nombres propios, marcas, siglas ni extranjerismos.',
+        sugerencia: null
+      });
       return;
     }
 
