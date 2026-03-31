@@ -1,4 +1,4 @@
-const CACHE_NAME = 'scrabble-marcador-v1';
+const CACHE_NAME = 'scrabble-marcador-v2';
 const ASSETS = [
   './index.html',
   './manifest.json',
@@ -29,20 +29,32 @@ self.addEventListener('activate', event => {
 
 // Fetch: cache first, luego red
 self.addEventListener('fetch', event => {
+  const url = event.request.url;
+
   // Solo interceptar GET
   if (event.request.method !== 'GET') return;
 
-  // Peticiones a APIs externas (diccionario, wiktionary) → siempre red
-  const url = event.request.url;
-  if (url.includes('dictionaryapi') || url.includes('wiktionary') || url.includes('anthropic')) {
-    return;
-  }
+  // Ignorar esquemas no-http (chrome-extension://, moz-extension://, etc.)
+  if (!url.startsWith('http://') && !url.startsWith('https://')) return;
+
+  // Peticiones a APIs externas → siempre red, sin cachear
+  if (
+    url.includes('wiktionary.org') ||
+    url.includes('dictionaryapi') ||
+    url.includes('anthropic.com')
+  ) return;
 
   event.respondWith(
     caches.match(event.request).then(cached => {
       if (cached) return cached;
       return fetch(event.request).then(response => {
-        if (response && response.status === 200 && response.type !== 'opaque') {
+        // Solo cachear respuestas válidas y no-opacas
+        if (
+          response &&
+          response.status === 200 &&
+          response.type !== 'opaque' &&
+          url.startsWith('https://')
+        ) {
           const clone = response.clone();
           caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
         }
