@@ -30,15 +30,15 @@
     --red2:      #c0392b;
     --text:      #f5e8c8;
     /* Increased text-dim for better contrast — accessibility */
-    --text-dim:  #b09070;
-    --text-mute: #7a6040;
+    --text-dim:  #c8a878;
+    --text-mute: #9a7850;
     --shadow-deep: 0 24px 64px rgba(0,0,0,0.85);
     --shadow-card: 0 8px 32px rgba(0,0,0,0.65);
     --shadow-glow: 0 0 40px rgba(201,148,58,0.12);
     --radius: 16px;
     --border-gold: rgba(201,148,58,.22);
     /* Larger base font for readability */
-    --font-base: 17px;
+    --font-base: 19px;
   }
   *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
 
@@ -75,9 +75,10 @@
 
   /* Focus styles for keyboard/accessibility */
   :focus-visible {
-    outline: 2px solid var(--gold2);
-    outline-offset: 3px;
-    border-radius: 4px;
+    outline: 3px solid var(--gold2);
+    outline-offset: 4px;
+    border-radius: 6px;
+    box-shadow: 0 0 0 6px rgba(232,184,75,.15);
   }
 
   @keyframes fadeIn  { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
@@ -198,7 +199,7 @@
   }
 
   .setup-card-title {
-    font-family:'Playfair Display',serif; font-size:1.6rem; font-weight:700;
+    font-family:'Playfair Display',serif; font-size:1.9rem; font-weight:700;
     font-style:italic; color:var(--cream); text-align:center; margin-bottom:.2rem;
     text-shadow: 0 2px 12px rgba(0,0,0,.6);
   }
@@ -208,7 +209,7 @@
   }
 
   .field-label {
-    font-size:.78rem; text-transform:uppercase; letter-spacing:.18em;
+    font-size:.9rem; text-transform:uppercase; letter-spacing:.18em;
     color:var(--gold2); margin-bottom:.7rem; font-weight:700;
     display:flex; align-items:center; gap:.5rem;
   }
@@ -220,11 +221,11 @@
   .count-selector { display:flex; gap:8px; margin-bottom:1.6rem; flex-wrap:wrap; }
 
   .count-btn {
-    width:54px; height:54px; border-radius:12px;
+    width:62px; height:62px; border-radius:12px;
     border:1.5px solid rgba(201,148,58,.18);
     background:linear-gradient(145deg, rgba(30,22,10,.92), rgba(16,12,5,.97));
     color:var(--text-dim); font-family:'Playfair Display',serif;
-    font-size:1.5rem; font-weight:700; cursor:pointer; transition:all .22s ease;
+    font-size:1.7rem; font-weight:700; cursor:pointer; transition:all .22s ease;
     position:relative; overflow:hidden;
     box-shadow: 0 2px 8px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.05);
   }
@@ -258,8 +259,8 @@
   .player-input {
     flex:1; background:rgba(0,0,0,.38);
     border:1.5px solid rgba(201,148,58,.14); border-radius:12px;
-    padding:.8rem 1.15rem; color:var(--cream);
-    font-family:'Lato',sans-serif; font-size:1.05rem;
+    padding:.9rem 1.15rem; color:var(--cream);
+    font-family:'Lato',sans-serif; font-size:1.15rem;
     outline:none; transition:border-color .22s, box-shadow .22s, background .22s;
     box-shadow: inset 0 2px 8px rgba(0,0,0,.45);
   }
@@ -413,7 +414,7 @@
     border:1px solid rgba(201,148,58,.2);
     background:linear-gradient(135deg, rgba(22,16,8,.95), rgba(12,9,4,.98));
     color:var(--text-dim);
-    font-family:'Lato',sans-serif; font-size:.85rem; font-weight:700;
+    font-family:'Lato',sans-serif; font-size:.95rem; font-weight:700;
     letter-spacing:.03em; cursor:pointer; transition:all .18s;
     box-shadow: inset 0 1px 0 rgba(255,255,255,.04), 0 2px 8px rgba(0,0,0,.4);
     min-height: 44px; /* WCAG touch target */
@@ -477,7 +478,7 @@
   .p-info { min-width:0; }
 
   .p-name {
-    font-family:'Playfair Display',serif; font-size:1.35rem; font-weight:900;
+    font-family:'Playfair Display',serif; font-size:1.5rem; font-weight:900;
     display:flex; align-items:center; gap:.5rem; flex-wrap:wrap;
     letter-spacing:.02em; line-height:1.2;
   }
@@ -560,7 +561,7 @@
     box-shadow: 0 0 12px rgba(201,148,58,.25);
   }
 
-  .turn-panel-header {
+  .turn-panel-header { font-size:1.35rem;
     font-size:.9rem; text-transform:uppercase; letter-spacing:.18em;
     color:var(--text-dim); margin-bottom:1rem;
     display:flex; align-items:center; justify-content:center;
@@ -766,14 +767,14 @@
     border-radius:0 0 14px 14px;
     padding:1.2rem 1.4rem 1.5rem; text-align:center;
   }
-  .validator-sub { font-size:.9rem; color:var(--text-mute); margin-bottom:1rem; line-height:1.65; }
+  .validator-sub { font-size:1rem; color:var(--text-dim); margin-bottom:1rem; line-height:1.65; }
   .validator-row { display:flex; gap:.6rem; align-items:stretch; justify-content:center; }
 
   .validator-input {
     flex:1; background:rgba(0,0,0,.4);
     border:1.5px solid rgba(201,148,58,.22); border-radius:10px;
     padding:.8rem 1rem; color:var(--cream);
-    font-family:'Playfair Display',serif; font-size:1.2rem; font-weight:700; /* bigger */
+    font-family:'Playfair Display',serif; font-size:1.4rem; font-weight:700;
     outline:none; transition:border-color .2s, box-shadow .2s;
     letter-spacing:.06em; text-align:center;
     box-shadow: inset 0 2px 6px rgba(0,0,0,.5);
@@ -785,10 +786,10 @@
     padding:.8rem 1.3rem; border-radius:10px;
     background:linear-gradient(140deg, var(--gold2), var(--gold), #a8741e);
     border:none; color:#100800;
-    font-family:'Lato',sans-serif; font-weight:700; font-size:.95rem;
+    font-family:'Lato',sans-serif; font-weight:700; font-size:1.05rem;
     letter-spacing:.04em; cursor:pointer; transition:all .2s;
     box-shadow: 0 4px 18px rgba(201,148,58,.35); white-space:nowrap;
-    min-height: 44px;
+    min-height: 54px;
   }
   .validator-btn:hover { transform:translateY(-1px); box-shadow:0 6px 24px rgba(201,148,58,.5); }
   .validator-btn:disabled { opacity:.45; cursor:not-allowed; transform:none; }
@@ -1103,7 +1104,7 @@
     width:100%; background:rgba(0,0,0,.4);
     border:2px solid rgba(201,148,58,.22); border-radius:12px;
     padding:.9rem 1rem; color:var(--cream);
-    font-family:'Playfair Display',serif; font-size:2.2rem; font-weight:900;
+    font-family:'Playfair Display',serif; font-size:2.8rem; font-weight:900;
     outline:none; text-align:center;
     transition:border-color .2s, box-shadow .2s; letter-spacing:.05em;
     box-shadow: inset 0 3px 10px rgba(0,0,0,.5);
@@ -1122,9 +1123,9 @@
   .qbtn {
     padding:.65rem 1.2rem; border-radius:10px;
     border:1.5px solid rgba(201,148,58,.25); background:var(--surface3);
-    color:var(--cream2); font-family:'DM Mono',monospace; font-size:1.05rem;
-    font-weight:600; cursor:pointer; transition:all .15s; min-width:64px;
-    min-height: 48px; box-shadow: 0 2px 8px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.04);
+    color:var(--cream2); font-family:'DM Mono',monospace; font-size:1.2rem;
+    font-weight:700; cursor:pointer; transition:all .15s; min-width:76px;
+    min-height: 56px; box-shadow: 0 2px 8px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.04);
   }
   .qbtn:hover { border-color:var(--gold); color:var(--gold2); background:rgba(201,148,58,.1); transform:translateY(-2px); }
   .qbtn:active { transform:scale(.94) translateY(0); }
@@ -1135,8 +1136,8 @@
     padding:.55rem 1rem; border-radius:10px;
     border:1.5px solid rgba(201,148,58,.25); background:var(--surface3);
     transition:all .2s; user-select:none;
-    font-family:'Lato',sans-serif; font-size:.95rem;
-    color:var(--cream2); font-weight:700; min-height:44px;
+    font-family:'Lato',sans-serif; font-size:1.1rem;
+    color:var(--cream2); font-weight:700; min-height:56px;
   }
   .scrabble-label:hover { border-color:rgba(201,148,58,.5); background:rgba(201,148,58,.1); }
   .scrabble-label.on {
@@ -1163,7 +1164,7 @@
     font-family:'Playfair Display',serif; font-size:1.1rem; font-weight:700;
     cursor:pointer; letter-spacing:.05em; transition:all .2s; text-align:center;
     box-shadow: 0 5px 20px rgba(59,92,47,.35), inset 0 1px 0 rgba(255,255,255,.14);
-    position:relative; overflow:hidden; min-height:54px;
+    position:relative; overflow:hidden; min-height:64px;
   }
   .add-btn::after {
     content:''; position:absolute; top:0; left:-100%; width:55%; height:100%;
@@ -1178,8 +1179,8 @@
     flex:1; min-width:130px; max-width:220px;
     padding:1.1rem 1.5rem; background:transparent;
     border:1.5px solid rgba(201,148,58,.2); border-radius:13px;
-    color:var(--text-dim); font-family:'Lato',sans-serif; font-size:1rem;
-    cursor:pointer; transition:all .18s; text-align:center; min-height:54px;
+    color:var(--text-dim); font-family:'Lato',sans-serif; font-size:1.15rem;
+    cursor:pointer; transition:all .18s; text-align:center; min-height:66px;
   }
   .pass-btn:hover { border-color:rgba(201,148,58,.4); color:var(--cream2); }
 
@@ -1208,11 +1209,11 @@
     display:flex; align-items:center; gap:.6rem;
     padding:.5rem .85rem; border-radius:8px;
     background:rgba(0,0,0,.2); border-left:3px solid;
-    font-size:.88rem; animation:fadeIn .25s ease;
+    font-size:1rem; animation:fadeIn .25s ease;
   }
-  .log-name { font-weight:700; font-family:'Playfair Display',serif; font-size:.92rem; }
-  .log-action { flex:1; color:var(--text-dim); font-size:.84rem; }
-  .log-pts { font-family:'DM Mono',monospace; font-weight:600; font-size:.9rem; }
+  .log-name { font-weight:700; font-family:'Playfair Display',serif; font-size:1.05rem; }
+  .log-action { flex:1; color:var(--text-dim); font-size:.95rem; }
+  .log-pts { font-family:'DM Mono',monospace; font-weight:700; font-size:1rem; }
   .log-empty { text-align:center; color:var(--text-mute); font-size:.88rem; padding:1.75rem; font-style:italic; font-family:'Playfair Display',serif; }
 
   /* ════ WINNER SCREEN ════ */
@@ -1653,87 +1654,148 @@
   /* ═══════════════ TUTORIAL OVERLAY ═══════════════ */
   #tutorial-overlay {
     display:none; position:fixed; inset:0; z-index:600;
-    background:rgba(0,0,0,.78); backdrop-filter:blur(3px);
-    align-items:center; justify-content:center;
+    background:rgba(0,0,0,.85); backdrop-filter:blur(5px);
+    align-items:center; justify-content:center; padding:1rem;
   }
   #tutorial-overlay.open { display:flex; animation:fadeIn .35s ease; }
 
-  .tutorial-box {
-    background:linear-gradient(160deg, rgba(32,24,10,.99), rgba(16,11,4,.99));
-    border:2px solid rgba(201,148,58,.55); border-radius:22px;
-    padding:2.4rem 2.2rem; max-width:480px; width:calc(100% - 2rem);
-    box-shadow: var(--shadow-deep), 0 0 80px rgba(201,148,58,.2);
-    position:relative; animation:slideUp .3s ease;
-    text-align:center;
-  }
-  .tutorial-box::before {
-    content:''; position:absolute; top:0; left:10%; right:10%; height:3px;
-    background:linear-gradient(90deg, transparent, var(--gold2), var(--gold3), var(--gold2), transparent);
-    border-radius:22px 22px 0 0;
+  @keyframes tutorialPop {
+    from { opacity:0; transform:scale(.88) translateY(18px); }
+    to   { opacity:1; transform:scale(1) translateY(0); }
   }
 
-  .tutorial-step-badge {
-    display:inline-flex; align-items:center; justify-content:center;
-    width:52px; height:52px; border-radius:50%;
-    background:linear-gradient(135deg, var(--gold2), var(--gold));
-    color:#100800; font-family:'Playfair Display',serif;
-    font-size:1.6rem; font-weight:900;
-    box-shadow: 0 4px 20px rgba(201,148,58,.5);
-    margin-bottom:1rem;
+  .tutorial-box {
+    background:linear-gradient(160deg, #1e1608 0%, #100c04 100%);
+    border:2px solid rgba(201,148,58,.6); border-radius:26px;
+    padding:0; max-width:500px; width:100%;
+    box-shadow: 0 32px 80px rgba(0,0,0,.95), 0 0 100px rgba(201,148,58,.18);
+    position:relative; animation:tutorialPop .38s cubic-bezier(.34,1.3,.64,1);
+    text-align:center; overflow:hidden;
+  }
+
+  /* Accent bar at top — changes color per step via JS */
+  .tutorial-accent-bar {
+    height:6px; width:100%; border-radius:26px 26px 0 0;
+    background:linear-gradient(90deg, var(--gold), var(--gold3), var(--gold2));
+    transition:background .4s ease;
+  }
+
+  /* Progress bar below accent */
+  .tutorial-progress-track {
+    height:4px; background:rgba(255,255,255,.07); width:100%;
+  }
+  .tutorial-progress-fill {
+    height:100%; background:linear-gradient(90deg, var(--gold2), var(--gold3));
+    transition:width .45s cubic-bezier(.4,0,.2,1);
+    box-shadow: 0 0 8px rgba(232,184,75,.5);
+  }
+
+  .tutorial-body { padding:2rem 2.2rem 2.2rem; }
+
+  /* Big icon with coloured circle backdrop */
+  .tutorial-icon-wrap {
+    width:90px; height:90px; border-radius:50%; margin:0 auto 1.1rem;
+    display:flex; align-items:center; justify-content:center;
+    background:radial-gradient(circle, rgba(201,148,58,.18) 0%, rgba(201,148,58,.04) 100%);
+    border:2px solid rgba(201,148,58,.3);
+    box-shadow: 0 0 32px rgba(201,148,58,.15);
+    transition:background .4s, border-color .4s;
   }
   .tutorial-icon {
-    font-size:3.2rem; display:block; margin-bottom:.6rem;
-    filter:drop-shadow(0 0 12px rgba(201,148,58,.4));
+    font-size:3.8rem; line-height:1; display:block;
+    filter:drop-shadow(0 2px 10px rgba(0,0,0,.5));
+    animation:tutorialIconBounce .5s .1s cubic-bezier(.34,1.5,.64,1) both;
   }
+  @keyframes tutorialIconBounce {
+    from { transform:scale(.5) rotate(-8deg); opacity:0; }
+    to   { transform:scale(1) rotate(0deg);  opacity:1; }
+  }
+
+  /* Step counter pill */
+  .tutorial-step-badge {
+    display:inline-flex; align-items:center; justify-content:center; gap:.35rem;
+    padding:.25rem .9rem; border-radius:20px;
+    background:linear-gradient(135deg, rgba(201,148,58,.22), rgba(201,148,58,.1));
+    border:1px solid rgba(201,148,58,.4);
+    color:var(--gold2); font-family:'DM Mono',monospace;
+    font-size:.85rem; font-weight:700; letter-spacing:.06em;
+    margin-bottom:.85rem;
+  }
+
   .tutorial-title {
-    font-family:'Playfair Display',serif; font-size:1.45rem; font-weight:900;
-    color:var(--cream); margin-bottom:.75rem; line-height:1.25;
+    font-family:'Playfair Display',serif; font-size:1.6rem; font-weight:900;
+    color:var(--cream); margin-bottom:.9rem; line-height:1.2;
+  }
+
+  /* Card-style text block */
+  .tutorial-text-card {
+    background:rgba(0,0,0,.28); border:1px solid rgba(255,255,255,.07);
+    border-radius:14px; padding:1.1rem 1.3rem;
+    margin-bottom:1.4rem; text-align:left;
   }
   .tutorial-text {
-    font-size:1.05rem; color:var(--cream2); line-height:1.85;
-    margin-bottom:1.5rem;
+    font-size:1.08rem; color:var(--cream2); line-height:1.9;
+    margin:0;
   }
+  .tutorial-text p { margin:0 0 .7rem; }
+  .tutorial-text p:last-child { margin:0; }
+
   .tutorial-highlight {
-    background:rgba(201,148,58,.18); border:1px solid rgba(201,148,58,.4);
-    border-radius:8px; padding:.2rem .55rem;
-    color:var(--gold2); font-weight:700;
+    background:rgba(201,148,58,.22); border:1.5px solid rgba(201,148,58,.5);
+    border-radius:8px; padding:.18rem .6rem;
+    color:var(--gold3); font-weight:700;
     display:inline-block; margin:0 .1rem;
+    box-shadow: 0 0 8px rgba(201,148,58,.12);
   }
+
+  /* Tip box inside tutorial */
+  .tutorial-tip {
+    display:flex; gap:.6rem; align-items:flex-start;
+    background:rgba(59,92,47,.15); border:1px solid rgba(94,184,102,.25);
+    border-radius:10px; padding:.75rem .9rem;
+    margin-top:.8rem; text-align:left;
+  }
+  .tutorial-tip-icon { font-size:1.2rem; flex-shrink:0; line-height:1.4; }
+  .tutorial-tip-text { font-size:.95rem; color:#a0d8a0; line-height:1.65; }
+
+  /* Dots */
   .tutorial-dots {
-    display:flex; justify-content:center; gap:.45rem; margin-bottom:1.3rem;
+    display:flex; justify-content:center; gap:.5rem; margin-bottom:1.4rem;
   }
   .tutorial-dot {
-    width:10px; height:10px; border-radius:50%;
-    background:rgba(201,148,58,.2); border:1px solid rgba(201,148,58,.3);
-    transition:all .2s;
+    height:8px; border-radius:4px; background:rgba(201,148,58,.2);
+    border:1px solid rgba(201,148,58,.25); transition:all .3s ease;
+    width:8px;
   }
   .tutorial-dot.active {
     background:var(--gold2); border-color:var(--gold3);
-    box-shadow:0 0 8px rgba(201,148,58,.5); transform:scale(1.2);
+    box-shadow:0 0 10px rgba(201,148,58,.6); width:28px;
   }
   .tutorial-dot.done {
-    background:rgba(201,148,58,.45);
+    background:rgba(201,148,58,.5); border-color:rgba(201,148,58,.6);
   }
+
   .tutorial-nav {
-    display:flex; gap:.75rem; justify-content:center; align-items:center;
+    display:flex; gap:.75rem; align-items:center;
   }
   .tutorial-btn-next {
-    flex:1; max-width:220px; padding:1.05rem 1.5rem;
+    flex:1; padding:1.1rem 1.5rem;
     background:linear-gradient(140deg, var(--gold2), var(--gold), #a8741e);
-    border:none; border-radius:13px; color:#100800;
-    font-family:'Playfair Display',serif; font-size:1.1rem; font-weight:700;
-    cursor:pointer; transition:all .2s; min-height:54px;
-    box-shadow: 0 5px 20px rgba(201,148,58,.4), inset 0 1px 0 rgba(255,255,255,.3);
+    border:none; border-radius:14px; color:#100800;
+    font-family:'Playfair Display',serif; font-size:1.15rem; font-weight:900;
+    cursor:pointer; transition:all .2s; min-height:58px;
+    box-shadow: 0 6px 22px rgba(201,148,58,.45), inset 0 1px 0 rgba(255,255,255,.35);
     letter-spacing:.04em;
   }
-  .tutorial-btn-next:hover { transform:translateY(-2px); box-shadow:0 8px 28px rgba(201,148,58,.55); }
+  .tutorial-btn-next:hover { transform:translateY(-3px); box-shadow:0 10px 32px rgba(201,148,58,.6); }
+  .tutorial-btn-next:active { transform:translateY(-1px); }
   .tutorial-btn-skip {
-    padding:.7rem 1rem; border-radius:10px;
-    background:transparent; border:1px solid rgba(201,148,58,.2);
-    color:var(--text-dim); font-size:.9rem; cursor:pointer; transition:all .18s;
-    font-family:'Lato',sans-serif; min-height:46px;
+    padding:.75rem 1.1rem; border-radius:11px;
+    background:transparent; border:1.5px solid rgba(201,148,58,.2);
+    color:var(--text-dim); font-size:.95rem; cursor:pointer; transition:all .18s;
+    font-family:'Lato',sans-serif; min-height:52px; white-space:nowrap;
   }
-  .tutorial-btn-skip:hover { border-color:rgba(201,148,58,.4); color:var(--cream2); }
+  .tutorial-btn-skip:hover { border-color:rgba(201,148,58,.45); color:var(--cream2); }
 
   /* Make the "two timer buttons" label clearer */
   .hbtn-timer-label {
@@ -1769,6 +1831,145 @@
     .turn-transition-overlay { display:none !important; }
   }
 
+  /* ══ SENIOR ACCESSIBILITY ENHANCEMENTS ══ */
+
+  /* Larger player-card base padding */
+  .player-card {
+    padding: 1.3rem 1.5rem !important;
+  }
+
+  /* Clearer active player highlight */
+  .player-card.active {
+    border-color: rgba(201,148,58,.7) !important;
+    box-shadow: 0 0 0 2px rgba(201,148,58,.45), var(--shadow-deep), 0 0 60px rgba(201,148,58,.15) !important;
+  }
+
+  /* Larger turn pill */
+  .turn-pill {
+    font-size:.78rem !important;
+    padding: 5px 13px !important;
+  }
+
+  /* Bigger avatar in card */
+  .p-avatar { font-size: 1.9rem !important; }
+  .player-card.active .p-avatar { font-size: 2.4rem !important; }
+
+  /* Clearer score display */
+  .p-score {
+    letter-spacing: .02em;
+  }
+
+  /* Bigger start button */
+  .start-btn {
+    font-size: 1.35rem !important;
+    padding: 1.4rem !important;
+    min-height: 68px !important;
+  }
+
+  /* Bigger chip history dots */
+  .chip {
+    padding: 3px 9px !important;
+    font-size: .85rem !important;
+    border-radius: 6px !important;
+  }
+
+  /* Cleaner quick-row layout: larger gap */
+  .quick-row {
+    gap: .65rem !important;
+    flex-wrap: wrap;
+  }
+
+  /* Bigger qbtn */
+  .qbtn {
+    min-width: 78px !important;
+    min-height: 58px !important;
+    font-size: 1.25rem !important;
+    font-weight: 700 !important;
+  }
+
+  /* Higher-contrast scrabble toggle */
+  .scrabble-label {
+    font-size: 1.05rem !important;
+    min-height: 58px !important;
+    padding: .65rem 1.1rem !important;
+  }
+
+  /* Clearer log list max-height so more entries show */
+  .log-list {
+    max-height: 260px !important;
+  }
+  .log-entry {
+    font-size: 1rem !important;
+    padding: .6rem .9rem !important;
+  }
+
+  /* Bigger avatar picker options */
+  .avatar-option {
+    width: 38px !important;
+    height: 38px !important;
+    font-size: 1.4rem !important;
+  }
+
+  /* Bigger avatar button */
+  .avatar-btn {
+    width: 52px !important;
+    height: 52px !important;
+    font-size: 1.6rem !important;
+  }
+
+  /* Bigger count-btn */
+  .count-btn {
+    width: 64px !important;
+    height: 64px !important;
+    font-size: 1.8rem !important;
+  }
+
+  /* Bigger help section text */
+  .help-rule span { font-size: 1rem !important; line-height: 1.7; }
+  .help-section-title { font-size: 1.05rem !important; }
+
+  /* Bigger turn overlay text */
+  .turn-transition-name { font-size: 2.6rem !important; }
+
+  /* Bigger round badge */
+  .round-badge { font-size: 1rem !important; padding: .5rem 1.6rem !important; }
+  .round-badge .rnum { font-size: 1.1rem !important; }
+
+  /* Bigger calc tiles */
+  .calc-tile-btn {
+    width: 50px !important;
+    min-height: 62px !important;
+  }
+  .calc-tile-btn .ct-letter { font-size: 1.5rem !important; }
+
+  /* Bigger calc result */
+  .calc-result-total { font-size: 3.2rem !important; }
+
+  /* Bigger calc-use-btn */
+  .calc-use-btn {
+    font-size: 1.1rem !important;
+    min-height: 56px !important;
+  }
+
+  /* Easier-to-read validator result */
+  .validator-result { font-size: 1rem !important; }
+  .v-result-word { font-size: 1.35rem !important; }
+
+  /* Bigger modal close button */
+  .help-modal-close {
+    width: 44px !important; height: 44px !important;
+    font-size: 1.2rem !important;
+  }
+
+  /* Bigger setup card */
+  @media (min-width: 480px) {
+    .setup-card { padding: 2.6rem 2.8rem !important; }
+  }
+
+  /* Line height boost for all body text */
+  body { line-height: 1.65 !important; }
+
+
 </style>
 </head>
 <body>
@@ -1780,7 +1981,7 @@
   <div>
     <div id="turn-overlay-avatar" style="font-size:3rem;line-height:1;margin-bottom:.4rem;filter:drop-shadow(0 4px 12px rgba(0,0,0,.6))">😀</div>
     <div class="turn-transition-name" id="turn-overlay-name"></div>
-    <div class="turn-transition-sub">¡Es tu turno!</div>
+    <div class="turn-transition-sub" style="font-size:1.3rem;font-weight:700;letter-spacing:.12em">¡ES TU TURNO!</div>
   </div>
 </div>
 
@@ -1790,14 +1991,24 @@
 <!-- ═══════ TUTORIAL ═══════ -->
 <div id="tutorial-overlay" role="dialog" aria-modal="true" aria-labelledby="tutorial-title">
   <div class="tutorial-box">
-    <div id="tutorial-icon" class="tutorial-icon">🎲</div>
-    <div id="tutorial-step-badge" class="tutorial-step-badge">1</div>
-    <h2 class="tutorial-title" id="tutorial-title"></h2>
-    <p class="tutorial-text" id="tutorial-text"></p>
-    <div class="tutorial-dots" id="tutorial-dots"></div>
-    <div class="tutorial-nav">
-      <button class="tutorial-btn-skip" onclick="closeTutorial()" id="tutorial-skip-btn">Saltar tutorial</button>
-      <button class="tutorial-btn-next" onclick="nextTutorialStep()" id="tutorial-next-btn">Siguiente →</button>
+    <div class="tutorial-accent-bar" id="tutorial-accent-bar"></div>
+    <div class="tutorial-progress-track">
+      <div class="tutorial-progress-fill" id="tutorial-progress-fill"></div>
+    </div>
+    <div class="tutorial-body">
+      <div class="tutorial-icon-wrap" id="tutorial-icon-wrap">
+        <span id="tutorial-icon" class="tutorial-icon">🎲</span>
+      </div>
+      <div id="tutorial-step-badge" class="tutorial-step-badge">Paso 1 de 7</div>
+      <h2 class="tutorial-title" id="tutorial-title"></h2>
+      <div class="tutorial-text-card">
+        <div class="tutorial-text" id="tutorial-text"></div>
+      </div>
+      <div class="tutorial-dots" id="tutorial-dots"></div>
+      <div class="tutorial-nav">
+        <button class="tutorial-btn-skip" onclick="closeTutorial()" id="tutorial-skip-btn">Saltar</button>
+        <button class="tutorial-btn-next" onclick="nextTutorialStep()" id="tutorial-next-btn">Siguiente →</button>
+      </div>
     </div>
   </div>
 </div>
@@ -1889,13 +2100,13 @@
 
     <div class="ornament-divider"><span>✦</span></div>
 
-    <button class="start-btn" onclick="startGame()">▶ Comenzar Partida</button>
+    <button class="start-btn" onclick="startGame()">▶  Comenzar la Partida</button>
   </div>
 
   <!-- Setup help accordion -->
   <div class="help-wrap">
     <button class="help-toggle" onclick="toggleHelp()" id="help-toggle" aria-expanded="false" aria-controls="help-body">
-      <span>❓ ¿Cómo usar la app?</span>
+      <span style="font-size:1rem">❓ ¿Cómo se usa esta app?</span>
       <span class="htoggle-arrow" id="htoggle-arrow">▼</span>
     </button>
     <div class="help-body" id="help-body" role="region">
@@ -1909,7 +2120,7 @@
         <div class="help-section">
           <div class="help-section-title" style="color:#7ecf82">✏️ Anotar puntos</div>
           <div class="help-rule"><span class="help-rule-icon">🔢</span><span>Escribe los puntos de la jugada en el campo grande, o usa los botones rápidos <strong>+10 · +20 · +30</strong>.</span></div>
-          <div class="help-rule"><span class="help-rule-icon">⭐</span><span>Si el jugador usó las 7 fichas (¡Scrabble!), activa el botón <strong>¡Scrabble! +50</strong> antes de añadir. Se suman 50 puntos extra.</span></div>
+          <div class="help-rule"><span class="help-rule-icon">⭐</span><span>Si el jugador usó las 7 fichas (¡Scrabble!), activa el botón <strong>¡Scrabble! +50 puntos extra</strong> antes de añadir. Se suman 50 puntos extra.</span></div>
           <div class="help-rule"><span class="help-rule-icon">➕</span><span>Pulsa <strong>Añadir Puntos</strong> para confirmar y pasar al siguiente jugador.</span></div>
           <div class="help-rule"><span class="help-rule-icon">⏭️</span><span>Si el jugador no puede jugar, pulsa <strong>Pasar turno</strong>.</span></div>
         </div>
@@ -1929,7 +2140,7 @@
     </div>
   </div><!-- end help-wrap -->
   <button onclick="openTutorial()" style="margin-top:.55rem;background:transparent;border:1px solid rgba(201,148,58,.22);border-radius:12px;color:var(--text-dim);font-family:'Lato',sans-serif;font-size:.9rem;padding:.7rem 1.4rem;cursor:pointer;transition:all .2s;width:100%;max-width:520px;" onmouseover="this.style.borderColor='rgba(201,148,58,.5)';this.style.color='var(--cream2)'" onmouseout="this.style.borderColor='rgba(201,148,58,.22)';this.style.color='var(--text-dim)'">
-    📖 Ver tutorial paso a paso
+    📖 Ver tutorial (instrucciones paso a paso)
   </button>
 </div><!-- end setup-screen -->
 
@@ -1970,7 +2181,7 @@
       </div>
     </div>
     <div class="header-btns">
-      <button class="hbtn" onclick="undoLast()" aria-label="Deshacer última jugada">↩ Deshacer</button>
+      <button class="hbtn" onclick="undoLast()" aria-label="Deshacer última jugada">↩ Deshacer último</button>
       <div class="hbtn-with-label">
         <button class="hbtn" id="timer-toggle-btn" onclick="toggleTimer()"
           aria-label="Activar o desactivar temporizador" aria-pressed="false">⏱ Reloj</button>
@@ -1983,13 +2194,13 @@
       </div>
       <button class="hbtn" onclick="openHelpModal()" aria-label="Ver instrucciones">❓ Ayuda</button>
       <button class="hbtn" onclick="openTutorial()" aria-label="Ver tutorial paso a paso">📖 Tutorial</button>
-      <button class="hbtn" onclick="endGamePrompt()" aria-label="Finalizar partida">🏆 Finalizar</button>
-      <button class="hbtn danger" onclick="resetPrompt()" aria-label="Reiniciar partida">↺ Reiniciar</button>
+      <button class="hbtn" onclick="endGamePrompt()" aria-label="Finalizar partida">🏆 Finalizar partida</button>
+      <button class="hbtn danger" onclick="resetPrompt()" aria-label="Reiniciar partida">↺ Reiniciar partida</button>
     </div>
   </div>
 
   <div class="round-bar">
-    <div class="round-badge" aria-live="polite">Ronda &nbsp;<span class="rnum" id="round-num">1</span></div>
+    <div class="round-badge" aria-live="polite" style="font-size:1rem;padding:.5rem 1.5rem">Ronda &nbsp;<span class="rnum" id="round-num">1</span></div>
   </div>
 
   <div class="scoreboard" id="scoreboard" aria-live="polite" aria-label="Marcador de jugadores"></div>
@@ -2010,9 +2221,9 @@
           ⏸ Pausar
         </button>
         <button class="timer-act-btn penalty-btn" id="timer-penalty-btn"
-          onclick="applyPenalty()" aria-label="Añadir tiempo extra de penalización"
-          title="Añadir tiempo por palabra inválida">
-          +⏱ Penalización
+          onclick="applyPenalty()" aria-label="Aplicar penalización: reiniciar el tiempo a los segundos de castigo"
+          title="Palabra inválida: reinicia el tiempo al tiempo de penalización">
+          ⚡ Penalización
         </button>
       </div>
     </div>
@@ -2021,7 +2232,7 @@
     <div class="validator-wrap">
       <button class="validator-toggle" onclick="toggleValidator()" id="validator-toggle"
         aria-expanded="false" aria-controls="validator-body">
-        <span>📖 Verificar Palabra</span>
+        <span style="font-size:1.05rem">📖 Verificar si una palabra es válida</span>
         <span class="vtoggle-arrow" id="vtoggle-arrow">▼</span>
       </button>
       <div class="validator-body" id="validator-body" role="region">
@@ -2069,7 +2280,7 @@
     <div class="calc-wrap">
       <button class="calc-toggle" onclick="toggleCalc()" id="calc-toggle"
         aria-expanded="false" aria-controls="calc-body">
-        <span>🧮 Calculadora de Puntos</span>
+        <span style="font-size:1.05rem">🧮 Calculadora de Puntos</span>
         <span class="ctoggle-arrow" id="ctoggle-arrow">▼</span>
       </button>
       <div class="calc-body" id="calc-body" role="region">
@@ -2095,15 +2306,15 @@
             </button>
             <button class="cwbtn dp" id="cwbtn-dp" onclick="selectWordBonus('dp')" aria-pressed="false">
               <span class="cbtn-icon">🟣</span>
-              <span class="cbtn-label">DP ×2</span>
+              <span class="cbtn-label">Doble Palabra</span>
             </button>
             <button class="cwbtn tp" id="cwbtn-tp" onclick="selectWordBonus('tp')" aria-pressed="false">
               <span class="cbtn-icon">🔴</span>
-              <span class="cbtn-label">TP ×3</span>
+              <span class="cbtn-label">Triple Palabra</span>
             </button>
             <button class="cwbtn dp" id="cwbtn-fp" onclick="selectWordBonus('fp')" aria-pressed="false">
               <span class="cbtn-icon">⭐</span>
-              <span class="cbtn-label">1ª ×2</span>
+              <span class="cbtn-label">1ª Palabra ×2</span>
             </button>
           </div>
 
@@ -2131,27 +2342,27 @@
           ⭐ Primera palabra: vale el doble · debe pasar por el centro del tablero
         </div>
 
-        <label class="sil" for="score-input">Puntos de esta jugada</label>
+        <label class="sil" for="score-input">¿Cuántos puntos hiciste esta jugada?</label>
         <input type="number" class="score-input" id="score-input"
           placeholder="0" min="0" max="999"
           aria-label="Puntos de esta jugada">
 
         <div class="quick-row" aria-label="Atajos de puntos">
-          <button class="qbtn" onclick="addQuick(10)" aria-label="Añadir 10 puntos">+10</button>
+          <button class="qbtn" onclick="addQuick(10)" aria-label="Añadir 10 puntos rápido">+10</button>
           <button class="qbtn" onclick="addQuick(20)" aria-label="Añadir 20 puntos">+20</button>
           <button class="qbtn" onclick="addQuick(30)" aria-label="Añadir 30 puntos">+30</button>
           <div class="scrabble-label" id="scrabble-label" onclick="toggleScrabble()"
             role="checkbox" aria-checked="false" tabindex="0"
             onkeydown="if(event.key===' '||event.key==='Enter') toggleScrabble()">
             <span class="scrabble-star" id="scrabble-star">⭐</span>
-            <strong>¡Scrabble! +50</strong>
+            <strong>¡Scrabble! +50 puntos extra</strong>
           </div>
         </div>
       </div>
 
       <div class="action-col">
-        <button class="add-btn" onclick="addScore()" aria-label="Confirmar y añadir puntos">✅ Añadir Puntos</button>
-        <button class="pass-btn" onclick="passTurn()" aria-label="Pasar turno sin puntuar">⏭ No puedo jugar (Pasar)</button>
+        <button class="add-btn" onclick="addScore()" aria-label="Confirmar y añadir puntos">✅ Añadir Puntos →</button>
+        <button class="pass-btn" onclick="passTurn()" aria-label="Pasar turno sin puntuar">✋ Pasar turno</button>
       </div>
     </div>
   </div>
@@ -2212,7 +2423,7 @@
         <span style="background:#7ecf82;color:#0a1a0a;border-radius:50%;width:26px;height:26px;display:inline-flex;align-items:center;justify-content:center;font-size:.85rem;flex-shrink:0">2</span>
         Si usaste todas tus 7 fichas de una vez (¡Scrabble!)
       </div>
-      <div class="help-rule"><span class="help-rule-icon">⭐</span><span>Activa el botón <strong>¡Scrabble! +50</strong> antes de confirmar. Se añadirán 50 puntos extra automáticamente.</span></div>
+      <div class="help-rule"><span class="help-rule-icon">⭐</span><span>Activa el botón <strong>¡Scrabble! +50 puntos extra</strong> antes de confirmar. Se añadirán 50 puntos extra automáticamente.</span></div>
     </div>
 
     <div class="help-divider"></div>
@@ -2314,13 +2525,13 @@
     </div>
 
     <!-- Penalty -->
-    <div class="timer-section-title" style="margin-top:.2rem">⚡ Tiempo extra por palabra inválida</div>
+    <div class="timer-section-title" style="margin-top:.2rem">⚡ Penalización por palabra inválida</div>
     <div class="timer-penalty-section">
       <div class="timer-penalty-row">
-        <label for="timer-penalty-val">Si alguien pone una palabra que no vale, se le añaden</label>
+        <label for="timer-penalty-val">Si alguien pone una palabra inválida, su tiempo se reinicia a solo</label>
         <input class="timer-penalty-input" type="number" id="timer-penalty-val"
           min="5" max="120" value="20" aria-label="Segundos de penalización">
-        <span class="timer-penalty-unit">segundos más</span>
+        <span class="timer-penalty-unit">segundos para jugar</span>
       </div>
     </div>
 
@@ -3060,7 +3271,7 @@
     if (avEl) avEl.textContent = avatar || '😀';
     overlay.classList.remove('show');
     void overlay.offsetWidth;
-    overlay.classList.add('show');
+    overlay.classList.add('show'); /* Extended for readability */
     setTimeout(() => overlay.classList.remove('show'), 900);
   }
 
@@ -3070,7 +3281,7 @@
   let timerSeconds   = 60;
   let timerPaused    = false;
   let TIMER_DURATION = 60;    // user-configurable
-  let PENALTY_SECS   = 20;    // seconds added per invalid word
+  let PENALTY_SECS   = 20;    // seconds remaining after penalty (replaces current time)
   let WARN_THRESHOLD = 10;    // seconds left when warning kicks in
 
   function formatTime(s) {
@@ -3131,13 +3342,17 @@
     if (!timerEnabled || !timerInterval) {
       showToast('El reloj no está activo'); return;
     }
-    timerSeconds = Math.min(timerSeconds + PENALTY_SECS, TIMER_DURATION * 3);
+    // Reset timer to exactly PENALTY_SECS — discards any remaining time
+    timerSeconds = PENALTY_SECS;
+    timerPaused  = false;
+    const pauseBtn = document.getElementById('timer-pause-btn');
+    if (pauseBtn) { pauseBtn.textContent = '⏸ Pausar'; pauseBtn.classList.remove('paused'); }
     const bar = document.getElementById('timer-bar');
     bar.classList.add('penalty');
     setTimeout(() => bar.classList.remove('penalty'), 800);
     updateTimerDisplay();
-    showToast(`+${PENALTY_SECS}s de penalización ⚡`);
-    haptic([10, 15, 10]);
+    showToast(`⚡ Penalización: solo ${PENALTY_SECS}s para jugar`);
+    haptic([50, 20, 50]);
     sfxClick();
   }
 
@@ -3229,7 +3444,7 @@
     if (total >= 5) TIMER_DURATION = total;
     if (timerEnabled) startTimerRun();
     closeModal('timer-modal');
-    showToast(`Timer: ${formatTime(TIMER_DURATION)} · Penalización: +${PENALTY_SECS}s`);
+    showToast(`Timer: ${formatTime(TIMER_DURATION)} · Penalización: ${PENALTY_SECS}s`);
     sfxClick();
   }
 
@@ -3326,41 +3541,66 @@
   });
 
   /* ═══ TUTORIAL ═══ */
+  // Per-step accent colors for the top bar
+  const TUTORIAL_COLORS = [
+    'linear-gradient(90deg,#4a90d9,#7ec8f0)',   // blue  — welcome
+    'linear-gradient(90deg,#c9943a,#f5d070)',   // gold  — players
+    'linear-gradient(90deg,#587a42,#8ecf6a)',   // green — scoring
+    'linear-gradient(90deg,#c9943a,#ffe066)',   // star  — scrabble
+    'linear-gradient(90deg,#4ecdc4,#a0f0ea)',   // teal  — confirm
+    'linear-gradient(90deg,#e07060,#f5a090)',   // red   — undo
+    'linear-gradient(90deg,#b8860b,#ffd700)',   // gold2 — finish
+  ];
+
   const TUTORIAL_STEPS = [
     {
       icon: '👋',
-      title: '¡Bienvenido al Marcador de Scrabble!',
-      text: 'Esta app te ayuda a llevar los puntos mientras juegas.\n\nTe explicaremos cómo usarla en unos pocos pasos, ¡es muy fácil!'
+      title: '¡Bienvenido!',
+      text: `<p>Esta app lleva automáticamente los <strong>puntos de tu partida de Scrabble</strong>.</p>
+             <p>Solo tienes que anotar cuántos puntos hace cada jugador en su turno — ¡el resto lo hace la app!</p>
+             <div class="tutorial-tip"><span class="tutorial-tip-icon">💡</span><span class="tutorial-tip-text">El tutorial tiene <strong>7 pasos cortos</strong>. En menos de 2 minutos sabrás usar todo.</span></div>`
     },
     {
       icon: '👥',
-      title: 'Paso 1 — Elige los jugadores',
-      text: 'Primero, elige cuántos jugadores van a jugar (de 2 a 6).\n\nLuego escribe el nombre de cada jugador en los espacios de la pantalla principal.'
+      title: '¿Cuántos van a jugar?',
+      text: `<p>En la pantalla de inicio, toca el número de jugadores que van a participar: <span class="tutorial-highlight">2</span>, <span class="tutorial-highlight">3</span>, <span class="tutorial-highlight">4</span>… hasta 6.</p>
+             <p>Después escribe el <strong>nombre de cada persona</strong> en los campos que aparecen debajo.</p>
+             <div class="tutorial-tip"><span class="tutorial-tip-icon">🎭</span><span class="tutorial-tip-text">También puedes elegir un <strong>emoji</strong> como avatar tocando el botón de carita junto al nombre.</span></div>`
     },
     {
       icon: '✏️',
-      title: 'Paso 2 — Anota los puntos',
-      text: 'Cuando un jugador termina su turno, escribe cuántos puntos hizo en el <span class="tutorial-highlight">cuadro grande</span> del centro.\n\nTambién puedes pulsar <span class="tutorial-highlight">+10</span>, <span class="tutorial-highlight">+20</span> o <span class="tutorial-highlight">+30</span> para sumar rápido.'
+      title: 'Anotar los puntos',
+      text: `<p>Cuando un jugador termina su turno en el tablero, escribe sus puntos en el <span class="tutorial-highlight">cuadro grande del centro</span>.</p>
+             <p>¿No quieres teclear? Usa los botones de acceso rápido: <span class="tutorial-highlight">+10</span> · <span class="tutorial-highlight">+20</span> · <span class="tutorial-highlight">+30</span> para sumar de golpe.</p>
+             <div class="tutorial-tip"><span class="tutorial-tip-icon">🧮</span><span class="tutorial-tip-text">¿Tienes casillas especiales (Doble Letra, Triple Palabra…)? Abre la <strong>Calculadora de Puntos</strong> y ella calculará todo.</span></div>`
     },
     {
       icon: '⭐',
-      title: 'Paso 3 — ¡Scrabble! (bonus de 50)',
-      text: '¿El jugador usó sus 7 fichas de una sola vez? ¡Eso es un Scrabble!\n\nAntes de confirmar los puntos, activa el botón <span class="tutorial-highlight">⭐ ¡Scrabble! +50</span> para añadir 50 puntos extra automáticamente.'
+      title: '¡Scrabble! — 50 puntos extra',
+      text: `<p>Si un jugador coloca sus <strong>7 fichas de golpe</strong> en un solo turno, eso se llama <strong>¡Scrabble!</strong> y gana 50 puntos adicionales.</p>
+             <p>Antes de confirmar los puntos, activa el botón <span class="tutorial-highlight">⭐ ¡Scrabble! +50 puntos extra</span> — los 50 puntos se añadirán solos.</p>
+             <div class="tutorial-tip"><span class="tutorial-tip-icon">🌟</span><span class="tutorial-tip-text">El botón se ilumina en dorado cuando está activado. Si te olvidaste de activarlo, usa <strong>Deshacer</strong> y repite.</span></div>`
     },
     {
       icon: '✅',
-      title: 'Paso 4 — Confirmar o pasar',
-      text: 'Cuando estés listo, pulsa el botón verde <span class="tutorial-highlight">✅ Añadir Puntos</span>.\n\nSi el jugador no puede colocar ninguna ficha este turno, pulsa <span class="tutorial-highlight">⏭ No puedo jugar (Pasar)</span>.'
+      title: 'Confirmar el turno',
+      text: `<p>Cuando hayas escrito los puntos correctos, pulsa el botón grande verde: <span class="tutorial-highlight">✅ Añadir Puntos →</span></p>
+             <p>¡Listo! Los puntos se guardan y la app pasa automáticamente al siguiente jugador.</p>
+             <div class="tutorial-tip"><span class="tutorial-tip-icon">✋</span><span class="tutorial-tip-text">¿El jugador no puede colocar ninguna ficha? Pulsa <span class="tutorial-highlight">✋ Pasar turno</span> sin escribir nada.</span></div>`
     },
     {
       icon: '↩️',
-      title: '¿Te equivocaste?',
-      text: 'No te preocupes. El botón <span class="tutorial-highlight">↩ Deshacer</span> (arriba) borra el último número que anotaste.\n\nPuedes usarlo tantas veces como necesites.'
+      title: '¿Te equivocaste? Sin problema',
+      text: `<p>Si anotaste un número incorrecto, pulsa el botón <span class="tutorial-highlight">↩ Deshacer último</span> que está arriba del todo.</p>
+             <p>Ese botón <strong>borra el último punto anotado</strong> y te deja corregirlo. Puedes usarlo tantas veces como necesites.</p>
+             <div class="tutorial-tip"><span class="tutorial-tip-icon">🔄</span><span class="tutorial-tip-text">Si quieres empezar la partida de cero, usa el botón <span class="tutorial-highlight">↺ Reiniciar partida</span>.</span></div>`
     },
     {
       icon: '🏆',
-      title: 'Fin de la partida',
-      text: 'Cuando el juego termine, pulsa el botón <span class="tutorial-highlight">🏆 Finalizar</span> para ver al ganador y los puntos finales de todos.\n\n¡Buena suerte y a jugar!'
+      title: '¡Fin de la partida!',
+      text: `<p>Cuando el juego termine, pulsa <span class="tutorial-highlight">🏆 Finalizar partida</span>.</p>
+             <p>Verás al <strong>ganador con su puntuación</strong>, la tabla completa de resultados y una gráfica de cómo evolucionaron los puntos.</p>
+             <div class="tutorial-tip"><span class="tutorial-tip-icon">🎉</span><span class="tutorial-tip-text">¡Ya sabes todo lo necesario! Si tienes dudas durante el juego, pulsa <strong>❓ Ayuda</strong> en cualquier momento.</span></div>`
     }
   ];
 
@@ -3390,23 +3630,49 @@
   }
 
   function _renderTutorialStep() {
-    const step = TUTORIAL_STEPS[tutorialStep];
-    document.getElementById('tutorial-icon').textContent = step.icon;
-    document.getElementById('tutorial-step-badge').textContent = tutorialStep + 1;
-    document.getElementById('tutorial-title').textContent = step.title;
-    document.getElementById('tutorial-text').innerHTML = step.text.replace(/\n/g, '<br>');
+    const step  = TUTORIAL_STEPS[tutorialStep];
+    const total = TUTORIAL_STEPS.length;
+    const isLast = tutorialStep === total - 1;
 
-    // Dots
+    // Icon + wrap color
+    const iconEl = document.getElementById('tutorial-icon');
+    iconEl.textContent = step.icon;
+    // Re-trigger bounce animation
+    iconEl.style.animation = 'none';
+    void iconEl.offsetWidth;
+    iconEl.style.animation = '';
+
+    // Accent bar color
+    const accentBar = document.getElementById('tutorial-accent-bar');
+    if (accentBar && TUTORIAL_COLORS[tutorialStep]) {
+      accentBar.style.background = TUTORIAL_COLORS[tutorialStep];
+    }
+
+    // Progress bar
+    const progressFill = document.getElementById('tutorial-progress-fill');
+    if (progressFill) {
+      progressFill.style.width = ((tutorialStep + 1) / total * 100) + '%';
+      if (TUTORIAL_COLORS[tutorialStep]) progressFill.style.background = TUTORIAL_COLORS[tutorialStep];
+    }
+
+    // Step badge
+    document.getElementById('tutorial-step-badge').textContent =
+      isLast ? '✓ Último paso' : `Paso ${tutorialStep + 1} de ${total}`;
+
+    // Title + text (text is now HTML)
+    document.getElementById('tutorial-title').textContent = step.title;
+    document.getElementById('tutorial-text').innerHTML = step.text;
+
+    // Dots — active dot is wider (pill shape via CSS)
     const dots = document.getElementById('tutorial-dots');
     dots.innerHTML = TUTORIAL_STEPS.map((_,i) =>
       `<div class="tutorial-dot${i===tutorialStep?' active':i<tutorialStep?' done':''}"></div>`
     ).join('');
 
-    // Last step button
+    // Buttons
     const nextBtn = document.getElementById('tutorial-next-btn');
     const skipBtn = document.getElementById('tutorial-skip-btn');
-    const isLast = tutorialStep === TUTORIAL_STEPS.length - 1;
-    nextBtn.textContent = isLast ? '✓ ¡Entendido!' : 'Siguiente →';
+    nextBtn.textContent = isLast ? '🎉 ¡Listo, a jugar!' : 'Siguiente →';
     skipBtn.style.display = isLast ? 'none' : '';
   }
 
