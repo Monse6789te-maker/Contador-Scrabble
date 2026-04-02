@@ -2615,6 +2615,113 @@
   function sfxClick()  { playTone(600,'sine',.04,.07); }
   function sfxWinner() { [523,659,784,880,1047,880,784,659,523].forEach((f,i) => playTone(f,'sine',.18,.2,i*0.1)); }
 
+  // Urgent tick — short sharp beep each second in warning zone
+  function sfxTimerTick() {
+    playTone(880, 'square', .045, .12);
+  }
+
+  // Escalated tick for last 3 seconds — higher pitch, louder
+  function sfxTimerTickUrgent() {
+    playTone(1200, 'square', .055, .18);
+    playTone(1000, 'square', .03,  .10, .06);
+  }
+
+  // Time's up alarm — three descending buzz pulses
+  function sfxTimerAlarm() {
+    try {
+      const ctx = getAudio();
+      // Three urgent pulses
+      [0, 0.22, 0.44].forEach(offset => {
+        const osc  = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain); gain.connect(ctx.destination);
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(520, ctx.currentTime + offset);
+        osc.frequency.linearRampToValueAtTime(220, ctx.currentTime + offset + 0.18);
+        gain.gain.setValueAtTime(0.28, ctx.currentTime + offset);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + offset + 0.2);
+        osc.start(ctx.currentTime + offset);
+        osc.stop(ctx.currentTime + offset + 0.22);
+      });
+    } catch(e) {}
+  }
+
+  // Game start — rising fanfare (3 ascending notes)
+  function sfxGameStart() {
+    [330, 440, 554, 660].forEach((f,i) => playTone(f, 'sine', .18, .16, i * 0.1));
+    setTimeout(() => playTone(880, 'sine', .35, .22), 450);
+  }
+
+  // Turn transition — soft two-note chime (ding-dong)
+  function sfxTurnChange() {
+    playTone(523, 'sine', .18, .14);
+    playTone(392, 'sine', .22, .12, .14);
+  }
+
+  // New round — three ascending pings, slightly more festive than turn change
+  function sfxNewRound() {
+    playTone(440, 'sine', .12, .13);
+    playTone(554, 'sine', .12, .14, .12);
+    playTone(659, 'sine', .22, .16, .24);
+  }
+
+  // Milestone / streak — bright sparkly arpeggio
+  function sfxMilestone() {
+    [659, 784, 880, 1047].forEach((f,i) => playTone(f, 'sine', .14, .14, i * 0.07));
+  }
+
+  // Personal record — short triumphant two-tone
+  function sfxRecord() {
+    playTone(784, 'sine', .1, .16);
+    playTone(1047, 'sine', .22, .2, .1);
+  }
+
+  // Reset / new game from winner screen — descending sweep
+  function sfxReset() {
+    [660, 523, 392, 330].forEach((f,i) => playTone(f, 'triangle', .1, .1, i * 0.07));
+  }
+
+  // Avatar selected — tiny pop
+  function sfxPop() {
+    playTone(900, 'sine', .05, .12);
+    playTone(1100, 'sine', .04, .08, .04);
+  }
+
+  // Quick-add (+10/+20/+30) — soft upward blip, pitch scales with amount
+  function sfxQuickAdd(n) {
+    const base = 440 + n * 5;
+    playTone(base, 'sine', .07, .11);
+    playTone(base * 1.25, 'sine', .05, .07, .06);
+  }
+
+  // Jump to player — soft lateral swoosh (two quick tones)
+  function sfxJump() {
+    playTone(500, 'sine', .06, .10);
+    playTone(650, 'sine', .06, .10, .07);
+  }
+
+  // Tutorial step advance — light chime
+  function sfxTutorialStep() {
+    playTone(660, 'sine', .1, .12);
+    playTone(880, 'sine', .14, .1, .09);
+  }
+
+  // Tutorial complete — cheerful mini fanfare
+  function sfxTutorialDone() {
+    [523, 659, 784, 1047].forEach((f,i) => playTone(f, 'sine', .15, .15, i * 0.09));
+  }
+
+  // Error / invalid input — low buzz
+  function sfxError() {
+    playTone(180, 'sawtooth', .12, .14);
+    playTone(160, 'sawtooth', .1, .10, .1);
+  }
+
+  // Resume saved game — warm welcoming chord
+  function sfxResume() {
+    [330, 415, 523].forEach((f,i) => playTone(f, 'sine', .25, .13, i * 0.06));
+  }
+
   /* ═══ HAPTICS ═══ */
   function haptic(pattern=[10]) { if (navigator.vibrate) navigator.vibrate(pattern); }
 
@@ -2780,6 +2887,7 @@
     openAvatarPopover = null;
     const btn = document.getElementById(`avatar-btn-${playerIdx}`);
     if (btn) btn.textContent = AVATARS[avatarIdx];
+    sfxPop();
   }
 
   function startGame() {
@@ -2797,7 +2905,7 @@
     clearSavedState();
     document.getElementById('setup-screen').style.display = 'none';
     document.getElementById('game-screen').style.display  = 'block';
-    haptic([10,30,10]);
+    sfxGameStart(); haptic([10,30,10]);
     render();
     setTimeout(() => showTurnTransition(players[0].name, players[0].hex, players[0].avatar), 400);
     if (timerEnabled) startTimerRun();
@@ -2882,7 +2990,7 @@
     const inp = document.getElementById('score-input');
     inp.value = (Number(inp.value)||0) + n;
     inp.focus();
-    haptic([5]);
+    sfxQuickAdd(n); haptic([5]);
   }
 
   function toggleScrabble() {
@@ -2909,20 +3017,20 @@
       inp.classList.add('shake');
       inp.addEventListener('animationend', () => inp.classList.remove('shake'), {once:true});
       showToast('⚠ Los puntos no pueden ser negativos');
-      haptic([50]); return;
+      sfxError(); haptic([50]); return;
     }
     if (pts > 999) {
       inp.classList.add('shake');
       inp.addEventListener('animationend', () => inp.classList.remove('shake'), {once:true});
       showToast('⚠ Máximo 999 puntos por jugada');
-      haptic([50]); return;
+      sfxError(); haptic([50]); return;
     }
     // FIX: warn if 0 pts and no scrabble — likely an accidental tap
     if (pts === 0 && !state.scrabbleOn) {
       showToast('⚠ Escribe los puntos primero, o usa "Pasar turno"');
       inp.classList.add('shake');
       inp.addEventListener('animationend', () => inp.classList.remove('shake'), {once:true});
-      haptic([30]); return;
+      sfxError(); haptic([30]); return;
     }
 
     const isScrabble = state.scrabbleOn;
@@ -2954,14 +3062,14 @@
     const newScore = p.score;
     for (const h of [100,200,300,400,500]) {
       if (prevScore < h && newScore >= h) {
-        setTimeout(() => showMilestone(`¡${p.name} llegó a ${h} puntos! 🎯`), 400);
+        setTimeout(() => { showMilestone(`¡${p.name} llegó a ${h} puntos! 🎯`); sfxMilestone(); }, 400);
         launchSparks(window.innerWidth*.5, window.innerHeight*.4, p.hex, 14);
         break;
       }
     }
-    if (pts >= 40 && !state.scrabbleOn) setTimeout(() => showMilestone(`¡Jugada increíble! ${pts} puntos 🌟`), 300);
-    if (p.streak===3) setTimeout(() => showMilestone(`¡${p.name} está en racha! 🔥`), 500);
-    if (p.streak===5) setTimeout(() => showMilestone(`¡Racha de ${p.streak}! Imparable 🚀`), 500);
+    if (pts >= 40 && !state.scrabbleOn) setTimeout(() => { showMilestone(`¡Jugada increíble! ${pts} puntos 🌟`); sfxMilestone(); }, 300);
+    if (p.streak===3) setTimeout(() => { showMilestone(`¡${p.name} está en racha! 🔥`); sfxMilestone(); }, 500);
+    if (p.streak===5) setTimeout(() => { showMilestone(`¡Racha de ${p.streak}! Imparable 🚀`); sfxMilestone(); }, 500);
   }
 
   function passTurn() {
@@ -2976,7 +3084,8 @@
 
   function advanceTurn() {
     state.currentTurn = (state.currentTurn+1) % state.players.length;
-    if (state.currentTurn===0) state.round++;
+    const _wasNewRound = state.currentTurn === 0;
+    if (_wasNewRound) { state.round++; setTimeout(sfxNewRound, 250); }
     render();
     const p = state.players[state.currentTurn];
     setTimeout(() => showTurnTransition(p.name, p.hex, p.avatar || '😀'), 120);
@@ -2986,7 +3095,7 @@
 
   function jumpTo(idx) {
     state.currentTurn = idx;
-    sfxClick();
+    sfxJump();
     render(); // render calls renderTurnPanel which clears input and scrabble
   }
 
@@ -3030,7 +3139,7 @@
 
     // Personal record badge
     if (pts > 0 && pts > prevBest && p.rounds.length > 1 && !isScrabble) {
-      setTimeout(() => showComboBadge('🏅 ¡Nuevo récord!', `linear-gradient(135deg,${p.hex}cc,${p.hex}88)`), 200);
+      setTimeout(() => { showComboBadge('🏅 ¡Nuevo récord!', `linear-gradient(135deg,${p.hex}cc,${p.hex}88)`); sfxRecord(); }, 200);
     }
   }
 
@@ -3081,7 +3190,7 @@
     state.players.forEach(p => { p.score=0; p.rounds=[]; p.passes=0; p.streak=0; p.bestScore=0; });
     state.currentTurn=0; state.round=1; state.history=[]; state.log=[];
     clearSavedState();
-    haptic([20,10,20]);
+    sfxReset(); haptic([20,10,20]);
     stopTimer();
     if (timerEnabled) startTimerRun();
     render();
@@ -3235,6 +3344,7 @@
     ws.classList.remove('show'); ws.style.display='none';
     stopTimer();
     clearSavedState();
+    sfxReset();
     document.getElementById('setup-screen').style.display='flex';
   }
 
@@ -3272,6 +3382,7 @@
     overlay.classList.remove('show');
     void overlay.offsetWidth;
     overlay.classList.add('show'); /* Extended for readability */
+    sfxTurnChange();
     setTimeout(() => overlay.classList.remove('show'), 900);
   }
 
@@ -3329,10 +3440,18 @@
       if (timerPaused) return;
       timerSeconds--;
       updateTimerDisplay();
-      if (timerSeconds <= WARN_THRESHOLD && timerSeconds > 0) haptic([5]);
+      // Warning zone ticks
+      if (timerSeconds <= WARN_THRESHOLD && timerSeconds > 0) {
+        haptic([8]);
+        if (timerSeconds <= 3) {
+          sfxTimerTickUrgent();   // last 3s: high urgent beep
+        } else {
+          sfxTimerTick();         // warning zone: regular tick
+        }
+      }
       if (timerSeconds <= 0) {
         stopTimer();
-        sfxPass(); haptic([30,20,50]);
+        sfxTimerAlarm(); haptic([60, 30, 60, 30, 80]);
         showToast('⏱ ¡Tiempo! Pasa el turno');
       }
     }, 1000);
@@ -3623,10 +3742,11 @@
     tutorialStep++;
     if (tutorialStep >= TUTORIAL_STEPS.length) {
       closeTutorial();
+      sfxTutorialDone();
       return;
     }
     _renderTutorialStep();
-    sfxScore(10);
+    sfxTutorialStep();
   }
 
   function _renderTutorialStep() {
@@ -3742,7 +3862,7 @@
     document.getElementById('resume-banner').style.display = 'none';
     document.getElementById('setup-screen').style.display = 'none';
     document.getElementById('game-screen').style.display  = 'block';
-    haptic([10,30,10]);
+    sfxResume(); haptic([10,30,10]);
     render();
     const p = state.players[state.currentTurn];
     setTimeout(function(){ showTurnTransition(p.name, p.hex); }, 400);
