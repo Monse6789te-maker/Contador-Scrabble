@@ -1,0 +1,8 @@
+name = "scrabble-ia-explicaciones"
+main = "src/index.js"
+compatibility_date = "2026-07-20"
+
+# Esto conecta el Worker con Workers AI (gratis, sin tarjeta, 10,000
+# "neuronas" al día). Dentro del código se usa como env.AI.
+[ai]
+binding = "AI"
