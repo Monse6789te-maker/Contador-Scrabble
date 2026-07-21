@@ -1,19 +1,4 @@
-/**
- * Backend gratuito para "Explicar con IA" del marcador de Scrabble.
- *
- * Recibe una palabra y le pide a un modelo de lenguaje (corriendo gratis en
- * Cloudflare Workers AI) una explicación breve: origen + significado.
- *
- * IMPORTANTE: esto es solo un extra de curiosidad/cultura general. La
- * validez de la palabra para jugar Scrabble sigue decidiéndose SOLO con
- * Wiktionary + las reglas de la app (esta IA puede a veces equivocarse
- * o "inventar" datos, especialmente en etimologías poco comunes).
- */
-
-// TODO: cambia esto por el dominio real donde publiques tu app
-// (por ejemplo "https://tuapp.netlify.app"). Mientras tanto, "*" deja
-// que cualquier página pueda llamar a tu Worker desde el navegador.
-const ALLOWED_ORIGIN = "https://monse6789te-maker.github.io/Contador-Scrabble/";
+const ALLOWED_ORIGIN = "https://monse6789te-maker.github.io";
 
 const CORS_HEADERS = {
   "Access-Control-Allow-Origin": ALLOWED_ORIGIN,
@@ -53,32 +38,37 @@ export default {
     }
 
     try {
-      const respuesta = await env.AI.run("@cf/meta/llama-3.1-8b-instruct", {
+      const respuesta = await env.AI.run("@cf/zai-org/glm-4.7-flash", {
         messages: [
           {
             role: "system",
-            content:
-              "Eres un asistente que explica palabras del español de forma extremadamente breve " +
-              "para un juego de Scrabble. Responde en máximo 2 o 3 frases cortas: primero el origen " +
-              "etimológico si lo conoces (idioma de origen y significado literal), y después qué " +
-              "significa la palabra en español actual. Si no reconoces la palabra o no estás seguro " +
-              "de su origen, dilo explícitamente en vez de inventar información. No agregues " +
-              "introducciones, saludos ni texto de relleno: responde solo con la explicación.",
+            content: "...",
           },
-          { role: "user", content: `Palabra: ${palabra}` },
+          {
+            role: "user",
+            content: `Palabra: ${palabra}`,
+          },
         ],
         max_tokens: 150,
       });
 
-      const texto = respuesta && respuesta.response ? String(respuesta.response).trim() : "";
+      const texto = respuesta && respuesta.response
+          ? String(respuesta.response).trim()
+          : "";
+
       if (!texto) throw new Error("Respuesta vacía del modelo");
 
-      return jsonResponse({ explicacion: texto });
+      return jsonResponse({
+        explicacion: texto
+      });
+
     } catch (e) {
-      return jsonResponse(
-        { error: "No se pudo generar la explicación en este momento. Intenta de nuevo." },
-        502
-      );
+      console.error(e);
+
+      return jsonResponse({
+          error: String(e.message || e),
+          stack: String(e.stack || "")
+      }, 500);
     }
-  },
-};
+  } // <-- Aquí cierra la función fetch
+}; // <-- Aquí cierra el objeto export default
