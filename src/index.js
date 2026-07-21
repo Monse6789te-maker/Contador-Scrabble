@@ -38,18 +38,18 @@ export default {
     }
 
     try {
-      const respuesta = await env.AI.run("@cf/zai-org/glm-4.7-flash", {
+      const respuesta = await env.AI.run("@cf/meta/llama-3.3-70b-instruct-fp8-fast", {
         messages: [
           {
             role: "system",
-            content: "...",
+            content: "Responde únicamente en español. Da una explicación muy breve (máximo 2 frases). No expliques tu razonamiento.",
           },
           {
             role: "user",
             content: `Palabra: ${palabra}`,
           },
         ],
-        max_tokens: 150,
+        max_tokens: 1024,
       });
       console.log(JSON.stringify(respuesta, null, 2));
       const texto = respuesta && respuesta.response
