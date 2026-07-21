@@ -51,7 +51,7 @@ export default {
         ],
         max_tokens: 150,
       });
-
+      console.log(JSON.stringify(respuesta, null, 2));
       const texto = respuesta && respuesta.response
           ? String(respuesta.response).trim()
           : "";
